@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.presentation.components.TargetBox
+import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -29,11 +30,16 @@ import ru.cyclone.cycfinans.presentation.navigation.Screens
 fun TargetScreen(navController: NavHostController) {
     Scaffold(
         floatingActionButton = {FloatingActionButton(
-            onClick = { /*TODO*/ }
+            onClick = { /*TODO*/ },
+            backgroundColor = Color(0xFFFFD700)
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
-                contentDescription = "add")
+                contentDescription = "add",
+                modifier = Modifier
+                    .height(33.dp)
+                    .width(33.dp)
+            )
         }}
     ) {
         Column(
@@ -43,36 +49,42 @@ fun TargetScreen(navController: NavHostController) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 16.dp, horizontal = 8.dp),
+                    .padding(vertical = 16.dp, horizontal = 26.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .width(48.dp)
-                        .height(48.dp)
-                        .clip(RoundedCornerShape(24.dp))
-                        .clickable { navController.navigate(Screens.MainScreen.rout) },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "back",
-                        modifier = Modifier
-                            .height(25.dp)
-                            .width(25.dp)
-                    )
-                }
+//                Box(
+//                    modifier = Modifier
+//                        .width(48.dp)
+//                        .height(48.dp)
+//                        .clip(RoundedCornerShape(24.dp))
+//                        .clickable { navController.navigate(Screens.MainScreen.rout) },
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Filled.ArrowBack,
+//                        contentDescription = "back",
+//                        modifier = Modifier
+//                            .height(25.dp)
+//                            .width(25.dp)
+//                    )
+//                }
                 Text(
                     text = "Цели",
                     fontSize = 36.sp,
                     fontWeight = FontWeight.Light,
                     modifier = Modifier
-                        .padding(start = 16.dp)
+                        .padding(start = 16.dp, bottom = 16.dp)
                 )
             }
 
-            TargetBox()
-            TargetBox()
+            TargetBox(
+                modifier = Modifier
+                    .clickable { navController.navigate(AdditionalScreens.TargetDetailsScreen.rout) }
+            )
+            TargetBox(
+                modifier = Modifier
+                    .clickable { navController.navigate(AdditionalScreens.TargetDetailsScreen.rout) }
+            )
         }
     }
 }

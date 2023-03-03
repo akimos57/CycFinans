@@ -24,23 +24,14 @@ import androidx.navigation.compose.rememberNavController
 import ru.cyclone.cycfinans.presentation.components.DayBox
 import ru.cyclone.cycfinans.presentation.components.MainBox
 import ru.cyclone.cycfinans.presentation.components.WidgetMain
+import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.CycFinansTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(navController: NavHostController) {
-    Scaffold(
-        floatingActionButton = {FloatingActionButton(
-            onClick = { navController.navigate(Screens.TargetScreen.rout) }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Home,
-                contentDescription = ""
-            )
-            }
-        }
-    ) {
+    Scaffold() {
 
         Column(
             modifier = Modifier
@@ -102,7 +93,7 @@ fun MainScreen(navController: NavHostController) {
 
             DayBox(
                 modifier = Modifier
-                .clickable { navController.navigate(Screens.MainDetailsScreen.rout) }
+                .clickable { navController.navigate(AdditionalScreens.MainDetailsScreen.rout) }
             )
 
 

@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun PromotionBox(
@@ -18,7 +20,7 @@ fun PromotionBox(
     modifier: Modifier
 ) {
 //    var price by rememberSaveable { mutableStateOf("") }
-    Column(modifier = modifier) {
+    Column(modifier = Modifier) {
 
 
         Box(
@@ -27,11 +29,11 @@ fun PromotionBox(
                 .height(120.dp)
                 .padding(horizontal = 8.dp, vertical = 8.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colors.secondary)
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = modifier
+                    .fillMaxSize()
             ) {
                 Row(
                     modifier = Modifier
@@ -40,10 +42,26 @@ fun PromotionBox(
                 ) {
                     Text(
                         text = "+ $price ₽",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Normal,
                         modifier = Modifier
-                            .padding(top = 16.dp)
+                            .padding(top = 20.dp, bottom = 20.dp)
+
                     )
                 }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = category,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+
+
 
 //            TextField(
 //                value = price,
@@ -57,17 +75,7 @@ fun PromotionBox(
 //                    cursorColor = colorCategory
 //                )
 //            )
-                TextButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.White,
-                        contentColor = colorCategory
-                    )
-                ) {
-                    Text(text = category)
-                }
+
             }
 
         }

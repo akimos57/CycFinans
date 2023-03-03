@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.presentation.components.PromotionBox
+import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
@@ -86,17 +87,16 @@ fun MainDetailsScreen(navController: NavHostController) {
                 .fillMaxHeight(),
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { navController.navigate(Screens.AddPromotionScreen.rout) },
-                    modifier = Modifier
-                        .padding(bottom = 20.dp),
+                    onClick = { navController.navigate(AdditionalScreens.AddPromotionScreen.rout) },
+                    modifier = Modifier,
                     backgroundColor = fab1
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
                         contentDescription = "add",
                         modifier = Modifier
-                            .height(30.dp)
-                            .width(30.dp)
+                            .height(33.dp)
+                            .width(33.dp)
                     )
                 }
             },
@@ -133,17 +133,16 @@ fun MainDetailsScreen(navController: NavHostController) {
             modifier = Modifier,
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { navController.navigate(Screens.AddPromotionScreen.rout) },
-                    modifier = Modifier
-                        .padding(bottom = 20.dp),
+                    onClick = { navController.navigate(AdditionalScreens.AddPromotionScreen.rout) },
+                    modifier = Modifier,
                     backgroundColor = fab2
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
                         contentDescription = "add",
                         modifier = Modifier
-                            .height(30.dp)
-                            .width(30.dp)
+                            .height(33.dp)
+                            .width(33.dp)
                     )
                 }
             },
@@ -172,7 +171,7 @@ fun MainDetailsScreen(navController: NavHostController) {
                         category = promotion.category,
                         colorCategory = Color(promotion.colorCategory),
                         modifier = Modifier
-                            .clickable { navController.navigate(Screens.AddPromotionScreen.rout
+                            .clickable { navController.navigate(AdditionalScreens.AddPromotionScreen.rout
 //                                    + "/${promotion.id}"
                             )}
                     )

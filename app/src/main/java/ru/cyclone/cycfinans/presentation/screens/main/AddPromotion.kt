@@ -21,23 +21,31 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Promotion
+import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 
 @Composable
 fun AddPromotion(
     navController: NavHostController,
+    type: Boolean
 //    id: String?
 ) {
 //        Log.d("checkData", "id: $${id}")
         val viewModel = hiltViewModel<AddPromotionVM>()
         var price by rememberSaveable { mutableStateOf("") }
+        var category by rememberSaveable { mutableStateOf("") }
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(220.dp)
-                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .padding(horizontal = 36.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colors.secondary)
         ) {
             Column(
                 modifier = Modifier
@@ -55,21 +63,33 @@ fun AddPromotion(
 //                        cursorColor = colorCategory
                     )
                 )
+                TextField(
+                    value = category,
+                    onValueChange = { category = it },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.White,
+//                        textColor = colorCategory,
+//                        cursorColor = colorCategory
+                    )
+                )
                 TextButton(
                     onClick = {
                         val price = price.toInt()
                         val color = Color.White.toArgb()
+                        val category = category
                         viewModel.addPromotion(
                             Promotion(
                                 type = true,
-                                category = "Hey",
+                                category = category,
                                 colorCategory = color,
                                 price = price
                             )
                         ) {
 //                            navController.navigate(Screens.MainDetailsScreen.rout)
                         }
-                        navController.navigate(Screens.MainDetailsScreen.rout)
+                        navController.navigate(AdditionalScreens.MainDetailsScreen.rout)
                     },
                     modifier = Modifier
                         .fillMaxSize(),
@@ -83,4 +103,6 @@ fun AddPromotion(
             }
 
         }
+    }
+
     }

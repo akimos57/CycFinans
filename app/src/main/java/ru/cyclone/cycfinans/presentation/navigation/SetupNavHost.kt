@@ -1,69 +1,88 @@
 package ru.cyclone.cycfinans.presentation.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import ru.cyclone.cycfinans.presentation.components.BottomNavigationBar
 import ru.cyclone.cycfinans.presentation.screens.*
 import ru.cyclone.cycfinans.presentation.screens.main.AddPromotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
+import ru.cyclone.cycnote.R
 
 sealed class Screens(
+    val title: String,
     val rout: String,
-    val icon: ImageVector
+    val iconId: Int
 ) {
-    object MainScreen: Screens(rout = "main_screen", icon = Icons.Filled.Home)
-    object MainDetailsScreen: Screens(rout = "mainDetails_screen", icon = Icons.Filled.Home)
-    object AddPromotionScreen: Screens(rout = "addPromotion_screen", icon = Icons.Filled.Home)
-    object TargetScreen: Screens(rout = "target_screen", icon = Icons.Filled.Star)
-    object TargetDetailsScreen: Screens(rout = "targetDetails_screen", icon = Icons.Filled.Home)
-    object StatisticsScreen: Screens(rout = "statistics_screen", icon = Icons.Filled.DateRange)
-    object SettingsScreen: Screens(rout = "settings_screen", icon = Icons.Filled.Settings)
+    object MainScreen: Screens(rout = "main_screen", iconId = R.drawable.home, title = "Главная")
+//    object MainDetailsScreen: Screens(rout = "mainDetails_screen", iconId = Icons.Filled.Home)
+//    object AddPromotionScreen: Screens(rout = "addPromotion_screen", iconId = Icons.Filled.Home)
+    object TargetScreen: Screens(rout = "target_screen", iconId = R.drawable.star, title = "Цели")
+//    object TargetDetailsScreen: Screens(rout = "targetDetails_screen", iconId = Icons.Filled.Home)
+    object StatisticsScreen: Screens(rout = "statistics_screen", iconId = R.drawable.data_usage, title = "Статистика")
+    object SettingsScreen: Screens(rout = "settings_screen", iconId = R.drawable.settings, title = "Настройки")
+}
+
+sealed class AdditionalScreens(
+    val rout: String
+) {
+    object MainDetailsScreen: AdditionalScreens(rout = "mainDetails_screen")
+    object AddPromotionScreen: AdditionalScreens(rout = "addPromotion_screen")
+    object TargetDetailsScreen: AdditionalScreens(rout = "targetDetails_screen")
 }
 
 @Composable
 fun SetupNavHost(navController: NavHostController) {
-    
-    NavHost(
-        navController = navController,
-        startDestination = Screens.MainScreen.rout
-    ) {
-        composable(route = Screens.MainScreen.rout) {
-            MainScreen(navController = navController)
-        }
-        composable(
-            route = Screens.AddPromotionScreen.rout
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController = navController) }
+    ) { paddingValues ->
+        NavHost(
+            navController = navController,
+            startDestination = Screens.MainScreen.rout,
+            modifier = Modifier
+                .padding(paddingValues)
+        ) {
+            composable(route = Screens.MainScreen.rout) {
+                MainScreen(navController = navController)
+            }
+            composable(
+                route = AdditionalScreens.AddPromotionScreen.rout
 //                    + "/{id}",
 //            arguments = listOf(navArgument("id"){type = NavType.StringType}
 
-        ) {
-            AddPromotion(navController = navController)
+            ) {
+                AddPromotion(navController = navController, type = true)
 //                it.arguments?.getString("id")
 
 
-        }
-        composable(route = Screens.MainDetailsScreen.rout) {
-            MainDetailsScreen(navController = navController)
-        }
-        composable(route = Screens.TargetScreen.rout) {
-            TargetScreen(navController = navController)
-        }
-        composable(route = Screens.TargetDetailsScreen.rout) {
-            TargetDetailsScreen(navController = navController)
-        }
-        composable(route = Screens.StatisticsScreen.rout) {
-            StatisticsScreen(navController = navController)
-        }
-        composable(route = Screens.SettingsScreen.rout) {
-            SettingsScreen(navController = navController)
+            }
+            composable(route = AdditionalScreens.MainDetailsScreen.rout) {
+                MainDetailsScreen(navController = navController)
+            }
+            composable(route = Screens.TargetScreen.rout) {
+                TargetScreen(navController = navController)
+            }
+            composable(route = AdditionalScreens.TargetDetailsScreen.rout) {
+                TargetDetailsScreen(navController = navController)
+            }
+            composable(route = Screens.StatisticsScreen.rout) {
+                StatisticsScreen(navController = navController)
+            }
+            composable(route = Screens.SettingsScreen.rout) {
+                SettingsScreen(navController = navController)
+            }
         }
     }
 }
