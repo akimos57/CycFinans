@@ -31,8 +31,8 @@ import ru.cyclone.cycfinans.presentation.ui.theme.CycFinansTheme
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(navController: NavHostController) {
-    Scaffold() {
 
+    Scaffold() {
         Column(
             modifier = Modifier
                 .fillMaxSize()

@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.domain.usecases.DeletePromotionUseCase
 import ru.cyclone.cycfinans.domain.usecases.GetAllPromotionUseCase
-import ru.cyclone.cycfinans.domain.usecases.GetPromotionById
 import javax.inject.Inject
 
 @HiltViewModel

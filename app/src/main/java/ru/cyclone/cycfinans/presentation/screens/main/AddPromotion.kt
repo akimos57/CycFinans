@@ -1,6 +1,9 @@
 package ru.cyclone.cycfinans.presentation.screens.main
 
+import android.os.Build
+import android.text.format.Time
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,7 +26,12 @@ import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
+import java.sql.Timestamp
+import java.time.Clock
+import java.time.LocalTime
+import java.util.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddPromotion(
     navController: NavHostController,
@@ -79,12 +87,14 @@ fun AddPromotion(
                         val price = price.toInt()
                         val color = Color.White.toArgb()
                         val category = category
+                        val currentTime = java.sql.Time(System.currentTimeMillis())
                         viewModel.addPromotion(
                             Promotion(
                                 type = true,
                                 category = category,
                                 colorCategory = color,
-                                price = price
+                                price = price,
+                                time = currentTime
                             )
                         ) {
 //                            navController.navigate(Screens.MainDetailsScreen.rout)
