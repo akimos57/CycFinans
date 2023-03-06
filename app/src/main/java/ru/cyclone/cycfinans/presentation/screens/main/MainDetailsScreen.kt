@@ -2,7 +2,6 @@ package ru.cyclone.cycfinans.presentation.screens.main
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -11,6 +10,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import ru.cyclone.cycfinans.presentation.components.EditPromotion
 import ru.cyclone.cycfinans.presentation.components.PromotionBox
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
@@ -167,16 +169,19 @@ fun MainDetailsScreen(navController: NavHostController) {
                 )
             }
                 promotions.forEach { promotion ->
+                    val showDialog = remember { mutableStateOf(false) }
+                    EditPromotion(showDialog.value, viewModel, onDismiss = {showDialog.value = false})
                     PromotionBox(
                         price = promotion.price,
                         category = promotion.category,
                         colorCategory = Color(promotion.colorCategory),
                         modifier = Modifier
                             .clickable {
-                                viewModel.deletePromotion(promotion = promotion)
-                                navController.navigate(AdditionalScreens.AddPromotionScreen.rout
+                                showDialog.value = true
+//                                viewModel.deletePromotion(promotion = promotion)
+//                                navController.navigate(AdditionalScreens.AddPromotionScreen.rout
 //                                    + "/${promotion.id}"
-                            )
+//                            )
                         }
                     )
                 }
