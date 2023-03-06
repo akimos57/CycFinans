@@ -58,7 +58,7 @@ fun AddPromotion(
                         .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.White,
+                        backgroundColor = MaterialTheme.colors.secondary,
 //                        textColor = colorCategory,
 //                        cursorColor = colorCategory
                     )
@@ -69,7 +69,7 @@ fun AddPromotion(
                     modifier = Modifier
                         .fillMaxWidth(),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.White,
+                        backgroundColor = MaterialTheme.colors.secondary,
 //                        textColor = colorCategory,
 //                        cursorColor = colorCategory
                     )
@@ -94,7 +94,7 @@ fun AddPromotion(
                     modifier = Modifier
                         .fillMaxSize(),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.White,
+                        backgroundColor = MaterialTheme.colors.secondary,
 //                        contentColor = colorCategory
                     )
                 ) {

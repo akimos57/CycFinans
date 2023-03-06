@@ -16,3 +16,5 @@ val fab2 = Color(0xFFE61845)
 val cardDark = Color(0xFF2E2E2E)
 val cardLight = Color.White
 
+val gold = Color(0xFFFFD700)
+

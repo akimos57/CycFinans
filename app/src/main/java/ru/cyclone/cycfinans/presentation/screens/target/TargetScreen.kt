@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.screens
+package ru.cyclone.cycfinans.presentation.screens.target
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -24,14 +24,15 @@ import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.presentation.components.TargetBox
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
+import ru.cyclone.cycfinans.presentation.ui.theme.gold
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun TargetScreen(navController: NavHostController) {
     Scaffold(
         floatingActionButton = {FloatingActionButton(
-            onClick = { /*TODO*/ },
-            backgroundColor = Color(0xFFFFD700)
+            onClick = { navController.navigate(AdditionalScreens.AddTargetScreen.rout) },
+            backgroundColor = gold
         ) {
             Icon(
                 imageVector = Icons.Filled.Add,
@@ -79,11 +80,11 @@ fun TargetScreen(navController: NavHostController) {
 
             TargetBox(
                 modifier = Modifier
-                    .clickable { navController.navigate(AdditionalScreens.TargetDetailsScreen.rout) }
+                    .clickable { navController.navigate(AdditionalScreens.AddTargetScreen.rout) }
             )
             TargetBox(
                 modifier = Modifier
-                    .clickable { navController.navigate(AdditionalScreens.TargetDetailsScreen.rout) }
+                    .clickable { navController.navigate(AdditionalScreens.AddTargetScreen.rout) }
             )
         }
     }

@@ -41,7 +41,7 @@ fun PromotionBox(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "+ $price ₽",
+                        text = "- $price ₽",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier

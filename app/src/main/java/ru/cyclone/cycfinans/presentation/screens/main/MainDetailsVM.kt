@@ -15,19 +15,34 @@ import javax.inject.Inject
 @HiltViewModel
 class MainDetailsVM @Inject constructor(
     private val getAllPromotionUseCase: GetAllPromotionUseCase,
+    private val deletePromotionUseCase: DeletePromotionUseCase
 ): ViewModel() {
     private val _promotions = MutableLiveData<List<Promotion>>()
     val promotions: LiveData<List<Promotion>>
     get() = _promotions
 
     init {
-        getAllPromotions()
+        updateAllPromotions()
     }
 
-    private fun getAllPromotions() {
+
+    private fun updateAllPromotions() {
         viewModelScope.launch {
             getAllPromotionUseCase.invoke().let {
                 _promotions.postValue(it)
+            }
+        }
+    }
+
+    fun deletePromotion(
+        onSuccess: () -> Unit = {},
+        promotion: Promotion
+    ) {
+        viewModelScope.launch {
+            promotions.value?.let {
+                deletePromotionUseCase.invoke(promotion = promotion)
+                updateAllPromotions()
+                onSuccess
             }
         }
     }

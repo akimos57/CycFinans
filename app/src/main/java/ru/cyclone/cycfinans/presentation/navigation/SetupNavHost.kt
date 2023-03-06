@@ -2,23 +2,17 @@ package ru.cyclone.cycfinans.presentation.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import ru.cyclone.cycfinans.presentation.components.BottomNavigationBar
 import ru.cyclone.cycfinans.presentation.screens.*
 import ru.cyclone.cycfinans.presentation.screens.main.AddPromotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
+import ru.cyclone.cycfinans.presentation.screens.target.AddTarget
+import ru.cyclone.cycfinans.presentation.screens.target.TargetScreen
 import ru.cyclone.cycnote.R
 
 sealed class Screens(
@@ -40,7 +34,7 @@ sealed class AdditionalScreens(
 ) {
     object MainDetailsScreen: AdditionalScreens(rout = "mainDetails_screen")
     object AddPromotionScreen: AdditionalScreens(rout = "addPromotion_screen")
-    object TargetDetailsScreen: AdditionalScreens(rout = "targetDetails_screen")
+    object AddTargetScreen: AdditionalScreens(rout = "targetDetails_screen")
 }
 
 @Composable
@@ -74,8 +68,8 @@ fun SetupNavHost(navController: NavHostController) {
             composable(route = Screens.TargetScreen.rout) {
                 TargetScreen(navController = navController)
             }
-            composable(route = AdditionalScreens.TargetDetailsScreen.rout) {
-                TargetDetailsScreen(navController = navController)
+            composable(route = AdditionalScreens.AddTargetScreen.rout) {
+                AddTarget(navController = navController)
             }
             composable(route = Screens.StatisticsScreen.rout) {
                 StatisticsScreen(navController = navController)
