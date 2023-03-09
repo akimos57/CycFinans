@@ -29,6 +29,7 @@ class MainDetailsVM @Inject constructor(
     fun addPromotion(promotion: Promotion, onSuccess: () -> Unit) {
         viewModelScope.launch {
             addPromotionUseCase.invoke(promotion = promotion)
+            updateAllPromotions()
             onSuccess()
         }
     }
@@ -49,11 +50,8 @@ class MainDetailsVM @Inject constructor(
             promotions.value?.let {
                 deletePromotionUseCase.invoke(promotion = promotion)
                 updateAllPromotions()
-                onSuccess
+                onSuccess()
             }
         }
     }
-
-
-
 }

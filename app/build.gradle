@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "ru.cyclone.cycnote"
-        minSdk 24
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -90,7 +90,7 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
     // Diagrams
-//    implementation 'co.yml:ycharts:1.0.0'
+    implementation 'co.yml:ycharts:1.0.0'
 
     // Calendar
     implementation "com.google.accompanist:accompanist-flowlayout:0.27.0"
