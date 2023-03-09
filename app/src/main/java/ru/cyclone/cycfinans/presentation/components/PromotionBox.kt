@@ -3,26 +3,24 @@ package ru.cyclone.cycfinans.presentation.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.cyclone.cycfinans.domain.model.Promotion
 
 @Composable
 fun PromotionBox(
-    price: Int,
-    category: String,
-    colorCategory: Color,
+    promotion: Promotion,
     modifier: Modifier
 ) {
-//    var price by rememberSaveable { mutableStateOf("") }
     Column(modifier = Modifier) {
-
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -34,50 +32,35 @@ fun PromotionBox(
             Column(
                 modifier = modifier
                     .fillMaxSize()
+                    .padding(16.dp)
+                    .fillMaxWidth()
             ) {
-                Row(
+                val text = if (promotion.type) "+ ${promotion.price}₽" else "- ${promotion.price}₽"
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "- $price ₽",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier
-                            .padding(top = 20.dp, bottom = 20.dp)
-
-                    )
-                }
-                Row(
+                        .align(Alignment.CenterHorizontally),
+                    text = text,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center
+                )
+                Text(
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = category,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-
-
-
-//            TextField(
-//                value = price,
-//                onValueChange = { price = it },
-//                modifier = Modifier
-//                    .fillMaxWidth(),
-//                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-//                colors = TextFieldDefaults.textFieldColors(
-//                    backgroundColor = Color.White,
-//                    textColor = colorCategory,
-//                    cursorColor = colorCategory
-//                )
-//            )
-
+                        .align(Alignment.CenterHorizontally),
+                    text = promotion.category,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    text = "${promotion.time.hours}:${promotion.time.minutes}",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center
+                )
             }
-
         }
     }
 }

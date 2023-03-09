@@ -1,7 +1,8 @@
 package ru.cyclone.cycfinans.presentation.screens.main
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -15,34 +16,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.components.EditPromotion
 import ru.cyclone.cycfinans.presentation.components.PromotionBox
-import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
+import java.sql.Time
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainDetailsScreen(navController: NavHostController) {
-//    val promotions: List<Promotion> = listOf(
-//        Promotion(
-//            id = 0,
-//            type = true,
-//            category = "House",
-//            colorCategory = Color.Red.toArgb(),
-//            price = 2000f
-//        )
-//    )
-
     val viewModel = hiltViewModel<MainDetailsVM>()
     val promotions = viewModel.promotions.observeAsState(listOf()).value
+
+    var type = false
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,19 +72,18 @@ fun MainDetailsScreen(navController: NavHostController) {
                     .padding(start = 16.dp)
             )
         }
-
-
     Row(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        val s = remember { mutableStateOf(false)}
         Scaffold(
             modifier = Modifier
                 .fillMaxWidth(0.5f)
                 .fillMaxHeight(),
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { navController.navigate(AdditionalScreens.AddPromotionScreen.rout) },
+                    onClick = { s.value = true; type = true },
                     modifier = Modifier,
                     backgroundColor = fab1
                 ) {
@@ -104,9 +97,10 @@ fun MainDetailsScreen(navController: NavHostController) {
                 }
             },
             floatingActionButtonPosition = FabPosition.Center
-        ) {
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
+                    .padding(paddingValues)
                     .fillMaxWidth()
                     .fillMaxHeight()
             ) {
@@ -122,21 +116,35 @@ fun MainDetailsScreen(navController: NavHostController) {
                         fontWeight = FontWeight.Light
                     )
                 }
-//                promotions.forEach { promotion ->
-//                    PromotionBox(
-//                        price = promotion.price,
-//                        category = promotion.category,
-//                        colorCategory = Color(promotion.colorCategory),
-//                        modifier = Modifier
-//                    )
-//                }
+                promotions.filter { it.type }.forEach { promotion ->
+                    val showDialog = remember { mutableStateOf(false) }
+                    val showDialog1 = remember { mutableStateOf(false) }
+                    EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion)
+                    if (showDialog1.value) {
+                        Dialog(
+                            onDismissRequest = { showDialog1.value = false }) {
+                            TextButton(
+                                onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
+                                Text(text = "Are u sure?")
+                            }
+                        }
+                    }
+                    PromotionBox(
+                        promotion,
+                        modifier = Modifier
+                            .combinedClickable(
+                                onClick = { showDialog.value = true },
+                                onLongClick = { showDialog1.value = true }
+                            )
+                    )
+                }
             }
         }
         Scaffold(
             modifier = Modifier,
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { navController.navigate(AdditionalScreens.AddPromotionScreen.rout) },
+                    onClick = { s.value = true; type = false },
                     modifier = Modifier,
                     backgroundColor = fab2
                 ) {
@@ -150,9 +158,17 @@ fun MainDetailsScreen(navController: NavHostController) {
                 }
             },
             floatingActionButtonPosition = FabPosition.Center
-        ) {
+        ) { paddingValues ->
+            EditPromotion(show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
+                time = Time(System.currentTimeMillis()),
+                type = type,
+                category = "",
+                colorCategory = 0,
+                price = 0
+            ))
             Column(
                 modifier = Modifier
+                    .padding(paddingValues)
                     .fillMaxWidth()
                     .fillMaxHeight()
             ) {
@@ -162,33 +178,36 @@ fun MainDetailsScreen(navController: NavHostController) {
                     .padding(bottom = 16.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "Расходы",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Light
-                )
-            }
-                promotions.forEach { promotion ->
-                    val showDialog = remember { mutableStateOf(false) }
-                    EditPromotion(showDialog.value, viewModel, onDismiss = {showDialog.value = false})
-                    PromotionBox(
-                        price = promotion.price,
-                        category = promotion.category,
-                        colorCategory = Color(promotion.colorCategory),
-                        modifier = Modifier
-                            .clickable {
-                                showDialog.value = true
-//                                viewModel.deletePromotion(promotion = promotion)
-//                                navController.navigate(AdditionalScreens.AddPromotionScreen.rout
-//                                    + "/${promotion.id}"
-//                            )
-                        }
+                    Text(
+                        text = "Расходы",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Light
                     )
                 }
-
+                promotions.filter { !it.type }.forEach { promotion ->
+                    val showDialog = remember { mutableStateOf(false) }
+                    val showDialog1 = remember { mutableStateOf(false) }
+                    EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion)
+                    if (showDialog1.value) {
+                        Dialog(
+                            onDismissRequest = { showDialog1.value = false }) {
+                            TextButton(
+                                onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
+                                Text(text = "Are u sure?")
+                            }
+                        }
+                    }
+                    PromotionBox(
+                        promotion,
+                        modifier = Modifier
+                            .combinedClickable(
+                                onClick = { showDialog.value = true },
+                                onLongClick = { showDialog1.value = true }
+                            )
+                    )
+                }
             }
         }
-
     }
     }
 }
