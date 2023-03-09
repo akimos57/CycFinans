@@ -12,6 +12,7 @@ import ru.cyclone.cycfinans.presentation.screens.*
 import ru.cyclone.cycfinans.presentation.screens.main.AddPromotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainScreen
+import ru.cyclone.cycfinans.presentation.screens.statistics.StatisticsScreen
 import ru.cyclone.cycfinans.presentation.screens.target.AddTarget
 import ru.cyclone.cycfinans.presentation.screens.target.TargetScreen
 import ru.cyclone.cycnote.R

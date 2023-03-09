@@ -31,7 +31,6 @@ fun PromotionBox(
             Column(
                 modifier = modifier
                     .padding(16.dp)
-                    .fillMaxWidth()
             ) {
                 val text = if (promotion.type) "+ ${promotion.price}₽" else "- ${promotion.price}₽"
                 Text(
@@ -42,11 +41,11 @@ fun PromotionBox(
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center
                 )
-                if (promotion.category.isNotEmpty()) {
+                if (promotion.category.isEmpty()) {
                     Text(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally),
-                        text = promotion.category,
+                        text = "others",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center

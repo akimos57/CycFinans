@@ -1,13 +1,14 @@
-package ru.cyclone.cycfinans.presentation.screens
+package ru.cyclone.cycfinans.presentation.screens.statistics
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,39 +20,24 @@ import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.presentation.components.Calendar
 import ru.cyclone.cycfinans.presentation.components.ChartDonut
 import ru.cyclone.cycfinans.presentation.navigation.Screens
+import java.time.Month
+import java.time.format.TextStyle
 import java.util.*
 
 @Composable
 fun StatisticsScreen(navController: NavHostController) {
-
     var visible by remember {
         mutableStateOf(false)
     }
 
     val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
 
-    val currentMonth2 = currentMonth + 1
-
+    var month = Month.of(currentMonth + 1).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
-    val currentMonth3 = when(currentMonth2) {
-        1 -> "Январь"
-        2 -> "Февраль"
-        3 -> "Март"
-        4 -> "Апрель"
-        5 -> "Май"
-        6 -> "Июнь"
-        7 -> "Июль"
-        8 -> "Август"
-        9 -> "Сентябрь"
-        10 -> "Октябрь"
-        11 -> "Ноябрь"
-        12 -> "Декабрь"
-        else -> {}
-    }
-
     var date by remember {
-        mutableStateOf("$currentMonth3, $currentYear")
+        mutableStateOf("$month, $currentYear")
     }
 
     Column(
@@ -92,7 +78,7 @@ fun StatisticsScreen(navController: NavHostController) {
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 8.dp),
-                    text = "$date",
+                    text = date,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Light
                 )
@@ -104,23 +90,9 @@ fun StatisticsScreen(navController: NavHostController) {
                 currentYear = currentYear,
                 confirmButtonClicked = {
                         month_, year_ ->
-//                    date = "$month_, $year_"
-                    val i = when(month_){
-                        1 -> "Январь"
-                        2 -> "Февраль"
-                        3 -> "Март"
-                        4 -> "Апрель"
-                        5 -> "Май"
-                        6 -> "Июнь"
-                        7 -> "Июль"
-                        8 -> "Август"
-                        9 -> "Сентябрь"
-                        10 -> "Октябрь"
-                        11 -> "Ноябрь"
-                        12 -> "Декабрь"
-                        else -> {}
-                    }
-                    date = "$i, $year_"
+                    month = Month.of(month_).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                    date = "$month, $year_"
                     visible = false
                 },
                 cancelClicked = {
