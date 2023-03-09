@@ -19,7 +19,7 @@ fun MainBox(modifier: Modifier) {
     // Всего средств
     var maxPrice = 100000
     // Расходы
-    var expenses = 40000
+    var expenses = 70000
     // Средств осталось
     var currentPrice = maxPrice - expenses
     // for LinearProgress
