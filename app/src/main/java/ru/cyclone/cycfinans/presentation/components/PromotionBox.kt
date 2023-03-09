@@ -50,6 +50,15 @@ fun PromotionBox(
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center
                     )
+                } else {
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally),
+                        text = promotion.category,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center
+                    )
                 }
                 Text(
                     modifier = Modifier
