@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -62,7 +63,9 @@ fun EditPromotion(
                             onValueChange = { price = it },
                             modifier = Modifier
                                 .fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            ),
                             colors = TextFieldDefaults.textFieldColors(
                                 backgroundColor = MaterialTheme.colors.secondary
                             )
@@ -72,12 +75,17 @@ fun EditPromotion(
                             onValueChange = { category = it },
                             modifier = Modifier
                                 .fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                autoCorrect = true,
+                                capitalization = KeyboardCapitalization.Sentences
+                            ),
                             colors = TextFieldDefaults.textFieldColors(
                                 backgroundColor = MaterialTheme.colors.secondary,
                             )
                         )
                         TextButton(onClick = { tp.show() }) {
-                            Text(text = promotion.time.toString())
+                            Text(text = "${promotion.time.hours}:${promotion.time.minutes}")
                         }
                         TextButton(
                             onClick = {

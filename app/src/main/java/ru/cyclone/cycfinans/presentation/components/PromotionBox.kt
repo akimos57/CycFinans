@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Promotion
+import java.util.*
 
 @Composable
 fun PromotionBox(
@@ -32,7 +33,8 @@ fun PromotionBox(
                 modifier = modifier
                     .padding(16.dp)
             ) {
-                val text = if (promotion.type) "+ ${promotion.price}₽" else "- ${promotion.price}₽"
+                var price = String.format(Locale.getDefault(), "%,d", promotion.price)
+                val text = if (promotion.type) "+ $price₽" else "- $price₽"
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
