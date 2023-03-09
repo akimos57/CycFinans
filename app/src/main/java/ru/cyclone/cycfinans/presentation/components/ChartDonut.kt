@@ -27,7 +27,7 @@ fun ChartDonut(
     data: Map<String, Int>,
     radiusOuter: Dp = 90.dp,
     chartBarWidth: Dp = 20.dp,
-    animDuration: Int = 3000
+    animDuration: Int = 2000
 ) {
     val totalSum = data.values.sum()
     val floatValue = mutableListOf<Float>()
@@ -72,7 +72,8 @@ fun ChartDonut(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -161,7 +162,6 @@ fun DetailsPieChartItem(
                     text = data.first,
                     fontWeight = FontWeight.Medium,
                     fontSize = 18.sp,
-                    color = Color.Black
                 )
                 Text(
                     modifier = Modifier

@@ -33,7 +33,8 @@ fun Calendar(
     currentMonth: Int,
     currentYear: Int,
     confirmButtonClicked: (Int, Int) -> Unit,
-    cancelClicked: () -> Unit
+    cancelClicked: () -> Unit,
+    onDismiss: () -> Unit
 ) {
 
     val months = listOf(
@@ -154,7 +155,7 @@ fun Calendar(
                                         val animatedSize by animateDpAsState(
                                             targetValue = if (month == it) 60.dp else 0.dp,
                                             animationSpec = tween(
-                                                durationMillis = 500,
+                                                durationMillis = 200,
                                                 easing = LinearOutSlowInEasing
                                             )
                                         )
@@ -197,13 +198,14 @@ fun Calendar(
                               shape = CircleShape,
                               border = BorderStroke(1.dp, color = Color.Transparent),
                               colors = ButtonDefaults.outlinedButtonColors(
-                                  backgroundColor = MaterialTheme.colors.background
+                                  backgroundColor = MaterialTheme.colors.secondary
                               )
                           ) {
                               Text(
                                   text = "Отмена",
                                   fontSize = 20.sp,
-                                  fontWeight = FontWeight.Medium
+                                  fontWeight = FontWeight.Medium,
+                                  color = MaterialTheme.colors.primaryVariant
                               )
                           }
 
@@ -217,7 +219,6 @@ fun Calendar(
                                   )
                               },
                               shape = CircleShape,
-                              border = BorderStroke(1.dp, color = gold),
                               colors = ButtonDefaults.outlinedButtonColors(
                                   backgroundColor = fab1
                               )
@@ -225,13 +226,14 @@ fun Calendar(
                               Text(
                                   text = "OK",
                                   fontSize = 20.sp,
-                                  fontWeight = FontWeight.Medium
+                                  fontWeight = FontWeight.Medium,
+                                  color = MaterialTheme.colors.primaryVariant
                               )
                           }
                           
                       }
             },
-            onDismissRequest = { /*TODO*/ }
+            onDismissRequest = { onDismiss }
         )
     }
 }

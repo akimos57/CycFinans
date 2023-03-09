@@ -16,6 +16,15 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun MainBox(modifier: Modifier) {
+    // Всего средств
+    var maxPrice = 100000
+    // Расходы
+    var expenses = 40000
+    // Средств осталось
+    var currentPrice = maxPrice - expenses
+    // for LinearProgress
+    val progress = currentPrice/maxPrice.toFloat()
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -40,9 +49,19 @@ fun MainBox(modifier: Modifier) {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "58 000 ₽",
+                        text = "$maxPrice ₽",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    LinearProgress(
+                        progress = progress
                     )
                 }
                 Row(
@@ -54,14 +73,14 @@ fun MainBox(modifier: Modifier) {
                         modifier = Modifier
                     ) {
                         Text(
-                            text = "Потрачено: 30 000 ₽",
+                            text = "Потрачено: $expenses ₽",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = "Осталось: 28 000 ₽",
+                            text = "Осталось: $currentPrice ₽",
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Medium
                         )
                     }
                 }

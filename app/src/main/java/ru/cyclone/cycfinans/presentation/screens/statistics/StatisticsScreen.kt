@@ -28,13 +28,31 @@ fun StatisticsScreen(navController: NavHostController) {
         mutableStateOf(false)
     }
 
-    var date by remember {
-        mutableStateOf("")
-    }
-
     val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+
+    val currentMonth2 = currentMonth + 1
+
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
+    val currentMonth3 = when(currentMonth2) {
+        1 -> "Январь"
+        2 -> "Февраль"
+        3 -> "Март"
+        4 -> "Апрель"
+        5 -> "Май"
+        6 -> "Июнь"
+        7 -> "Июль"
+        8 -> "Август"
+        9 -> "Сентябрь"
+        10 -> "Октябрь"
+        11 -> "Ноябрь"
+        12 -> "Декабрь"
+        else -> {}
+    }
+
+    var date by remember {
+        mutableStateOf("$currentMonth3, $currentYear")
+    }
 
     Column(
         modifier = Modifier
@@ -65,14 +83,17 @@ fun StatisticsScreen(navController: NavHostController) {
             Box(
                 modifier = Modifier
                     .height(48.dp)
+                    .padding(start = 16.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colors.background)
                     .clickable { visible = true },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Январь, $currentMonth",
-                    fontSize = 24.sp,
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp),
+                    text = "$date",
+                    fontSize = 28.sp,
                     fontWeight = FontWeight.Light
                 )
             }
@@ -81,13 +102,15 @@ fun StatisticsScreen(navController: NavHostController) {
                 visible = visible,
                 currentMonth = currentMonth,
                 currentYear = currentYear,
-                confirmButtonClicked = { month_, year_ ->
-                    date = "$month_/$year_"
+                confirmButtonClicked = {
+                        month_, year_ ->
+                    date = "$month_, $year_"
                     visible = false
                 },
                 cancelClicked = {
                     visible = false
-                }
+                },
+                onDismiss = { visible = false }
             )
             Row(
                 modifier = Modifier
