@@ -1,8 +1,6 @@
 package ru.cyclone.cycfinans.presentation.components
 
-import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.widget.TimePicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +29,7 @@ fun EditPromotion(
     if (show) {
         var price by remember { mutableStateOf(promotion.price.toString()) }
         var category by remember { mutableStateOf(promotion.category) }
-        var time by remember { mutableStateOf(Time(System.currentTimeMillis())) }
+        var time by remember { mutableStateOf(promotion.time) }
 
         val c = java.util.Calendar.getInstance()
         val tp = TimePickerDialog(LocalContext.current,
@@ -86,6 +84,7 @@ fun EditPromotion(
                                 val color = Color.White.toArgb()
                                 vm.addPromotion(
                                     Promotion(
+                                        id = promotion.id,
                                         type = promotion.type,
                                         category = category,
                                         colorCategory = color,

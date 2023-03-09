@@ -72,142 +72,140 @@ fun MainDetailsScreen(navController: NavHostController) {
                     .padding(start = 16.dp)
             )
         }
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        val s = remember { mutableStateOf(false)}
-        Scaffold(
+        Row(
             modifier = Modifier
-                .fillMaxWidth(0.5f)
-                .fillMaxHeight(),
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { s.value = true; type = true },
-                    modifier = Modifier,
-                    backgroundColor = fab1
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "add",
-                        modifier = Modifier
-                            .height(33.dp)
-                            .width(33.dp)
-                    )
-                }
-            },
-            floatingActionButtonPosition = FabPosition.Center
-        ) { paddingValues ->
-            Column(
+                .fillMaxSize()
+        ) {
+            val s = remember { mutableStateOf(false)}
+            Scaffold(
                 modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-            ) {
-                Row(
+                    .fillMaxWidth(0.5f)
+                    .fillMaxHeight(),
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { s.value = true; type = true },
+                        modifier = Modifier,
+                        backgroundColor = fab1
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "add",
+                            modifier = Modifier
+                                .height(33.dp)
+                                .width(33.dp)
+                        )
+                    }
+                },
+                floatingActionButtonPosition = FabPosition.Center
+            ) { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Доходы",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Light
+                        )
+                    }
+                    promotions.filter { it.type }.forEach { promotion ->
+                        val showDialog = remember { mutableStateOf(false) }
+                        val showDialog1 = remember { mutableStateOf(false) }
+                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion)
+                        if (showDialog1.value) {
+                            Dialog(
+                                onDismissRequest = { showDialog1.value = false }) {
+                                TextButton(
+                                    onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
+                                    Text(text = "Are u sure?")
+                                }
+                            }
+                        }
+                        PromotionBox(
+                            promotion,
+                            modifier = Modifier
+                                .combinedClickable(
+                                    onClick = { showDialog.value = true },
+                                    onLongClick = { showDialog1.value = true }
+                                )
+                        )
+                    }
+                }
+            }
+            Scaffold(
+                modifier = Modifier,
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { s.value = true; type = false },
+                        modifier = Modifier,
+                        backgroundColor = fab2
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "add",
+                            modifier = Modifier
+                                .size(33.dp)
+                        )
+                    }
+                },
+                floatingActionButtonPosition = FabPosition.Center
+            ) { paddingValues ->
+                EditPromotion(show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
+                    time = Time(System.currentTimeMillis()),
+                    type = type,
+                    category = "",
+                    colorCategory = 0,
+                    price = 0
+                ))
+                Column(
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .fillMaxSize()
+                ) {
+                    Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = "Доходы",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Light
-                    )
-                }
-                promotions.filter { it.type }.forEach { promotion ->
-                    val showDialog = remember { mutableStateOf(false) }
-                    val showDialog1 = remember { mutableStateOf(false) }
-                    EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion)
-                    if (showDialog1.value) {
-                        Dialog(
-                            onDismissRequest = { showDialog1.value = false }) {
-                            TextButton(
-                                onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
-                                Text(text = "Are u sure?")
+                        Text(
+                            text = "Расходы",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Light
+                        )
+                    }
+                    promotions.filter { !it.type }.forEach { promotion ->
+                        val showDialog = remember { mutableStateOf(false) }
+                        val showDialog1 = remember { mutableStateOf(false) }
+                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion)
+                        if (showDialog1.value) {
+                            Dialog(
+                                onDismissRequest = { showDialog1.value = false }) {
+                                TextButton(
+                                    onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
+                                    Text(text = "Are u sure?")
+                                }
                             }
                         }
+                        PromotionBox(
+                            promotion,
+                            modifier = Modifier
+                                .combinedClickable(
+                                    onClick = { showDialog.value = true },
+                                    onLongClick = { showDialog1.value = true }
+                                )
+                        )
                     }
-                    PromotionBox(
-                        promotion,
-                        modifier = Modifier
-                            .combinedClickable(
-                                onClick = { showDialog.value = true },
-                                onLongClick = { showDialog1.value = true }
-                            )
-                    )
                 }
             }
         }
-        Scaffold(
-            modifier = Modifier,
-            floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { s.value = true; type = false },
-                    modifier = Modifier,
-                    backgroundColor = fab2
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = "add",
-                        modifier = Modifier
-                            .height(33.dp)
-                            .width(33.dp)
-                    )
-                }
-            },
-            floatingActionButtonPosition = FabPosition.Center
-        ) { paddingValues ->
-            EditPromotion(show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
-                time = Time(System.currentTimeMillis()),
-                type = type,
-                category = "",
-                colorCategory = 0,
-                price = 0
-            ))
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-            ) {
-                Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                    Text(
-                        text = "Расходы",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Light
-                    )
-                }
-                promotions.filter { !it.type }.forEach { promotion ->
-                    val showDialog = remember { mutableStateOf(false) }
-                    val showDialog1 = remember { mutableStateOf(false) }
-                    EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion)
-                    if (showDialog1.value) {
-                        Dialog(
-                            onDismissRequest = { showDialog1.value = false }) {
-                            TextButton(
-                                onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
-                                Text(text = "Are u sure?")
-                            }
-                        }
-                    }
-                    PromotionBox(
-                        promotion,
-                        modifier = Modifier
-                            .combinedClickable(
-                                onClick = { showDialog.value = true },
-                                onLongClick = { showDialog1.value = true }
-                            )
-                    )
-                }
-            }
-        }
-    }
     }
 }

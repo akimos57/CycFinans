@@ -24,14 +24,12 @@ fun PromotionBox(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
                 .padding(horizontal = 8.dp, vertical = 8.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colors.secondary)
         ) {
             Column(
                 modifier = modifier
-                    .fillMaxSize()
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
@@ -44,14 +42,16 @@ fun PromotionBox(
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center
                 )
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    text = promotion.category,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center
-                )
+                if (promotion.category.isNotEmpty()) {
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally),
+                        text = promotion.category,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center
+                    )
+                }
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),

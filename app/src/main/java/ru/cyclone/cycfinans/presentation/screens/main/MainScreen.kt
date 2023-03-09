@@ -1,7 +1,5 @@
-package ru.cyclone.cycfinans.presentation.screens
+package ru.cyclone.cycfinans.presentation.screens.main
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,12 +7,10 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,13 +24,12 @@ import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.CycFinansTheme
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(navController: NavHostController) {
-
-    Scaffold() {
+    Scaffold { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
         ) {
             TextButton(
@@ -56,8 +51,7 @@ fun MainScreen(navController: NavHostController) {
                         imageVector = Icons.Filled.ArrowDropDown,
                         contentDescription = "arrow",
                         modifier = Modifier
-                            .height(33.dp)
-                            .width(33.dp)
+                            .size(33.dp)
                     )
                 }
 

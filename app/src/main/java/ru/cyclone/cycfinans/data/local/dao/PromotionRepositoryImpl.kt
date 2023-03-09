@@ -5,8 +5,7 @@ import ru.cyclone.cycfinans.domain.model.Promotion
 
 @Dao
 interface PromotionRepositoryImpl {
-
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPromotion(promotion: Promotion)
 
     @Query("SELECT * FROM promotion")
