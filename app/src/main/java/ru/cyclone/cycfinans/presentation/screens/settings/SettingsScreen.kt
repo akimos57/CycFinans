@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.screens
+package ru.cyclone.cycfinans.presentation.screens.settings
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

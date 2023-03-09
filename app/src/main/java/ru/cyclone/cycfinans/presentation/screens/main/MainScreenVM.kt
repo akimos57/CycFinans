@@ -8,26 +8,32 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.domain.usecases.GetAllPromotionUseCase
+import java.time.YearMonth
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenVM @Inject constructor(
     private val getAllPromotionUseCase: GetAllPromotionUseCase
 ) : ViewModel() {
-    private val _promotions = MutableLiveData<List<List<Promotion>>>()
-    val promotions: LiveData<List<List<Promotion>>>
+    private val _promotions = MutableLiveData<List<Promotion>>()
+    val promotions: LiveData<List<Promotion>>
         get() = _promotions
+    private val yearMonth = YearMonth.now()
 
     init {
-        getHistory()
+        getHistory(yearMonth)
     }
 
-    private fun getHistory(){
-//        viewModelScope.launch {
-//            getAllPromotionUseCase.invoke().let {
-//                it.map { it.time }
-//                _promotions.postValue(it)
-//            }
-//        }
+    fun getHistory(_yearMonth: YearMonth){
+        viewModelScope.launch {
+            getAllPromotionUseCase.invoke().let { promotions1 ->
+                _promotions.postValue(promotions1.filter {
+                    val c = Calendar.getInstance()
+                    c.time = it.time
+                    (c.get(Calendar.MONTH) + 1 == _yearMonth.month.value) and (c.get(Calendar.YEAR) == _yearMonth.year)
+                })
+            }
+        }
     }
 }

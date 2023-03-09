@@ -8,8 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ru.cyclone.cycfinans.presentation.components.BottomNavigationBar
-import ru.cyclone.cycfinans.presentation.screens.*
-import ru.cyclone.cycfinans.presentation.screens.main.AddPromotion
+import ru.cyclone.cycfinans.presentation.screens.settings.SettingsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainScreen
 import ru.cyclone.cycfinans.presentation.screens.statistics.StatisticsScreen
@@ -35,7 +34,6 @@ sealed class AdditionalScreens(
     val rout: String
 ) {
     object MainDetailsScreen: AdditionalScreens(rout = "mainDetails_screen")
-    object AddPromotionScreen: AdditionalScreens(rout = "addPromotion_screen")
     object AddTargetScreen: AdditionalScreens(rout = "targetDetails_screen")
 }
 
@@ -53,19 +51,12 @@ fun SetupNavHost(navController: NavHostController) {
             composable(route = Screens.MainScreen.rout) {
                 MainScreen(navController = navController)
             }
-            composable(
-                route = AdditionalScreens.AddPromotionScreen.rout
-//                    + "/{id}",
-//            arguments = listOf(navArgument("id"){type = NavType.StringType}
-
-            ) {
-                AddPromotion(navController = navController, type = true)
-//                it.arguments?.getString("id")
-
-
-            }
-            composable(route = AdditionalScreens.MainDetailsScreen.rout) {
-                MainDetailsScreen(navController = navController)
+            composable(route = AdditionalScreens.MainDetailsScreen.rout + "/{day}/{month}/{year}") {
+                MainDetailsScreen(navController = navController,
+                    it.arguments?.getString("day"),
+                    it.arguments?.getString("month"),
+                    it.arguments?.getString("year")
+                )
             }
             composable(route = Screens.TargetScreen.rout) {
                 TargetScreen(navController = navController)

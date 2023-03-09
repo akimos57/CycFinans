@@ -1,7 +1,6 @@
 package ru.cyclone.cycfinans.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -9,21 +8,20 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun MainBox(modifier: Modifier) {
-    // Всего средств
-    var maxPrice = 100000
-    // Расходы
-    var expenses = 70000
+fun MainBox(
+    modifier: Modifier,
+    income: Int,
+    expenses: Int
+) {
     // Средств осталось
-    var currentPrice = maxPrice - expenses
+    val currentPrice = income - expenses
     // for LinearProgress
-    val progress = currentPrice/maxPrice.toFloat()
+    val progress = currentPrice/income.toFloat()
 
     Box(
         modifier = Modifier
@@ -49,7 +47,7 @@ fun MainBox(modifier: Modifier) {
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "$maxPrice ₽",
+                        text = "$income ₽",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )

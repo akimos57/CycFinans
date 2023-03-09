@@ -10,6 +10,7 @@ import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.domain.usecases.AddPromotionUseCase
 import ru.cyclone.cycfinans.domain.usecases.DeletePromotionUseCase
 import ru.cyclone.cycfinans.domain.usecases.GetAllPromotionUseCase
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +22,7 @@ class MainDetailsVM @Inject constructor(
     private val _promotions = MutableLiveData<List<Promotion>>()
     val promotions: LiveData<List<Promotion>>
     get() = _promotions
+    var date: Calendar? = Calendar.getInstance()
 
     init {
         updateAllPromotions()
@@ -37,7 +39,12 @@ class MainDetailsVM @Inject constructor(
     private fun updateAllPromotions() {
         viewModelScope.launch {
             getAllPromotionUseCase.invoke().let {
-                _promotions.postValue(it)
+                val cm = it.filter { promotion ->
+                    val c = Calendar.getInstance()
+                    c.timeInMillis = promotion.time.time
+                    date?.get(Calendar.DATE) == c.get(Calendar.DATE)
+                }
+                _promotions.postValue(cm)
             }
         }
     }

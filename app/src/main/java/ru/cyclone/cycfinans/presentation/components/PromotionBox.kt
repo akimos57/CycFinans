@@ -1,7 +1,12 @@
+@file:Suppress("DEPRECATION")
+
 package ru.cyclone.cycfinans.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,7 +24,7 @@ import java.util.*
 @Composable
 fun PromotionBox(
     promotion: Promotion,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     Column(modifier = Modifier) {
         Box(

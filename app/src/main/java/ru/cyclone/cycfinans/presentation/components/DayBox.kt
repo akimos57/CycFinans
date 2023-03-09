@@ -1,7 +1,6 @@
 package ru.cyclone.cycfinans.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -10,14 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import java.util.*
 
 @Composable
-fun DayBox(modifier: Modifier) {
-
-
-
+fun DayBox(
+    day: Int,
+    modifier: Modifier = Modifier,
+    income: Int,
+    expenses : Int
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,7 +37,7 @@ fun DayBox(modifier: Modifier) {
                     .fillMaxWidth(0.1f),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "1")
+                Text(text = day.toString())
             }
             Row(
                 modifier = Modifier
@@ -44,8 +45,12 @@ fun DayBox(modifier: Modifier) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "+3 500 ₽")
-                Text(text = "-2 000 ₽")
+                Text(
+                    text = String.format(Locale.getDefault(), "+%,d ₽", income)
+                )
+                Text(
+                    text = String.format(Locale.getDefault(), "-%,d ₽", expenses)
+                )
             }
 
         }

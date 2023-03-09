@@ -1,5 +1,6 @@
 package ru.cyclone.cycfinans.presentation.screens.main
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -29,14 +30,27 @@ import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import java.sql.Time
+import java.time.Month
+import java.time.format.TextStyle
+import java.util.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainDetailsScreen(navController: NavHostController) {
+fun MainDetailsScreen(
+    navController: NavHostController,
+    day: String?,
+    month: String?,
+    year: String?
+) {
+    val date = Calendar.getInstance()
+    date.set(year!!.toInt(), month!!.toInt() - 1, day!!.toInt())
+
     val viewModel = hiltViewModel<MainDetailsVM>()
+    viewModel.date = date
     val promotions = viewModel.promotions.observeAsState(listOf()).value
 
     var type = false
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,7 +66,13 @@ fun MainDetailsScreen(navController: NavHostController) {
                     .width(48.dp)
                     .height(48.dp)
                     .clip(RoundedCornerShape(24.dp))
-                    .clickable { navController.navigate(Screens.MainScreen.rout) },
+                    .clickable {
+                        navController.navigate(Screens.MainScreen.rout) {
+                            popUpTo(Screens.MainScreen.rout) {
+                                inclusive = true
+                            }
+                        }
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -63,9 +83,8 @@ fun MainDetailsScreen(navController: NavHostController) {
                         .width(25.dp)
                 )
             }
-
             Text(
-                text = "1 января",
+                text = "$day ${ Month.of(month.toInt()).getDisplayName(TextStyle.FULL, Locale.getDefault()) }, $year",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
@@ -119,7 +138,7 @@ fun MainDetailsScreen(navController: NavHostController) {
                     promotions.filter { it.type }.forEach { promotion ->
                         val showDialog = remember { mutableStateOf(false) }
                         val showDialog1 = remember { mutableStateOf(false) }
-                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion)
+                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion, date.timeInMillis)
                         if (showDialog1.value) {
                             Dialog(
                                 onDismissRequest = { showDialog1.value = false }) {
@@ -132,6 +151,7 @@ fun MainDetailsScreen(navController: NavHostController) {
                         PromotionBox(
                             promotion,
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .combinedClickable(
                                     onClick = { showDialog.value = true },
                                     onLongClick = { showDialog1.value = true }
@@ -158,13 +178,15 @@ fun MainDetailsScreen(navController: NavHostController) {
                 },
                 floatingActionButtonPosition = FabPosition.Center
             ) { paddingValues ->
-                EditPromotion(show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
-                    time = Time(System.currentTimeMillis()),
-                    type = type,
-                    category = "",
-                    colorCategory = 0,
-                    price = 0
-                ))
+                EditPromotion(
+                    show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
+                        time = Time(System.currentTimeMillis()),
+                        type = type,
+                        category = "",
+                        colorCategory = 0,
+                        price = 0
+                    ), date = date.timeInMillis
+                )
                 Column(
                     modifier = Modifier
                         .padding(paddingValues)
@@ -185,7 +207,13 @@ fun MainDetailsScreen(navController: NavHostController) {
                     promotions.filter { !it.type }.forEach { promotion ->
                         val showDialog = remember { mutableStateOf(false) }
                         val showDialog1 = remember { mutableStateOf(false) }
-                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion)
+                        EditPromotion(
+                            showDialog.value,
+                            viewModel,
+                            onDismiss = { showDialog.value = false },
+                            promotion,
+                            date.timeInMillis
+                        )
                         if (showDialog1.value) {
                             Dialog(
                                 onDismissRequest = { showDialog1.value = false }) {
@@ -198,6 +226,7 @@ fun MainDetailsScreen(navController: NavHostController) {
                         PromotionBox(
                             promotion,
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .combinedClickable(
                                     onClick = { showDialog.value = true },
                                     onLongClick = { showDialog1.value = true }
@@ -205,6 +234,13 @@ fun MainDetailsScreen(navController: NavHostController) {
                         )
                     }
                 }
+            }
+        }
+    }
+    BackHandler {
+        navController.navigate(Screens.MainScreen.rout) {
+            popUpTo(Screens.MainScreen.rout) {
+                inclusive = true
             }
         }
     }
