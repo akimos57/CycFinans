@@ -92,9 +92,9 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
-    // Diagrams
-    implementation 'co.yml:ycharts:1.0.0'
-
     // Calendar
     implementation "com.google.accompanist:accompanist-flowlayout:0.27.0"
+
+    // Data Store
+    implementation "androidx.datastore:datastore-preferences:1.1.0-alpha01"
 }

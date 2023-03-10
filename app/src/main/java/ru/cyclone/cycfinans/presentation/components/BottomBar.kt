@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
@@ -31,7 +32,13 @@ fun BottomNavigationBar(
             BottomNavigationItem(
                 selected = currentRoute == item.rout,
                 onClick = {
-                          navController.navigate(item.rout)
+                          navController.navigate(item.rout) {
+                              popUpTo(navController.graph.findStartDestination().id) {
+                                  saveState = true
+                              }
+                              launchSingleTop = true
+                              restoreState = true
+                          }
                 },
                 icon = { Icon(
                     painter = painterResource(id = item.iconId),
