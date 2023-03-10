@@ -21,7 +21,7 @@ fun MainBox(
     // Средств осталось
     val currentPrice = income - expenses
     // for LinearProgress
-    val progress = currentPrice/income.toFloat()
+    val progress = if (income != 0) currentPrice/income.toFloat() else 0F
 
     Box(
         modifier = Modifier

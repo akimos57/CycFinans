@@ -54,11 +54,11 @@ fun MainScreen(navController: NavHostController) {
     val fullIncome = history.value?.filter {
         c.timeInMillis = it.time.time
         it.type
-    }?.sumOf { it.price }
+    }?.sumOf { it.price }?:0
     val fullExpenses = history.value?.filter {
         c.timeInMillis = it.time.time
         !it.type
-    }?.sumOf { it.price }
+    }?.sumOf { it.price }?:0
 
     Scaffold { paddingValues ->
         Column(
@@ -88,14 +88,12 @@ fun MainScreen(navController: NavHostController) {
                         .size(33.dp)
                 )
             }
-            if ((fullIncome != null) and (fullExpenses != null)) {
-                MainBox(
-                    modifier = Modifier
-                        .clickable { navController.navigate(Screens.StatisticsScreen.rout) },
-                    income = fullIncome!!,
-                    expenses = fullExpenses!!
-                    )
-            }
+            MainBox(
+                modifier = Modifier
+                    .clickable { navController.navigate(Screens.StatisticsScreen.rout) },
+                income = fullIncome,
+                expenses = fullExpenses
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
