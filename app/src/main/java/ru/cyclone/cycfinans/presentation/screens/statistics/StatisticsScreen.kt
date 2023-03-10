@@ -14,11 +14,16 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.presentation.components.Calendar
 import ru.cyclone.cycfinans.presentation.components.ChartDonut
 import ru.cyclone.cycfinans.presentation.navigation.Screens
@@ -26,6 +31,7 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun StatisticsScreen(navController: NavHostController) {
     var visible by remember {
@@ -40,6 +46,7 @@ fun StatisticsScreen(navController: NavHostController) {
     vm.date = date
 
     val categories = vm.categories.observeAsState()
+    val categories1 = vm.categories1.observeAsState()
 
     Column(
         modifier = Modifier
@@ -85,7 +92,6 @@ fun StatisticsScreen(navController: NavHostController) {
                     fontWeight = FontWeight.Light
                 )
             }
-
             Calendar(
                 visible = visible,
                 currentMonth = currentMonth,
@@ -93,6 +99,7 @@ fun StatisticsScreen(navController: NavHostController) {
                 confirmButtonClicked = {
                         _month, _year ->
                     date = YearMonth.of(_year, _month)
+                    vm.updateAllPromotions()
                     visible = false
                 },
                 cancelClicked = {
@@ -102,10 +109,121 @@ fun StatisticsScreen(navController: NavHostController) {
             )
 
         }
-        categories.value?.let {
-            ChartDonut(
-                data = it
-            )
+        val pagerState = rememberPagerState()
+        val coroutine = rememberCoroutineScope()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            when (pagerState.currentPage) {
+                0 -> {
+                    Column(
+                        modifier = Modifier
+                            .width(IntrinsicSize.Min)
+                            .background(Color.LightGray)
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 15.dp)
+                                .padding(top = 8.dp, bottom = 3.dp),
+                            text = "Расходы"
+                        )
+                        Box(
+                            modifier = Modifier
+                                .height(5.dp)
+                                .fillMaxWidth()
+                                .background(Color.Gray)
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .width(IntrinsicSize.Min)
+                            .background(MaterialTheme.colors.secondary)
+                            .clickable {
+                                coroutine.launch {
+                                    pagerState.scrollToPage(1)
+                                }
+                            }
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 15.dp)
+                                .padding(top = 8.dp, bottom = 3.dp),
+                            text = "Доходы"
+                        )
+                        Box(
+                            modifier = Modifier
+                                .height(5.dp)
+                                .fillMaxWidth()
+                                .background(Color.LightGray)
+                        )
+                    }
+                }
+                1 -> {
+                    Column(
+                        modifier = Modifier
+                            .width(IntrinsicSize.Min)
+                            .background(MaterialTheme.colors.secondary)
+                            .clickable {
+                                coroutine.launch {
+                                    pagerState.scrollToPage(0)
+                                }
+                            }
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 15.dp)
+                                .padding(top = 8.dp, bottom = 3.dp),
+                            text = "Расходы"
+                        )
+                        Box(
+                            modifier = Modifier
+                                .height(5.dp)
+                                .fillMaxWidth()
+                                .background(Color.LightGray)
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .width(IntrinsicSize.Min)
+                            .background(Color.LightGray)
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 15.dp)
+                                .padding(top = 8.dp, bottom = 3.dp),
+                            text = "Доходы"
+                        )
+                        Box(
+                            modifier = Modifier
+                                .height(5.dp)
+                                .fillMaxWidth()
+                                .background(Color.Gray)
+                        )
+                    }
+                }
+            }
+        }
+        HorizontalPager(
+            count = 2,
+            state = pagerState
+        ) { page ->
+            when (page) {
+                0 -> {
+                    categories.value?.let {
+                        ChartDonut(
+                            data = it
+                        )
+                    }
+                }
+                1 -> {
+                    categories1.value?.let {
+                        ChartDonut(
+                            data = it
+                        )
+                    }
+                }
+            }
         }
     }
 }

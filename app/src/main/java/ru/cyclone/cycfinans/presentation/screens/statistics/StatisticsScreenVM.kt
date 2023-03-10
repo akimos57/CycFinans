@@ -19,19 +19,34 @@ class StatisticsScreenVM @Inject constructor(
     private val _categories = MutableLiveData<Map<String, Int>>()
     val categories: LiveData<Map<String, Int>>
         get() = _categories
+    private val _categories1 = MutableLiveData<Map<String, Int>>()
+    val categories1: LiveData<Map<String, Int>>
+        get() = _categories1
 
-    private fun updateAllPromotions() {
+    fun updateAllPromotions() {
         viewModelScope.launch {
             getAllPromotionUseCase.invoke().let {
-                val cm = it.filter { promotion ->
+                val promotionListExpenses = it.filter { promotion ->
                     val c = Calendar.getInstance()
                     c.timeInMillis = promotion.time.time
-                    println(date)
-                    date == YearMonth.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1)
+                    (date == YearMonth.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1)) and
+                            (!promotion.type)
                 }
-                _categories.postValue(cm.associate { promotion ->
-                    val sum = cm.filter { p -> p.category == promotion.category }.sumOf { p ->
-                        if (!p.type) p.price else 0
+                val promotionListIncomes = it.filter { promotion ->
+                    val c = Calendar.getInstance()
+                    c.timeInMillis = promotion.time.time
+                    (date == YearMonth.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1)) and
+                            (promotion.type)
+                }
+                _categories.postValue(promotionListExpenses.associate { promotion ->
+                    val sum = promotionListExpenses.filter { p -> p.category == promotion.category }.sumOf { p ->
+                        p.price
+                    }
+                    Pair(promotion.category, sum)
+                })
+                _categories1.postValue(promotionListIncomes.associate { promotion ->
+                    val sum = promotionListIncomes.filter { p -> p.category == promotion.category }.sumOf { p ->
+                        p.price
                     }
                     Pair(promotion.category, sum)
                 })

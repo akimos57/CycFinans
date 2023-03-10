@@ -42,7 +42,9 @@ class MainDetailsScreenVM @Inject constructor(
                 val cm = it.filter { promotion ->
                     val c = Calendar.getInstance()
                     c.timeInMillis = promotion.time.time
-                    date?.get(Calendar.DATE) == c.get(Calendar.DATE)
+                    (date?.get(Calendar.YEAR) == c.get(Calendar.YEAR)) and
+                            (date?.get(Calendar.MONTH) == c.get(Calendar.MONTH)) and
+                            (date?.get(Calendar.DATE) == c.get(Calendar.DATE))
                 }
                 _promotions.postValue(cm)
             }
