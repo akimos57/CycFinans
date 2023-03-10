@@ -10,18 +10,20 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.presentation.components.Calendar
 import ru.cyclone.cycfinans.presentation.components.ChartDonut
 import ru.cyclone.cycfinans.presentation.navigation.Screens
-import java.time.Month
-import java.time.format.TextStyle
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Composable
@@ -31,14 +33,13 @@ fun StatisticsScreen(navController: NavHostController) {
     }
 
     val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
-
-    var month = Month.of(currentMonth + 1).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
-        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
-    var date by remember {
-        mutableStateOf("$month, $currentYear")
-    }
+    var date by remember { mutableStateOf(YearMonth.of(currentYear, currentMonth + 1)) }
+    val vm = hiltViewModel<StatisticsScreenVM>()
+    vm.date = date
+
+    val categories = vm.categories.observeAsState()
 
     Column(
         modifier = Modifier
@@ -78,7 +79,8 @@ fun StatisticsScreen(navController: NavHostController) {
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 8.dp),
-                    text = date,
+                    text = date.format(DateTimeFormatter.ofPattern("LLL, y", Locale.getDefault()))
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Light
                 )
@@ -89,10 +91,8 @@ fun StatisticsScreen(navController: NavHostController) {
                 currentMonth = currentMonth,
                 currentYear = currentYear,
                 confirmButtonClicked = {
-                        month_, year_ ->
-                    month = Month.of(month_).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
-                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-                    date = "$month, $year_"
+                        _month, _year ->
+                    date = YearMonth.of(_year, _month)
                     visible = false
                 },
                 cancelClicked = {
@@ -102,17 +102,11 @@ fun StatisticsScreen(navController: NavHostController) {
             )
 
         }
-        
-        ChartDonut(
-            data = mapOf(
-                Pair("Еда", 150),
-                Pair("Одежда", 120),
-                Pair("Налоги", 50),
-                Pair("Развлечения", 170),
-                Pair("Остальное", 20),
+        categories.value?.let {
+            ChartDonut(
+                data = it
             )
-        )
-
+        }
     }
 }
 

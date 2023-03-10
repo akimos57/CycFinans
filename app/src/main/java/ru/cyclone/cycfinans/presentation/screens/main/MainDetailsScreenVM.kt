@@ -14,7 +14,7 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class MainDetailsVM @Inject constructor(
+class MainDetailsScreenVM @Inject constructor(
     private val getAllPromotionUseCase: GetAllPromotionUseCase,
     private val deletePromotionUseCase: DeletePromotionUseCase,
     private val addPromotionUseCase: AddPromotionUseCase

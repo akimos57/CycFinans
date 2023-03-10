@@ -14,26 +14,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import ru.cyclone.cycfinans.domain.model.Promotion
-import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsVM
+import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
 import java.sql.Time
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun EditPromotion(
     show: Boolean,
-    vm: MainDetailsVM,
+    vm: MainDetailsScreenVM,
     onDismiss: () -> Unit,
     promotion: Promotion,
     date: Long
 ){
     if (show) {
         var price by remember { mutableStateOf(promotion.price.toString()) }
-        var category by remember { mutableStateOf(promotion.category) }
+        val category = remember { mutableStateOf(promotion.category) }
         var time by remember { mutableStateOf(Time(date)) }
 
         val c = Calendar.getInstance()
@@ -44,8 +44,10 @@ fun EditPromotion(
                 q.set(Calendar.HOUR_OF_DAY, selectedHour)
                 q.set(Calendar.MINUTE, selectedMinute)
                 time = Time(q.timeInMillis)
-            }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], false)
+            }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], true)
+        val showDialog = remember { mutableStateOf(false) }
         
+        CategoryChooseDialog(show = showDialog, onDismiss = { showDialog.value = false }, category_picker = category)
         Dialog(
             onDismissRequest = onDismiss
         ) {
@@ -61,7 +63,7 @@ fun EditPromotion(
                 ) {
                     Column {
                         TextField(
-                            value = price,
+                            value = if (price == "0") "" else price,
                             onValueChange = { price = it },
                             modifier = Modifier
                                 .fillMaxWidth(),
@@ -72,39 +74,28 @@ fun EditPromotion(
                                 backgroundColor = MaterialTheme.colors.secondary
                             )
                         )
-                        TextField(
-                            value = category,
-                            onValueChange = { category = it },
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text,
-                                autoCorrect = true,
-                                capitalization = KeyboardCapitalization.Sentences
-                            ),
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = MaterialTheme.colors.secondary,
-                            )
-                        )
                         TextButton(onClick = { tp.show() }) {
-                            Text(text = "${time.hours}:${time.minutes}")
+                            Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time))
+                        }
+                        TextButton(onClick = { showDialog.value = true }) {
+                            Text(text = category.value.ifEmpty { "Choose category" })
                         }
                         TextButton(
                             onClick = {
                                 val color = Color.White.toArgb()
-                                println(time.time)
-                                vm.addPromotion(
-                                    Promotion(
-                                        id = promotion.id,
-                                        type = promotion.type,
-                                        category = category,
-                                        colorCategory = color,
-                                        price = price.toInt(),
-                                        time = time
-                                    )
-                                ) {
-                                    onDismiss()
+                                if (price != "0"){
+                                    vm.addPromotion(
+                                        Promotion(
+                                            id = promotion.id,
+                                            type = promotion.type,
+                                            category = category.value,
+                                            colorCategory = color,
+                                            price = price.toInt(),
+                                            time = time
+                                        )
+                                    ) { }
                                 }
+                                onDismiss()
                             },
                             modifier = Modifier
                                 .fillMaxSize(),

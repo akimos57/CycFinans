@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Promotion
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
@@ -38,8 +39,8 @@ fun PromotionBox(
                 modifier = modifier
                     .padding(16.dp)
             ) {
-                var price = String.format(Locale.getDefault(), "%,d", promotion.price)
-                val text = if (promotion.type) "+ $price₽" else "- $price₽"
+                val price = String.format(Locale.getDefault(), "%,d", promotion.price)
+                val text = if (promotion.type) "+$price ₽" else "-$price ₽"
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
@@ -52,7 +53,7 @@ fun PromotionBox(
                     Text(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally),
-                        text = "others",
+                        text = "Others",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center
@@ -70,7 +71,7 @@ fun PromotionBox(
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    text = "${promotion.time.hours}:${promotion.time.minutes}",
+                    text = SimpleDateFormat("hh:mm", Locale.getDefault()).format(promotion.time),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center

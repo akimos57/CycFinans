@@ -43,9 +43,10 @@ fun MainDetailsScreen(
     year: String?
 ) {
     val date = Calendar.getInstance()
+    date.clear()
     date.set(year!!.toInt(), month!!.toInt() - 1, day!!.toInt())
 
-    val viewModel = hiltViewModel<MainDetailsVM>()
+    val viewModel = hiltViewModel<MainDetailsScreenVM>()
     viewModel.date = date
     val promotions = viewModel.promotions.observeAsState(listOf()).value
 
@@ -138,7 +139,7 @@ fun MainDetailsScreen(
                     promotions.filter { it.type }.forEach { promotion ->
                         val showDialog = remember { mutableStateOf(false) }
                         val showDialog1 = remember { mutableStateOf(false) }
-                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion, date.timeInMillis)
+                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion, promotion.time.time)
                         if (showDialog1.value) {
                             Dialog(
                                 onDismissRequest = { showDialog1.value = false }) {
@@ -180,7 +181,7 @@ fun MainDetailsScreen(
             ) { paddingValues ->
                 EditPromotion(
                     show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
-                        time = Time(System.currentTimeMillis()),
+                        time = Time(date.timeInMillis),
                         type = type,
                         category = "",
                         colorCategory = 0,
@@ -212,7 +213,7 @@ fun MainDetailsScreen(
                             viewModel,
                             onDismiss = { showDialog.value = false },
                             promotion,
-                            date.timeInMillis
+                            promotion.time.time
                         )
                         if (showDialog1.value) {
                             Dialog(
