@@ -11,6 +11,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 
 @Composable
 fun MainBox(
@@ -59,7 +60,9 @@ fun MainBox(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     LinearProgress(
-                        progress = progress
+                        progress = progress,
+                        color = fab1,
+                        width = 250.dp
                     )
                 }
                 Row(

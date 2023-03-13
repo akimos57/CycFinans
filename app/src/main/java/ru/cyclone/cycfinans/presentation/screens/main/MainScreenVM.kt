@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.domain.model.Promotion
-import ru.cyclone.cycfinans.domain.usecases.GetAllPromotionUseCase
+import ru.cyclone.cycfinans.domain.usecases.promotion.GetAllPromotionUseCase
 import java.time.YearMonth
 import java.util.*
 import javax.inject.Inject

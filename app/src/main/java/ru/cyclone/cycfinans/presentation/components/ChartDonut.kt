@@ -119,10 +119,9 @@ fun DetailsPieChart(
         data.values.forEachIndexed { index, value ->
             DetailsPieChartItem(
                 data = Pair(data.keys.elementAt(index), value),
-                color = colors[index]
+                color = colors[index],
             )
         }
-
     }
 }
 
@@ -132,9 +131,10 @@ fun DetailsPieChartItem(
     height: Dp = 45.dp,
     color: Color
 ) {
+
     Surface(
         modifier = Modifier
-            .padding(vertical = 10.dp, horizontal = 30.dp),
+            .padding(vertical = 10.dp, horizontal = 12.dp),
         color = Color.Transparent
     ) {
         Row(
@@ -142,36 +142,40 @@ fun DetailsPieChartItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .height(24.dp)
-                    .width(24.dp)
-                    .background(
-                        color = color,
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                    .size(height)
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.5f)
             ) {
-                Text(
+                Column(
                     modifier = Modifier
-                        .padding(start = 15.dp),
-                    text = data.first,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 18.sp,
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(start = 15.dp),
-                    text = data.second.toString(),
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 16.sp,
-                    color = Color.Gray
-                )
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 15.dp),
+                        text = data.first,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 16.sp,
+                    )
+                    val price = data.second.toString()
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 15.dp),
+                        text = "$price ₽",
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                }
             }
+            val progress = data.second
+//            карачесвкая шоссе 94
+            val p = progress.toFloat()
+
+            LinearProgress(
+                progress = p,
+                color = color,
+                width = 150.dp
+            )
         }
     }
 }

@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.domain.usecases
+package ru.cyclone.cycfinans.domain.usecases.promotion
 
 import ru.cyclone.cycfinans.domain.repository.PromotionRepository
 import javax.inject.Inject

@@ -77,6 +77,8 @@ fun MainScreen(navController: NavHostController) {
                 )
             ) {
                 Text(
+                    modifier = Modifier
+                        .padding(start = 8.dp),
                     text = date,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Light

@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.cyclone.cycfinans.domain.usecases.GetAllPromotionUseCase
+import ru.cyclone.cycfinans.domain.usecases.promotion.GetAllPromotionUseCase
 import ru.cyclone.cycfinans.presentation.components.Categories
 import java.util.*
 import javax.inject.Inject

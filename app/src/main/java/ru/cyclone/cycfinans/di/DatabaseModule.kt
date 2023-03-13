@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.cyclone.cycfinans.data.local.AppDatabase
 import ru.cyclone.cycfinans.data.local.dao.PromotionRepositoryImpl
+//import ru.cyclone.cycfinans.data.local.dao.TargeteRepositoryImpl
 
 
 @InstallIn(SingletonComponent::class)
@@ -28,6 +29,11 @@ class DatabaseModule {
     fun provideTransactionDao(appDatabase: AppDatabase): PromotionRepositoryImpl {
         return appDatabase.promotionDao()
     }
+
+//    @Provides
+//    fun provideTargetDao(appDatabase: AppDatabase): TargeteRepositoryImpl{
+//        return appDatabase.targeteDao()
+//    }
 
 }
 

@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -83,14 +84,27 @@ fun StatisticsScreen(navController: NavHostController) {
                     .clickable { visible = true },
                 contentAlignment = Alignment.Center
             ) {
-                Text(
+                Row(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp),
-                    text = date.format(DateTimeFormatter.ofPattern("LLL, y", Locale.getDefault()))
-                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Light
-                )
+                        .padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 8.dp),
+                        text = date.format(DateTimeFormatter.ofPattern("LLL, y", Locale.getDefault()))
+                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Light
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        contentDescription = "arrow",
+                        modifier = Modifier
+                            .size(28.dp)
+                    )
+                }
+
             }
             Calendar(
                 visible = visible,
@@ -107,103 +121,107 @@ fun StatisticsScreen(navController: NavHostController) {
                 },
                 onDismiss = { visible = false }
             )
-
         }
         val pagerState = rememberPagerState()
         val coroutine = rememberCoroutineScope()
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier,
+            horizontalArrangement = Arrangement.Center
         ) {
-            when (pagerState.currentPage) {
-                0 -> {
-                    Column(
-                        modifier = Modifier
-                            .width(IntrinsicSize.Min)
-                            .background(Color.LightGray)
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .padding(horizontal = 15.dp)
-                                .padding(top = 8.dp, bottom = 3.dp),
-                            text = "Расходы"
-                        )
-                        Box(
-                            modifier = Modifier
-                                .height(5.dp)
-                                .fillMaxWidth()
-                                .background(Color.Gray)
-                        )
-                    }
-                    Column(
-                        modifier = Modifier
-                            .width(IntrinsicSize.Min)
-                            .background(MaterialTheme.colors.secondary)
-                            .clickable {
-                                coroutine.launch {
-                                    pagerState.scrollToPage(1)
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    when (pagerState.currentPage) {
+                        0 -> {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                            ) {
+                                Row(modifier = Modifier) {
+                                    Column(
+                                        modifier = Modifier
+                                            .width(IntrinsicSize.Min)
+                                            .background(Color.LightGray),
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(horizontal = 15.dp, vertical = 4.dp),
+                                            text = "Расходы"
+                                        )
+                                    }
+
+                                    Column(
+                                        modifier = Modifier
+                                            .width(IntrinsicSize.Min)
+                                            .background(MaterialTheme.colors.secondary)
+                                            .clickable {
+                                                coroutine.launch {
+                                                    pagerState.scrollToPage(1)
+                                                }
+                                            },
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(horizontal = 15.dp, vertical = 4.dp),
+                                            text = "Доходы"
+                                        )
+                                    }
                                 }
                             }
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .padding(horizontal = 15.dp)
-                                .padding(top = 8.dp, bottom = 3.dp),
-                            text = "Доходы"
-                        )
-                        Box(
-                            modifier = Modifier
-                                .height(5.dp)
-                                .fillMaxWidth()
-                                .background(Color.LightGray)
-                        )
-                    }
-                }
-                1 -> {
-                    Column(
-                        modifier = Modifier
-                            .width(IntrinsicSize.Min)
-                            .background(MaterialTheme.colors.secondary)
-                            .clickable {
-                                coroutine.launch {
-                                    pagerState.scrollToPage(0)
+
+                        }
+                        1 -> {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                            ) {
+                                Row(modifier = Modifier) {
+                                    Column(
+                                        modifier = Modifier
+                                            .width(IntrinsicSize.Min)
+                                            .background(MaterialTheme.colors.secondary)
+                                            .clickable {
+                                                coroutine.launch {
+                                                    pagerState.scrollToPage(0)
+                                                }
+                                            },
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(horizontal = 15.dp, vertical = 4.dp),
+                                            text = "Расходы"
+                                        )
+                                    }
+                                    Column(
+                                        modifier = Modifier
+                                            .width(IntrinsicSize.Min)
+                                            .background(Color.LightGray),
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(horizontal = 15.dp, vertical = 4.dp),
+                                            text = "Доходы"
+                                        )
+                                    }
                                 }
                             }
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .padding(horizontal = 15.dp)
-                                .padding(top = 8.dp, bottom = 3.dp),
-                            text = "Расходы"
-                        )
-                        Box(
-                            modifier = Modifier
-                                .height(5.dp)
-                                .fillMaxWidth()
-                                .background(Color.LightGray)
-                        )
-                    }
-                    Column(
-                        modifier = Modifier
-                            .width(IntrinsicSize.Min)
-                            .background(Color.LightGray)
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .padding(horizontal = 15.dp)
-                                .padding(top = 8.dp, bottom = 3.dp),
-                            text = "Доходы"
-                        )
-                        Box(
-                            modifier = Modifier
-                                .height(5.dp)
-                                .fillMaxWidth()
-                                .background(Color.Gray)
-                        )
+                        }
                     }
                 }
             }
         }
+
+
         HorizontalPager(
             count = 2,
             state = pagerState
