@@ -46,10 +46,10 @@ fun DayBox(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = String.format(Locale.getDefault(), "+%,d ₽", income)
+                    text = String.format(Locale.getDefault(), "+ %,d ₽", income)
                 )
                 Text(
-                    text = String.format(Locale.getDefault(), "-%,d ₽", expenses)
+                    text = String.format(Locale.getDefault(), "- %,d ₽", expenses)
                 )
             }
 

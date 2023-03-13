@@ -3,10 +3,7 @@
 package ru.cyclone.cycfinans.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Promotion
+import ru.cyclone.cycfinans.presentation.ui.theme.gold
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,22 +29,24 @@ fun PromotionBox(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(120.dp)
                 .padding(horizontal = 8.dp, vertical = 8.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colors.secondary)
         ) {
             Column(
                 modifier = modifier
-                    .padding(16.dp)
+                    .fillMaxSize()
+                    .padding(top = 24.dp)
             ) {
                 val price = String.format(Locale.getDefault(), "%,d", promotion.price)
-                val text = if (promotion.type) "+$price ₽" else "-$price ₽"
+                val text = if (promotion.type) "+ $price ₽" else "- $price ₽"
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     text = text,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Normal,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center
                 )
                 if (promotion.category.isEmpty()) {
@@ -55,8 +55,9 @@ fun PromotionBox(
                             .align(Alignment.CenterHorizontally),
                         text = "Others",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center,
+                        color = gold
                     )
                 } else {
                     Text(
@@ -64,16 +65,18 @@ fun PromotionBox(
                             .align(Alignment.CenterHorizontally),
                         text = promotion.category,
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center,
+                        color = gold
                     )
                 }
                 Text(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
+                        .align(Alignment.End)
+                        .padding(end = 6.dp),
                     text = SimpleDateFormat("hh:mm", Locale.getDefault()).format(promotion.time),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center
                 )
             }

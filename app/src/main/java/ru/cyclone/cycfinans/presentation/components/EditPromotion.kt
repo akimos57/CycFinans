@@ -3,8 +3,10 @@
 package ru.cyclone.cycfinans.presentation.components
 
 import android.app.TimePickerDialog
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -16,9 +18,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
+import ru.cyclone.cycfinans.presentation.ui.theme.fab1
+import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,7 +63,7 @@ fun EditPromotion(
                     modifier = Modifier
                         .height(220.dp)
                         .padding(horizontal = 36.dp)
-                        .clip(RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(24.dp))
                         .background(MaterialTheme.colors.secondary)
                 ) {
                     Column {
@@ -72,39 +77,84 @@ fun EditPromotion(
                             ),
                             colors = TextFieldDefaults.textFieldColors(
                                 backgroundColor = MaterialTheme.colors.secondary
-                            )
+                            ),
+                            placeholder = {
+                                Text(
+                                    text = "Введите значение",
+                                    fontSize = 16.sp
+                                )
+                            }
                         )
-                        TextButton(onClick = { tp.show() }) {
-                            Text(text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time))
-                        }
-                        TextButton(onClick = { showDialog.value = true }) {
-                            Text(text = category.value.ifEmpty { "Choose category" })
+                        TextButton(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            onClick = { tp.show() }
+                        ) {
+                            Text(
+                                text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time),
+                                color = MaterialTheme.colors.primaryVariant
+                                )
                         }
                         TextButton(
-                            onClick = {
-                                val color = Color.White.toArgb()
-                                if (price != "0"){
-                                    vm.addPromotion(
-                                        Promotion(
-                                            id = promotion.id,
-                                            type = promotion.type,
-                                            category = category.value,
-                                            colorCategory = color,
-                                            price = price.toInt(),
-                                            time = time
-                                        )
-                                    ) { }
-                                }
-                                onDismiss()
-                            },
                             modifier = Modifier
-                                .fillMaxSize(),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.secondary,
-                            )
+                                .fillMaxWidth(),
+                            onClick = { showDialog.value = true }
                         ) {
-                            Text(text = "Add")
+                            Text(text = category.value.ifEmpty { "Выберите категорию" })
                         }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            OutlinedButton(
+                                modifier = Modifier
+//                                    .padding(end = 20.dp)
+                                ,
+                                shape = CircleShape,
+                                border = BorderStroke(1.dp, color = Color.Transparent),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    backgroundColor = MaterialTheme.colors.secondary,
+                                ),
+                                onClick = { showDialog.value = false }
+                            ) {
+                                Text(
+                                    text = "Отмена",
+                                    color = MaterialTheme.colors.primaryVariant
+                                )
+                            }
+                            OutlinedButton(
+                                onClick = {
+                                    val color = Color.White.toArgb()
+                                    if (price != "0"){
+                                        vm.addPromotion(
+                                            Promotion(
+                                                id = promotion.id,
+                                                type = promotion.type,
+                                                category = category.value,
+                                                colorCategory = color,
+                                                price = price.toInt(),
+                                                time = time
+                                            )
+                                        ) { }
+                                    }
+                                    onDismiss()
+                                },
+                                modifier = Modifier
+//                                    .padding(end = 20.dp),
+                                        ,
+                                shape = CircleShape,
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    backgroundColor = fab1,
+                                )
+                            ) {
+                                Text(
+                                    text = "Сохранить",
+                                    color = MaterialTheme.colors.primaryVariant
+                                )
+                            }
+                        }
+
                     }
 
                 }

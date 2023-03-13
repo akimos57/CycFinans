@@ -1,10 +1,9 @@
 package ru.cyclone.cycfinans.presentation.screens.main
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -17,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -143,9 +143,71 @@ fun MainDetailsScreen(
                         if (showDialog1.value) {
                             Dialog(
                                 onDismissRequest = { showDialog1.value = false }) {
-                                TextButton(
-                                    onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
-                                    Text(text = "Are u sure?")
+                                Box(
+                                    modifier = Modifier
+                                        .height(120.dp)
+                                        .width(250.dp)
+                                        .clip(RoundedCornerShape(24.dp))
+                                        .background(MaterialTheme.colors.secondary)
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 24.dp),
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            text = "Удалить?",
+                                            fontSize = 20.sp,
+                                            fontWeight = FontWeight.Medium,
+                                        )
+                                    }
+
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxSize(),
+                                        verticalArrangement = Arrangement.Bottom
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.End
+                                        ) {
+                                            OutlinedButton(
+                                                modifier = Modifier
+                                                    .padding(end = 20.dp),
+                                                shape = CircleShape,
+                                                border = BorderStroke(1.dp, color = Color.Transparent),
+                                                colors = ButtonDefaults.outlinedButtonColors(
+                                                    backgroundColor = MaterialTheme.colors.secondary,
+                                                    contentColor = MaterialTheme.colors.primaryVariant
+                                                ),
+                                                onClick = { showDialog1.value = false }) {
+                                                Text(
+                                                    text = "Отмена",
+                                                    fontSize = 14.sp,
+                                                    fontWeight = FontWeight.Medium
+                                                )
+                                            }
+                                            OutlinedButton(
+                                                modifier = Modifier
+                                                    .padding(end = 20.dp),
+                                                shape = CircleShape,
+                                                border = BorderStroke(1.dp, color = Color.Transparent),
+                                                colors = ButtonDefaults.outlinedButtonColors(
+                                                    backgroundColor = fab2,
+                                                    contentColor = MaterialTheme.colors.primaryVariant
+                                                ),
+                                                onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
+                                                Text(
+                                                    text = "Удалить",
+                                                    fontSize = 14.sp,
+                                                    fontWeight = FontWeight.Medium,
+                                                )
+                                            }
+                                        }
+                                    }
+
                                 }
                             }
                         }
@@ -218,9 +280,71 @@ fun MainDetailsScreen(
                         if (showDialog1.value) {
                             Dialog(
                                 onDismissRequest = { showDialog1.value = false }) {
-                                TextButton(
-                                    onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
-                                    Text(text = "Are u sure?")
+                                Box(
+                                    modifier = Modifier
+                                        .height(120.dp)
+                                        .width(250.dp)
+                                        .clip(RoundedCornerShape(24.dp))
+                                        .background(MaterialTheme.colors.secondary)
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(top = 24.dp),
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            text = "Удалить?",
+                                            fontSize = 20.sp,
+                                            fontWeight = FontWeight.Medium,
+                                        )
+                                    }
+
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxSize(),
+                                        verticalArrangement = Arrangement.Bottom
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.End
+                                        ) {
+                                            OutlinedButton(
+                                                modifier = Modifier
+                                                    .padding(end = 20.dp),
+                                                shape = CircleShape,
+                                                border = BorderStroke(1.dp, color = Color.Transparent),
+                                                colors = ButtonDefaults.outlinedButtonColors(
+                                                    backgroundColor = MaterialTheme.colors.secondary,
+                                                    contentColor = MaterialTheme.colors.primaryVariant
+                                                ),
+                                                onClick = { showDialog1.value = false }) {
+                                                Text(
+                                                    text = "Отмена",
+                                                    fontSize = 14.sp,
+                                                    fontWeight = FontWeight.Medium
+                                                )
+                                            }
+                                            OutlinedButton(
+                                                modifier = Modifier
+                                                    .padding(end = 20.dp),
+                                                shape = CircleShape,
+                                                border = BorderStroke(1.dp, color = Color.Transparent),
+                                                colors = ButtonDefaults.outlinedButtonColors(
+                                                    backgroundColor = fab2,
+                                                    contentColor = MaterialTheme.colors.primaryVariant
+                                                ),
+                                                onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
+                                                Text(
+                                                    text = "Удалить",
+                                                    fontSize = 14.sp,
+                                                    fontWeight = FontWeight.Medium,
+                                                )
+                                            }
+                                        }
+                                    }
+
                                 }
                             }
                         }

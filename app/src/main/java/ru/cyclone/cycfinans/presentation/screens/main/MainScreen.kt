@@ -78,7 +78,7 @@ fun MainScreen(navController: NavHostController) {
             ) {
                 Text(
                     text = date,
-                    fontSize = 36.sp,
+                    fontSize = 32.sp,
                     fontWeight = FontWeight.Light
                 )
                 Icon(
