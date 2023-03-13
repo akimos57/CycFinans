@@ -11,6 +11,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.text.NumberFormat
+import java.util.*
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 
 @Composable
@@ -47,8 +49,9 @@ fun MainBox(
                         .padding(top = 16.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
+                    val incomeString = NumberFormat.getNumberInstance(Locale.US).format(income).replace(',', ' ')
                     Text(
-                        text = "$income ₽",
+                        text = "$incomeString ₽",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -73,13 +76,15 @@ fun MainBox(
                     Column(
                         modifier = Modifier
                     ) {
+                        val expensesString = NumberFormat.getNumberInstance(Locale.US).format(expenses).replace(',', ' ')
+                        val currentPriceString = NumberFormat.getNumberInstance(Locale.US).format(currentPrice).replace(',', ' ')
                         Text(
-                            text = "Потрачено: $expenses ₽",
+                            text = "Потрачено: $expensesString ₽",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = "Осталось: $currentPrice ₽",
+                            text = "Осталось: $currentPriceString ₽",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )

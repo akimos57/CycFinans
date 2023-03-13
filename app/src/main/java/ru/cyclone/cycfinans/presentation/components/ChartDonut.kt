@@ -4,9 +4,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -100,7 +98,8 @@ fun ChartDonut(
         }
         DetailsPieChart(
             data = data,
-            colors = colors
+            colors = colors,
+            totalSum = totalSum
         )
     }
 }
@@ -108,7 +107,8 @@ fun ChartDonut(
 @Composable
 fun DetailsPieChart(
     data: Map<String, Int>,
-    colors: List<Color>
+    colors: List<Color>,
+    totalSum: Int
 ) {
     Column(
         modifier = Modifier
@@ -120,6 +120,7 @@ fun DetailsPieChart(
             DetailsPieChartItem(
                 data = Pair(data.keys.elementAt(index), value),
                 color = colors[index],
+                totalSum = totalSum
             )
         }
     }
@@ -129,9 +130,10 @@ fun DetailsPieChart(
 fun DetailsPieChartItem(
     data: Pair<String, Int>,
     height: Dp = 45.dp,
-    color: Color
+    color: Color,
+    totalSum: Int
 ) {
-
+    println(totalSum)
     Surface(
         modifier = Modifier
             .padding(vertical = 10.dp, horizontal = 12.dp),
@@ -167,39 +169,13 @@ fun DetailsPieChartItem(
                     )
                 }
             }
-            val progress = data.second
-//            карачесвкая шоссе 94
-            val p = progress.toFloat()
+            val progress = data.second.toFloat() / totalSum.toFloat()
 
             LinearProgress(
-                progress = p,
+                progress = progress,
                 color = color,
                 width = 150.dp
             )
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

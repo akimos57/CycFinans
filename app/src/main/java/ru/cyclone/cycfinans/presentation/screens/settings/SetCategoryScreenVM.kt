@@ -24,7 +24,8 @@ class SetCategoryScreenVM @Inject constructor(
     private fun updateLimits() {
         viewModelScope.launch {
             getAllPromotionUseCase.invoke().let { promotions ->
-                val promotionList = Categories.getAll(Locale.getDefault()) +
+                // Get all expenses categories
+                val promotionList = Categories.getAll(Locale.getDefault(), false, dataStore) +
                         (promotions.filter{ p -> (!p.type) and (p.category.isNotEmpty()) }.map { promotion ->
                     promotion.category
                 }).distinct()

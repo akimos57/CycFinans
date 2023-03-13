@@ -10,10 +10,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import ru.cyclone.cycfinans.presentation.components.BottomNavigationBar
-import ru.cyclone.cycfinans.presentation.screens.settings.SettingsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainScreen
 import ru.cyclone.cycfinans.presentation.screens.settings.SetCategoryScreen
+import ru.cyclone.cycfinans.presentation.screens.settings.SettingsScreen
 import ru.cyclone.cycfinans.presentation.screens.statistics.StatisticsScreen
 import ru.cyclone.cycfinans.presentation.screens.target.AddTarget
 import ru.cyclone.cycfinans.presentation.screens.target.TargetScreen
@@ -58,7 +58,8 @@ fun SetupNavHost(navController: NavHostController) {
                 MainDetailsScreen(navController = navController,
                     it.arguments?.getString("day"),
                     it.arguments?.getString("month"),
-                    it.arguments?.getString("year")
+                    it.arguments?.getString("year"),
+                    dataStore
                 )
             }
             composable(route = Screens.TargetScreen.rout) {

@@ -20,21 +20,29 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
-import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun EditPromotion(
     show: Boolean,
     vm: MainDetailsScreenVM,
     onDismiss: () -> Unit,
     promotion: Promotion,
-    date: Long
+    date: Long,
+    dataStore: DataStore<Preferences>
 ){
     if (show) {
         var price by remember { mutableStateOf(promotion.price.toString()) }
@@ -52,7 +60,7 @@ fun EditPromotion(
             }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], true)
         val showDialog = remember { mutableStateOf(false) }
         
-        CategoryChooseDialog(show = showDialog, onDismiss = { showDialog.value = false }, category_picker = category)
+        CategoryChooseDialog(show = showDialog, onDismiss = { showDialog.value = false }, category_picker = category, type = promotion.type, dataStore)
         Dialog(
             onDismissRequest = onDismiss
         ) {
@@ -93,7 +101,7 @@ fun EditPromotion(
                             Text(
                                 text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time),
                                 color = MaterialTheme.colors.primaryVariant
-                                )
+                            )
                         }
                         TextButton(
                             modifier = Modifier
@@ -108,9 +116,7 @@ fun EditPromotion(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             OutlinedButton(
-                                modifier = Modifier
-//                                    .padding(end = 20.dp)
-                                ,
+//                                modifier = Modifier.padding(end = 20.dp),
                                 shape = CircleShape,
                                 border = BorderStroke(1.dp, color = Color.Transparent),
                                 colors = ButtonDefaults.outlinedButtonColors(
@@ -123,38 +129,48 @@ fun EditPromotion(
                                     color = MaterialTheme.colors.primaryVariant
                                 )
                             }
-                            OutlinedButton(
-                                onClick = {
-                                    val color = Color.White.toArgb()
-                                    if (price != "0"){
-                                        vm.addPromotion(
-                                            Promotion(
-                                                id = promotion.id,
-                                                type = promotion.type,
-                                                category = category.value,
-                                                colorCategory = color,
-                                                price = price.toInt(),
-                                                time = time
-                                            )
-                                        ) { }
-                                    }
-                                    onDismiss()
-                                },
-                                modifier = Modifier
-//                                    .padding(end = 20.dp),
-                                        ,
-                                shape = CircleShape,
-                                colors = ButtonDefaults.outlinedButtonColors(
-                                    backgroundColor = fab1,
-                                )
-                            ) {
-                                Text(
-                                    text = "Сохранить",
-                                    color = MaterialTheme.colors.primaryVariant
-                                )
-                            }
                         }
-
+                        OutlinedButton(
+                            onClick = {
+                                val color = Color.White.toArgb()
+                                if (price != "0"){
+                                    vm.addPromotion(
+                                        Promotion(
+                                            id = promotion.id,
+                                            type = promotion.type,
+                                            category = category.value,
+                                            colorCategory = color,
+                                            price = price.toInt(),
+                                            time = time
+                                        ),
+                                        onSuccess = {
+                                            if (!Categories.getAll(
+                                                    Locale.getDefault(),
+                                                    promotion.type,
+                                                    dataStore
+                                                ).contains(category.value)) {
+                                                GlobalScope.launch {
+                                                    dataStore.edit {
+                                                        it[stringPreferencesKey(Categories.categoryPreferencesKey)] += "\n${category.value}"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    )
+                                }
+                                onDismiss()
+                            },
+//                            modifier = Modifier.padding(end = 20.dp), 
+                            shape = CircleShape,
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                backgroundColor = fab1,
+                            )
+                        ) {
+                            Text(
+                                text = "Сохранить",
+                                color = MaterialTheme.colors.primaryVariant
+                            )
+                        }
                     }
 
                 }

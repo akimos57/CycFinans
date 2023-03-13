@@ -39,13 +39,19 @@ fun StatisticsScreen(navController: NavHostController) {
         mutableStateOf(false)
     }
 
+    // Create a YearMonth object with the current year and month
     val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 
     var date by remember { mutableStateOf(YearMonth.of(currentYear, currentMonth + 1)) }
+
+    // Get the view model from Hilt
     val vm = hiltViewModel<StatisticsScreenVM>()
+
+    // Set the date in the view model
     vm.date = date
 
+    // Observe the categories and categories1 states
     val categories = vm.categories.observeAsState()
     val categories1 = vm.categories1.observeAsState()
 
@@ -227,26 +233,9 @@ fun StatisticsScreen(navController: NavHostController) {
             state = pagerState
         ) { page ->
             when (page) {
-                0 -> {
-                    categories.value?.let {
-                        ChartDonut(
-                            data = it
-                        )
-                    }
-                }
-                1 -> {
-                    categories1.value?.let {
-                        ChartDonut(
-                            data = it
-                        )
-                    }
-                }
+                0 -> categories.value?.let { ChartDonut(data = it) }
+                1 -> categories1.value?.let { ChartDonut(data = it) }
             }
         }
     }
 }
-
-
-
-
-

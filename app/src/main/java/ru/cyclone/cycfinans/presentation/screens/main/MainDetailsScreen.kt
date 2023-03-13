@@ -21,6 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Promotion
@@ -40,7 +42,8 @@ fun MainDetailsScreen(
     navController: NavHostController,
     day: String?,
     month: String?,
-    year: String?
+    year: String?,
+    dataStore: DataStore<Preferences>
 ) {
     val date = Calendar.getInstance()
     date.clear()
@@ -139,7 +142,7 @@ fun MainDetailsScreen(
                     promotions.filter { it.type }.forEach { promotion ->
                         val showDialog = remember { mutableStateOf(false) }
                         val showDialog1 = remember { mutableStateOf(false) }
-                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion, promotion.time.time)
+                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion, promotion.time.time, dataStore)
                         if (showDialog1.value) {
                             Dialog(
                                 onDismissRequest = { showDialog1.value = false }) {
@@ -248,7 +251,8 @@ fun MainDetailsScreen(
                         category = "",
                         colorCategory = 0,
                         price = 0
-                    ), date = date.timeInMillis
+                    ), date = date.timeInMillis,
+                    dataStore
                 )
                 Column(
                     modifier = Modifier
@@ -275,7 +279,8 @@ fun MainDetailsScreen(
                             viewModel,
                             onDismiss = { showDialog.value = false },
                             promotion,
-                            promotion.time.time
+                            promotion.time.time,
+                            dataStore
                         )
                         if (showDialog1.value) {
                             Dialog(

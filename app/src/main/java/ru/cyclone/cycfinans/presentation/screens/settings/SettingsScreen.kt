@@ -43,5 +43,32 @@ fun SettingsScreen(navController: NavHostController) {
             .height(1.dp)
             .background(colorResource(id = ru.cyclone.cycnote.R.color.secondary_gray))
         )
+
+        TextButton(
+            onClick = {
+                navController.navigate(AdditionalScreens.SetCategoryScreen.rout) {
+                    popUpTo(Screens.SettingsScreen.rout) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                textAlign = TextAlign.Start,
+                text = "Set Category limits",
+                color = MaterialTheme.colors.onSurface,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 10.dp, horizontal = 10.dp)
+            )
+        }
+        Spacer( modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(colorResource(id = ru.cyclone.cycnote.R.color.secondary_gray))
+        )
     }
 }

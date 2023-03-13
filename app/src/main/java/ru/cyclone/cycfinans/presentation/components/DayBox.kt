@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import java.text.NumberFormat
 import java.util.*
 
 @Composable
@@ -45,11 +46,13 @@ fun DayBox(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val incomeString = NumberFormat.getNumberInstance(Locale.US).format(income).replace(',', ' ')
+                val expensesString = NumberFormat.getNumberInstance(Locale.US).format(expenses).replace(',', ' ')
                 Text(
-                    text = String.format(Locale.getDefault(), "+ %,d ₽", income)
+                    text = "+$incomeString ₽"
                 )
                 Text(
-                    text = String.format(Locale.getDefault(), "- %,d ₽", expenses)
+                    text = "-$expensesString ₽"
                 )
             }
 
