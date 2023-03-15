@@ -28,8 +28,9 @@ import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.presentation.components.Calendar
 import ru.cyclone.cycfinans.presentation.components.ChartDonut
 import ru.cyclone.cycfinans.presentation.navigation.Screens
+import java.time.Month
 import java.time.YearMonth
-import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.*
 
 @OptIn(ExperimentalPagerApi::class)
@@ -47,9 +48,6 @@ fun StatisticsScreen(navController: NavHostController) {
 
     // Get the view model from Hilt
     val vm = hiltViewModel<StatisticsScreenVM>()
-
-    // Set the date in the view model
-    vm.date = date
 
     // Observe the categories and categories1 states
     val categories = vm.categories.observeAsState()
@@ -95,10 +93,12 @@ fun StatisticsScreen(navController: NavHostController) {
                         .padding(horizontal = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val monthString =
+                        Month.of(date.month.value).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
                     Text(
                         modifier = Modifier
                             .padding(start = 8.dp),
-                        text = date.format(DateTimeFormatter.ofPattern("LLL, y", Locale.getDefault()))
+                        text = "$monthString, ${date.year}"
                             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Light
@@ -119,7 +119,7 @@ fun StatisticsScreen(navController: NavHostController) {
                 confirmButtonClicked = {
                         _month, _year ->
                     date = YearMonth.of(_year, _month)
-                    vm.updateAllPromotions()
+                    vm.updateAllPromotions(date)
                     visible = false
                 },
                 cancelClicked = {
@@ -226,7 +226,6 @@ fun StatisticsScreen(navController: NavHostController) {
                 }
             }
         }
-
 
         HorizontalPager(
             count = 2,

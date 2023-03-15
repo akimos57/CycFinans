@@ -15,7 +15,6 @@ import javax.inject.Inject
 class StatisticsScreenVM @Inject constructor(
     private val getAllPromotionUseCase: GetAllPromotionUseCase
 ): ViewModel() {
-    var date: YearMonth = YearMonth.now()
     private val _categories = MutableLiveData<Map<String, Int>>()
     val categories: LiveData<Map<String, Int>>
         get() = _categories
@@ -24,7 +23,7 @@ class StatisticsScreenVM @Inject constructor(
     val categories1: LiveData<Map<String, Int>>
         get() = _categories1
 
-    fun updateAllPromotions() {
+    fun updateAllPromotions(date: YearMonth = YearMonth.now()) {
         viewModelScope.launch {
             getAllPromotionUseCase.invoke().let {
                 // Get the calendar instance
@@ -35,7 +34,7 @@ class StatisticsScreenVM @Inject constructor(
                     // Check if the date is equal to the year and month of the calendar instance
                     (date == YearMonth.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1)) and
                             // Check if the promotion type is false
-                            (!promotion.type)
+                            !promotion.type
                 }
                 val promotionListIncomes = it.filter { promotion ->
                     // Set the time to the promotion time
@@ -43,7 +42,7 @@ class StatisticsScreenVM @Inject constructor(
                     // Check if the date is equal to the year and month of the calendar instance
                     (date == YearMonth.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1)) and
                             // Check if the promotion type is true
-                            (promotion.type)
+                            promotion.type
                 }
                 _categories.postValue(promotionListExpenses.associate { promotion ->
                     // Calculate the sum of the prices for each category

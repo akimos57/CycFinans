@@ -23,9 +23,18 @@ import androidx.compose.ui.window.Dialog
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.beust.klaxon.Json
+import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.util.*
+
+data class Category(
+    @Json(name = "category_table")
+    val name: String,
+    val type: Boolean,
+    val language: String
+)
 
 object Categories {
     const val categoryPreferencesKey = "CategoryPreferencesKey"
@@ -65,22 +74,43 @@ object Categories {
         dataStore: DataStore<Preferences>
     ) : List<String> = runBlocking {
         var extraCategories = listOf<String>()
-        val dataList = dataStore.data.first()[stringPreferencesKey(categoryPreferencesKey)]?.replace("null\n", "")?.split("\n")
+        val dataList = dataStore.data.first()[stringPreferencesKey(categoryPreferencesKey)]?.replace("null\n", "")?.split("\n")?.distinct()
         if (!dataList.isNullOrEmpty()) { extraCategories = dataList }
+
+        val categoryList = getCategoryByLocationAndType(
+            extraCategories.mapNotNull { Klaxon().parse<Category>(it) },
+            language = locale.language,
+            type = type
+        )
 
         when(type) {
             true -> {
                 when (locale.language) {
-                    "ru" -> incomeCategoriesRU + extraCategories
-                    else -> incomeCategories + extraCategories
+                    "ru" -> incomeCategoriesRU + categoryList
+                    else -> incomeCategories + categoryList
                 }
             }
             false -> {
                 when (locale.language) {
-                    "ru" -> categoriesRU + extraCategories
-                    else -> categories + extraCategories
+                    "ru" -> categoriesRU + categoryList
+                    else -> categories + categoryList
                 }
             }
+        }
+    }
+
+    // For future usage in translation
+    private fun getCategoryByLocationAndType(
+        categoryList: List<Category>,
+        language: String,
+        type: Boolean
+    ): List<String> = runBlocking {
+        return@runBlocking categoryList.filter { it.type == type }.map { category ->
+            val categoryName = category.name
+            if (category.language != language) {
+                // ToDo translate here
+                categoryName
+            } else categoryName
         }
     }
 

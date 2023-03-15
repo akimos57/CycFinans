@@ -2,13 +2,14 @@ package ru.cyclone.cycfinans.presentation.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.cyclone.cycfinans.presentation.components.BottomNavigationBar
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainScreen
@@ -42,8 +43,19 @@ sealed class AdditionalScreens(
 @Composable
 fun SetupNavHost(navController: NavHostController) {
     val dataStore = preferencesDataStore(name = "category_limits").getValue(LocalContext.current, Preferences::javaClass)
+    var showNavigationBar by remember { mutableStateOf(true) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    showNavigationBar = when (navBackStackEntry?.destination?.route) {
+        Screens.MainScreen.rout -> true
+        Screens.TargetScreen.rout -> true
+        Screens.StatisticsScreen.rout -> true
+        Screens.SettingsScreen.rout -> true
+        else -> false
+    }
+
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController = navController) }
+        bottomBar = { BottomNavigationBar(navController = navController, showNavigationBar) }
     ) { paddingValues ->
         NavHost(
             navController = navController,

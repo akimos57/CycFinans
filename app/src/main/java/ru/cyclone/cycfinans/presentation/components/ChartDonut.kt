@@ -133,7 +133,6 @@ fun DetailsPieChartItem(
     color: Color,
     totalSum: Int
 ) {
-    println(totalSum)
     Surface(
         modifier = Modifier
             .padding(vertical = 10.dp, horizontal = 12.dp),

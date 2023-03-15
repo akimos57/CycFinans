@@ -24,6 +24,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.beust.klaxon.Klaxon
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -48,6 +49,7 @@ fun EditPromotion(
         var price by remember { mutableStateOf(promotion.price.toString()) }
         val category = remember { mutableStateOf(promotion.category) }
         var time by remember { mutableStateOf(Time(date)) }
+        val showDialog = remember { mutableStateOf(false) }
 
         val c = Calendar.getInstance()
         val tp = TimePickerDialog(LocalContext.current,
@@ -58,7 +60,6 @@ fun EditPromotion(
                 q.set(Calendar.MINUTE, selectedMinute)
                 time = Time(q.timeInMillis)
             }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], true)
-        val showDialog = remember { mutableStateOf(false) }
         
         CategoryChooseDialog(show = showDialog, onDismiss = { showDialog.value = false }, category_picker = category, type = promotion.type, dataStore)
         Dialog(
@@ -148,10 +149,11 @@ fun EditPromotion(
                                                     Locale.getDefault(),
                                                     promotion.type,
                                                     dataStore
-                                                ).contains(category.value)) {
+                                                ).contains(category.value) and category.value.isNotEmpty()) {
                                                 GlobalScope.launch {
                                                     dataStore.edit {
-                                                        it[stringPreferencesKey(Categories.categoryPreferencesKey)] += "\n${category.value}"
+                                                        val result = Klaxon().toJsonString(Category(category.value, promotion.type, Locale.getDefault().language))
+                                                        it[stringPreferencesKey(Categories.categoryPreferencesKey)] += '\n' + result
                                                     }
                                                 }
                                             }

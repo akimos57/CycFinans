@@ -97,4 +97,7 @@ dependencies {
 
     // Data Store
     implementation "androidx.datastore:datastore-preferences:1.1.0-alpha01"
+
+    // Json
+    implementation 'com.beust:klaxon:5.5'
 }
