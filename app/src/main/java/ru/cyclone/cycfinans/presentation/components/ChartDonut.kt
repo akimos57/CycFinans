@@ -6,6 +6,8 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.*
 import ru.cyclone.cycfinans.presentation.ui.theme.*
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalTextApi::class, ExperimentalUnitApi::class)
@@ -39,15 +42,18 @@ fun ChartDonut(
         floatValue.add(index, 360*values.toFloat() / totalSum.toFloat())
     }
 
-
-    val colors = listOf(
+    val colors = mutableListOf(
         Purple200,
         fab1,
         fab2,
         gold,
         Purple700,
-
     )
+
+    val extraSize = data.values.size - colors.size
+    if (data.values.size > colors.size) {
+        colors += List(extraSize) { Color(Random().nextInt().absoluteValue) }
+    }
 
     var animationPlayed by remember { mutableStateOf(false) }
 
@@ -90,7 +96,9 @@ fun ChartDonut(
             .padding(top = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val text = NumberFormat.getNumberInstance(Locale.US).format(totalSum).replace(',', ' ')
+        var text = NumberFormat.getNumberInstance(Locale.US).format(totalSum).replace(',', ' ')
+        if (text.isEmpty() or (text == "0"))
+            text = ""
         val textStyle = TextStyle(
             fontSize = TextUnit(animateScaling.value, TextUnitType.Sp)
         )
@@ -157,6 +165,7 @@ fun DetailsPieChart(
         modifier = Modifier
             .padding(top = 60.dp)
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
     ) {
 
         data.values.forEachIndexed { index, value ->

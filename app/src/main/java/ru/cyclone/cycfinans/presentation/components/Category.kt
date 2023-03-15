@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.beust.klaxon.Json
 import com.beust.klaxon.Klaxon
-import kotlinx.coroutines.runBlocking
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import java.util.*
 
@@ -68,7 +67,7 @@ object Categories {
     fun getAll(
         locale: Locale,
         type: Boolean
-    ) : List<String> = runBlocking {
+    ) : List<String> {
         val extraCategories = PreferencesController().fileNameList.map { it }
 
         val categoryList = getCategoryByLocationAndType(
@@ -77,7 +76,7 @@ object Categories {
             type = type
         )
 
-        when(type) {
+        return when(type) {
             true -> {
                 when (locale.language) {
                     "ru" -> incomeCategoriesRU + categoryList
@@ -98,8 +97,8 @@ object Categories {
         categoryList: List<Category>,
         language: String,
         type: Boolean
-    ): List<String> = runBlocking {
-        return@runBlocking categoryList.filter { it.type == type }.map { category ->
+    ): List<String>  {
+        return categoryList.filter { it.type == type }.map { category ->
             val categoryName = category.name
             if (category.language != language) {
                 // ToDo translate here

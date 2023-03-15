@@ -109,10 +109,8 @@ fun MainScreen(navController: NavHostController) {
                     .fillMaxSize(),
                 state = scrollState
             ) {
-                coroutineScope.launch {
-                    scrollState.animateScrollToItem(currentDay)
-                }
-                items(monthList.size) { i ->
+                items(monthList.size) { index ->
+                    val i = index+1
                     val income = history.value?.filter {
                         c.timeInMillis = it.time.time
                         (c.get(Calendar.DAY_OF_MONTH) == i) and (it.type)
@@ -164,6 +162,9 @@ fun MainScreen(navController: NavHostController) {
                             expenses = expenses!!
                         )
                     }
+                }
+                coroutineScope.launch {
+                    scrollState.animateScrollToItem(currentDay - 1)
                 }
             }
         }
