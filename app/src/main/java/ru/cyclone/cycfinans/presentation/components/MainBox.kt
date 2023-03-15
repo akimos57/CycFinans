@@ -65,7 +65,8 @@ fun MainBox(
                     LinearProgress(
                         progress = progress,
                         color = fab1,
-                        width = 250.dp
+                        width = 250.dp,
+                        height = 12.dp
                     )
                 }
                 Row(

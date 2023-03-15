@@ -18,3 +18,8 @@ val cardLight = Color.White
 
 val gold = Color(0xFFFFD700)
 
+
+
+
+
+

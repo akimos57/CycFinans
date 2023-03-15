@@ -16,12 +16,13 @@ import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 fun LinearProgress(
     progress: Float,
     color: Color,
-    width: Dp
+    width: Dp,
+    height: Dp
 ) {
     LinearProgressIndicator(
         progress = progress,
         modifier = Modifier
-            .height(12.dp)
+            .height(height)
             .width(width)
             .clip(RoundedCornerShape(6.dp)),
         color = color

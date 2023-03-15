@@ -14,11 +14,14 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.presentation.ui.theme.*
+import java.util.Random
+import kotlin.math.roundToInt
 
 @Composable
 fun ChartDonut(
@@ -34,12 +37,14 @@ fun ChartDonut(
         floatValue.add(index, 360*values.toFloat() / totalSum.toFloat())
     }
 
+
     val colors = listOf(
         Purple200,
         fab1,
         fab2,
         gold,
-        Purple700
+        Purple700,
+
     )
 
     var animationPlayed by remember { mutableStateOf(false) }
@@ -145,7 +150,7 @@ fun DetailsPieChartItem(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(0.5f)
+                    .fillMaxWidth(0.4f)
             ) {
                 Column(
                     modifier = Modifier
@@ -170,11 +175,33 @@ fun DetailsPieChartItem(
             }
             val progress = data.second.toFloat() / totalSum.toFloat()
 
-            LinearProgress(
-                progress = progress,
-                color = color,
-                width = 150.dp
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(0.7f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                LinearProgress(
+                    progress = progress,
+                    color = color,
+                    width = 130.dp,
+                    height = 10.dp
+                )
+            }
+
+            val per = progress*100
+            val percent = (per*100).roundToInt() / 100.0
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
+                Text(
+                    text = "$percent %",
+                    fontSize = 14.sp
+                )
+            }
+
         }
     }
 }
