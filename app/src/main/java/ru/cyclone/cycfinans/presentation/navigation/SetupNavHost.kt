@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +17,6 @@ import ru.cyclone.cycfinans.presentation.screens.statistics.StatisticsScreen
 import ru.cyclone.cycfinans.presentation.screens.target.AddTarget
 import ru.cyclone.cycfinans.presentation.screens.target.TargetScreen
 import ru.cyclone.cycnote.R
-import java.util.prefs.Preferences
 
 sealed class Screens(
     val title: String,
@@ -42,7 +39,6 @@ sealed class AdditionalScreens(
 
 @Composable
 fun SetupNavHost(navController: NavHostController) {
-    val dataStore = preferencesDataStore(name = "category_limits").getValue(LocalContext.current, Preferences::javaClass)
     var showNavigationBar by remember { mutableStateOf(true) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -70,8 +66,7 @@ fun SetupNavHost(navController: NavHostController) {
                 MainDetailsScreen(navController = navController,
                     it.arguments?.getString("day"),
                     it.arguments?.getString("month"),
-                    it.arguments?.getString("year"),
-                    dataStore
+                    it.arguments?.getString("year")
                 )
             }
             composable(route = Screens.TargetScreen.rout) {
@@ -87,7 +82,7 @@ fun SetupNavHost(navController: NavHostController) {
                 SettingsScreen(navController = navController)
             }
             composable(route = AdditionalScreens.SetCategoryScreen.rout) {
-                SetCategoryScreen(navController = navController, dataStore)
+                SetCategoryScreen()
             }
         }
     }

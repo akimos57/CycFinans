@@ -20,24 +20,21 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.beust.klaxon.Json
 import com.beust.klaxon.Klaxon
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import java.util.*
 
 data class Category(
     @Json(name = "category_table")
     val name: String,
     val type: Boolean,
-    val language: String
+    val language: String,
+    var limit: Int = 0
 )
 
 object Categories {
-    const val categoryPreferencesKey = "CategoryPreferencesKey"
     private val categories = listOf(
         "Food",
         "Clothes",
@@ -70,12 +67,9 @@ object Categories {
 
     fun getAll(
         locale: Locale,
-        type: Boolean,
-        dataStore: DataStore<Preferences>
+        type: Boolean
     ) : List<String> = runBlocking {
-        var extraCategories = listOf<String>()
-        val dataList = dataStore.data.first()[stringPreferencesKey(categoryPreferencesKey)]?.replace("null\n", "")?.split("\n")?.distinct()
-        if (!dataList.isNullOrEmpty()) { extraCategories = dataList }
+        val extraCategories = PreferencesController().fileNameList.map { it }
 
         val categoryList = getCategoryByLocationAndType(
             extraCategories.mapNotNull { Klaxon().parse<Category>(it) },
@@ -124,11 +118,10 @@ fun CategoryChooseDialog(
     show: MutableState<Boolean>,
     onDismiss: () -> Unit,
     category_picker: MutableState<String>,
-    type: Boolean,
-    dataStore: DataStore<Preferences>
+    type: Boolean
 ) {
     val c = remember { mutableStateOf("") }
-    val categories = Categories.getAll(Categories.currentLocation(), type, dataStore)
+    val categories = Categories.getAll(Categories.currentLocation(), type)
     if (show.value){
         Dialog(
             onDismissRequest = onDismiss) {

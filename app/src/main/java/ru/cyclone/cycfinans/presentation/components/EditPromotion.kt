@@ -20,14 +20,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.beust.klaxon.Klaxon
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
@@ -35,15 +29,13 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
-@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun EditPromotion(
     show: Boolean,
     vm: MainDetailsScreenVM,
     onDismiss: () -> Unit,
     promotion: Promotion,
-    date: Long,
-    dataStore: DataStore<Preferences>
+    date: Long
 ){
     if (show) {
         var price by remember { mutableStateOf(promotion.price.toString()) }
@@ -51,6 +43,7 @@ fun EditPromotion(
         var time by remember { mutableStateOf(Time(date)) }
         val showDialog = remember { mutableStateOf(false) }
 
+        val preferencesController = PreferencesController()
         val c = Calendar.getInstance()
         val tp = TimePickerDialog(LocalContext.current,
             { _, selectedHour: Int, selectedMinute: Int ->
@@ -61,7 +54,7 @@ fun EditPromotion(
                 time = Time(q.timeInMillis)
             }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], true)
         
-        CategoryChooseDialog(show = showDialog, onDismiss = { showDialog.value = false }, category_picker = category, type = promotion.type, dataStore)
+        CategoryChooseDialog(show = showDialog, onDismiss = { showDialog.value = false }, category_picker = category, type = promotion.type)
         Dialog(
             onDismissRequest = onDismiss
         ) {
@@ -147,15 +140,11 @@ fun EditPromotion(
                                         onSuccess = {
                                             if (!Categories.getAll(
                                                     Locale.getDefault(),
-                                                    promotion.type,
-                                                    dataStore
+                                                    promotion.type
                                                 ).contains(category.value) and category.value.isNotEmpty()) {
-                                                GlobalScope.launch {
-                                                    dataStore.edit {
-                                                        val result = Klaxon().toJsonString(Category(category.value, promotion.type, Locale.getDefault().language))
-                                                        it[stringPreferencesKey(Categories.categoryPreferencesKey)] += '\n' + result
-                                                    }
-                                                }
+                                                val result = Klaxon().toJsonString(Category(category.value, promotion.type, Locale.getDefault().language))
+                                                preferencesController.fileNameList.add(result)
+                                                preferencesController.saveLists()
                                             }
                                         }
                                     )

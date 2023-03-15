@@ -1,6 +1,7 @@
 package ru.cyclone.cycfinans.presentation.components
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -11,18 +12,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.*
 import ru.cyclone.cycfinans.presentation.ui.theme.*
-import java.util.Random
+import java.text.NumberFormat
+import java.util.*
 import kotlin.math.roundToInt
 
+@OptIn(ExperimentalTextApi::class, ExperimentalUnitApi::class)
 @Composable
 fun ChartDonut(
     data: Map<String, Int>,
@@ -69,6 +71,15 @@ fun ChartDonut(
         )
     )
 
+    val animateScaling by animateDpAsState(
+        targetValue = if (animationPlayed) 24.dp else 0.dp,
+        animationSpec = tween(
+            animDuration,
+            delayMillis = 0,
+            easing = LinearOutSlowInEasing
+        )
+    )
+
     LaunchedEffect(key1 = true) {
         animationPlayed = true
     }
@@ -79,6 +90,17 @@ fun ChartDonut(
             .padding(top = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val text = NumberFormat.getNumberInstance(Locale.US).format(totalSum).replace(',', ' ')
+        val textStyle = TextStyle(
+            fontSize = TextUnit(animateScaling.value, TextUnitType.Sp)
+        )
+        val textMeasurer = rememberTextMeasurer()
+        val textLayoutResult: TextLayoutResult =
+            textMeasurer.measure(
+                text = AnnotatedString(text),
+                style = textStyle
+            )
+        val textSize = textLayoutResult.size
         Box(
             modifier = Modifier
                 .size(animateSize.dp),
@@ -92,13 +114,29 @@ fun ChartDonut(
                 floatValue.forEachIndexed { index, value ->
                     drawArc(
                         color = colors[index],
-                        lastValue,
-                        value,
+                        startAngle = lastValue,
+                        sweepAngle = value,
                         useCenter = false,
                         style = Stroke(chartBarWidth.toPx(), cap = StrokeCap.Butt)
                     )
                     lastValue += value
                 }
+            }
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+            ){
+                val canvasWidth = size.width
+                val canvasHeight = size.height
+                drawText(
+                    textMeasurer = textMeasurer,
+                    topLeft = Offset(
+                        (canvasWidth - textSize.width) / 2f,
+                        (canvasHeight - textSize.height) / 2f
+                    ),
+                    text = text,
+                    style = textStyle
+                )
             }
         }
         DetailsPieChart(
@@ -162,7 +200,7 @@ fun DetailsPieChartItem(
                         fontWeight = FontWeight.Medium,
                         fontSize = 16.sp,
                     )
-                    val price = data.second.toString()
+                    val price = NumberFormat.getNumberInstance(Locale.US).format(data.second).replace(',', ' ')
                     Text(
                         modifier = Modifier
                             .padding(start = 15.dp),

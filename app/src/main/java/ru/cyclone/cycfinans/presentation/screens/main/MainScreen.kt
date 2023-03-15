@@ -2,9 +2,9 @@ package ru.cyclone.cycfinans.presentation.screens.main
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -19,12 +19,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.presentation.components.Calendar
 import ru.cyclone.cycfinans.presentation.components.DayBox
 import ru.cyclone.cycfinans.presentation.components.MainBox
 import ru.cyclone.cycfinans.presentation.components.WidgetMain
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
+import java.time.LocalDate
 import java.time.Month
 import java.time.Year
 import java.time.YearMonth
@@ -51,6 +53,7 @@ fun MainScreen(navController: NavHostController) {
     }
 
     val c = Calendar.getInstance()
+    val currentDay = LocalDate.now().dayOfMonth
     val fullIncome = history.value?.filter {
         c.timeInMillis = it.time.time
         it.type
@@ -60,12 +63,14 @@ fun MainScreen(navController: NavHostController) {
         !it.type
     }?.sumOf { it.price }?:0
 
+    val scrollState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
         ) {
             TextButton(
                 modifier = Modifier
@@ -96,55 +101,69 @@ fun MainScreen(navController: NavHostController) {
                 income = fullIncome,
                 expenses = fullExpenses
             )
-            Row(
+
+            val monthList = (1..Month.of(currentMonth.value + 1).length(Year.now().isLeap)).toList()
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .padding(bottom = 12.dp, start = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(paddingValues)
+                    .fillMaxSize(),
+                state = scrollState
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(24.dp))
-                        .clickable { },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Edit,
-                        contentDescription = "new",
-                    )
+                coroutineScope.launch {
+                    scrollState.animateScrollToItem(currentDay)
                 }
+                items(monthList.size) { i ->
+                    val income = history.value?.filter {
+                        c.timeInMillis = it.time.time
+                        (c.get(Calendar.DAY_OF_MONTH) == i) and (it.type)
+                    }?.sumOf { it.price }
+                    val expenses = history.value?.filter {
+                        c.timeInMillis = it.time.time
+                        (c.get(Calendar.DAY_OF_MONTH) == i) and (!it.type)
+                    }?.sumOf { it.price }
+                    if (i == currentDay) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp)
+                                .padding(bottom = 12.dp, start = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(RoundedCornerShape(24.dp))
+                                    .clickable { },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = "new",
+                                )
+                            }
 
-                WidgetMain()
-                WidgetMain()
-                WidgetMain()
-            }
+                            WidgetMain()
+                            WidgetMain()
+                            WidgetMain()
+                        }
+                    }
 
-            for (i in 1..Month.of(currentMonth.value + 1).length(Year.now().isLeap)) {
-                val income = history.value?.filter {
-                    c.timeInMillis = it.time.time
-                    (c.get(Calendar.DAY_OF_MONTH) == i) and (it.type)
-                }?.sumOf { it.price }
-                val expenses = history.value?.filter {
-                    c.timeInMillis = it.time.time
-                    (c.get(Calendar.DAY_OF_MONTH) == i) and (!it.type)
-                }?.sumOf { it.price }
-                if ((income != null) and (expenses != null)) {
-                    DayBox(
-                        day = i,
-                        modifier = Modifier
-                            .clickable {
-                                navController.navigate(
-                                    AdditionalScreens.MainDetailsScreen.rout +
-                                            "/$i/${currentMonth.value + 1}/$currentYear"
-                                ) {
-                                    launchSingleTop = true
-                                }
-                            },
-                        income = income!!,
-                        expenses = expenses!!
-                    )
+                    if ((income != null) and (expenses != null)) {
+                        DayBox(
+                            day = i,
+                            modifier = Modifier
+                                .clickable {
+                                    navController.navigate(
+                                        AdditionalScreens.MainDetailsScreen.rout +
+                                                "/$i/${currentMonth.value + 1}/$currentYear"
+                                    ) {
+                                        launchSingleTop = true
+                                    }
+                                },
+                            income = income!!,
+                            expenses = expenses!!
+                        )
+                    }
                 }
             }
         }

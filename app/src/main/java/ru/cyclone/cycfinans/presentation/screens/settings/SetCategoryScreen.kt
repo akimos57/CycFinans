@@ -16,26 +16,21 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import kotlinx.coroutines.launch
+import com.beust.klaxon.Klaxon
+import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
+import ru.cyclone.cycfinans.presentation.components.Category
 import ru.cyclone.cycnote.R
+import java.util.*
 
 @Composable
-fun SetCategoryScreen(
-    navController: NavController,
-    dataStore: DataStore<androidx.datastore.preferences.core.Preferences>
-) {
+fun SetCategoryScreen() {
     val vm = hiltViewModel<SetCategoryScreenVM>()
-    vm.dataStore = dataStore
     val limits = vm.categories.observeAsState()
     val focusRequester = remember { FocusRequester() }
     val focus = LocalFocusManager.current
 
-    val coroutine = rememberCoroutineScope()
+    val preferencesController = PreferencesController()
     Scaffold(
         topBar = {
             val appName = stringResource(id = R.string.app_name)
@@ -65,11 +60,11 @@ fun SetCategoryScreen(
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
-                            coroutine.launch {
-                                dataStore.edit { mutablePreferences ->
-                                    mutablePreferences[stringPreferencesKey(category)] = str
-                                }
-                            }
+                            val resultString = Klaxon().toJsonString(Category(category, false, Locale.getDefault().language))
+                            val index = preferencesController.fileNameList.indexOf(resultString)
+                            preferencesController.fileNameList[index] =
+                                Klaxon().toJsonString(Category(category, false, Locale.getDefault().language, limit = str.toInt()))
+                            preferencesController.saveLists()
                             focus.clearFocus()
                         }
                     ),

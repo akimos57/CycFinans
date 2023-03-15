@@ -25,25 +25,25 @@ class StatisticsScreenVM @Inject constructor(
 
     fun updateAllPromotions(date: YearMonth = YearMonth.now()) {
         viewModelScope.launch {
-            getAllPromotionUseCase.invoke().let {
+            getAllPromotionUseCase.invoke().let { promotions ->
                 // Get the calendar instance
                 val c = Calendar.getInstance()
-                val promotionListExpenses = it.filter { promotion ->
+                val promotionListExpenses = promotions.filter { promotion ->
                     // Set the time to the promotion time
                     c.timeInMillis = promotion.time.time
                     // Check if the date is equal to the year and month of the calendar instance
                     (date == YearMonth.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1)) and
                             // Check if the promotion type is false
                             !promotion.type
-                }
-                val promotionListIncomes = it.filter { promotion ->
+                }.sortedByDescending { it.price }
+                val promotionListIncomes = promotions.filter { promotion ->
                     // Set the time to the promotion time
                     c.timeInMillis = promotion.time.time
                     // Check if the date is equal to the year and month of the calendar instance
                     (date == YearMonth.of(c.get(Calendar.YEAR), c.get(Calendar.MONTH) + 1)) and
                             // Check if the promotion type is true
                             promotion.type
-                }
+                }.sortedByDescending { it.price }
                 _categories.postValue(promotionListExpenses.associate { promotion ->
                     // Calculate the sum of the prices for each category
                     val sum = promotionListExpenses.filter { p -> p.category == promotion.category }.sumOf { p ->

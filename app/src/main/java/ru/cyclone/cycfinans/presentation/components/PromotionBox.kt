@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.ui.theme.gold
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,7 +40,7 @@ fun PromotionBox(
                     .fillMaxSize()
                     .padding(top = 24.dp)
             ) {
-                val price = String.format(Locale.getDefault(), "%,d", promotion.price)
+                val price = NumberFormat.getNumberInstance(Locale.US).format(promotion.price).replace(',', ' ')
                 val text = if (promotion.type) "+ $price ₽" else "- $price ₽"
                 Text(
                     modifier = Modifier
