@@ -99,6 +99,7 @@ fun ChartDonut(
         var text = NumberFormat.getNumberInstance(Locale.US).format(totalSum).replace(',', ' ')
         if (text.isEmpty() or (text == "0"))
             text = ""
+        val text2 = "$text ₽"
         val textStyle = TextStyle(
             fontSize = TextUnit(animateScaling.value, TextUnitType.Sp)
         )
@@ -139,10 +140,10 @@ fun ChartDonut(
                 drawText(
                     textMeasurer = textMeasurer,
                     topLeft = Offset(
-                        (canvasWidth - textSize.width) / 2f,
+                        (canvasWidth - textSize.width) / 2.4f,
                         (canvasHeight - textSize.height) / 2f
                     ),
-                    text = text,
+                    text = text2,
                     style = textStyle
                 )
             }

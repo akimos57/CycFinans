@@ -11,11 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Promotion
+import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.gold
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -58,7 +60,7 @@ fun PromotionBox(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
-                        color = gold
+                        color = fab1
                     )
                 } else {
                     Text(
@@ -68,7 +70,7 @@ fun PromotionBox(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
-                        color = gold
+                        color = fab1
                     )
                 }
                 Text(

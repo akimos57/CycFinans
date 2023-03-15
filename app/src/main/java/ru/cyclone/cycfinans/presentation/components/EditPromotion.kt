@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.beust.klaxon.Klaxon
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
@@ -29,21 +32,22 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun EditPromotion(
     show: Boolean,
     vm: MainDetailsScreenVM,
     onDismiss: () -> Unit,
     promotion: Promotion,
-    date: Long
+    date: Long,
 ){
     if (show) {
         var price by remember { mutableStateOf(promotion.price.toString()) }
         val category = remember { mutableStateOf(promotion.category) }
         var time by remember { mutableStateOf(Time(date)) }
         val showDialog = remember { mutableStateOf(false) }
-
         val preferencesController = PreferencesController()
+
         val c = Calendar.getInstance()
         val tp = TimePickerDialog(LocalContext.current,
             { _, selectedHour: Int, selectedMinute: Int ->
@@ -123,47 +127,54 @@ fun EditPromotion(
                                     color = MaterialTheme.colors.primaryVariant
                                 )
                             }
-                        }
-                        OutlinedButton(
-                            onClick = {
-                                val color = Color.White.toArgb()
-                                if (price != "0"){
-                                    vm.addPromotion(
-                                        Promotion(
-                                            id = promotion.id,
-                                            type = promotion.type,
-                                            category = category.value,
-                                            colorCategory = color,
-                                            price = price.toInt(),
-                                            time = time
-                                        ),
-                                        onSuccess = {
-                                            if (!Categories.getAll(
-                                                    Locale.getDefault(),
-                                                    promotion.type
-                                                ).contains(category.value) and category.value.isNotEmpty()) {
-                                                val result = Klaxon().toJsonString(Category(category.value, promotion.type, Locale.getDefault().language))
-                                                preferencesController.fileNameList.add(result)
-                                                preferencesController.saveLists()
+                            OutlinedButton(
+                                onClick = {
+                                    val color = Color.White.toArgb()
+                                    if (price != "0") {
+                                        vm.addPromotion(
+                                            Promotion(
+                                                id = promotion.id,
+                                                type = promotion.type,
+                                                category = category.value,
+                                                colorCategory = color,
+                                                price = price.toInt(),
+                                                time = time
+                                            ),
+                                            onSuccess = {
+                                                if (!Categories.getAll(
+                                                        Locale.getDefault(),
+                                                        promotion.type,
+                                                    )
+                                                        .contains(category.value) and category.value.isNotEmpty()
+                                                ) {
+                                                    val result = Klaxon().toJsonString(
+                                                        Category(
+                                                            category.value,
+                                                            promotion.type,
+                                                            Locale.getDefault().language
+                                                        )
+                                                    )
+                                                    preferencesController.fileNameList.add(result)
+                                                    preferencesController.saveLists()
+                                                }
                                             }
-                                        }
-                                    )
-                                }
-                                onDismiss()
-                            },
+                                        )
+                                    }
+                                    onDismiss()
+                                },
 //                            modifier = Modifier.padding(end = 20.dp), 
-                            shape = CircleShape,
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                backgroundColor = fab1,
-                            )
-                        ) {
-                            Text(
-                                text = "Сохранить",
-                                color = MaterialTheme.colors.primaryVariant
-                            )
+                                shape = CircleShape,
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    backgroundColor = fab1,
+                                )
+                            ) {
+                                Text(
+                                    text = "Сохранить",
+                                    color = MaterialTheme.colors.primaryVariant
+                                )
+                            }
                         }
                     }
-
                 }
             }
         }

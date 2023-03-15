@@ -39,7 +39,7 @@ fun Calendar(
     onDismiss: () -> Unit
 ) {
     val months = List<String>(12) { index ->
-        Month.of(index + 1).getDisplayName(TextStyle.SHORT, Locale.getDefault())
+        Month.of(index + 1).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
     }
 
     var month by remember {
