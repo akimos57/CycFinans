@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.components
+package ru.cyclone.cycfinans.presentation.ui.components
 
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -19,7 +19,7 @@ fun BottomNavigationBar(
     if (show) {
         val listItems = listOf(
             Screens.MainScreen,
-            Screens.TargetScreen,
+            Screens.CalendarScreen,
             Screens.StatisticsScreen,
             Screens.SettingsScreen
         )

@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package ru.cyclone.cycfinans.presentation.components
+package ru.cyclone.cycfinans.presentation.ui.components
 
 import android.app.TimePickerDialog
 import androidx.compose.foundation.BorderStroke
@@ -21,9 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.beust.klaxon.Klaxon
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
@@ -32,7 +29,6 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 
-@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun EditPromotion(
     show: Boolean,

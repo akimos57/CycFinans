@@ -25,8 +25,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import ru.cyclone.cycfinans.presentation.components.Calendar
-import ru.cyclone.cycfinans.presentation.components.ChartDonut
+import ru.cyclone.cycfinans.presentation.ui.components.Calendar
+import ru.cyclone.cycfinans.presentation.ui.components.ChartDonut
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import java.time.Month
 import java.time.YearMonth

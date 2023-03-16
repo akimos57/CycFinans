@@ -3,7 +3,6 @@ package ru.cyclone.cycfinans.presentation.screens.main
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -25,8 +24,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Promotion
-import ru.cyclone.cycfinans.presentation.components.EditPromotion
-import ru.cyclone.cycfinans.presentation.components.PromotionBox
+import ru.cyclone.cycfinans.presentation.ui.components.EditPromotion
+import ru.cyclone.cycfinans.presentation.ui.components.PromotionBox
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2

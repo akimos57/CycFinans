@@ -58,7 +58,7 @@ fun SettingsScreen(navController: NavHostController) {
         ) {
             Text(
                 textAlign = TextAlign.Start,
-                text = "Set Category limits",
+                text = "Income values",
                 color = MaterialTheme.colors.onSurface,
                 modifier = Modifier
                     .fillMaxWidth()

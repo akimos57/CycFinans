@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.components
+package ru.cyclone.cycfinans.presentation.ui.components
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -36,11 +36,7 @@ fun ChartDonut(
     animDuration: Int = 2000
 ) {
     val totalSum = data.values.sum()
-    val floatValue = mutableListOf<Float>()
-
-    data.values.forEachIndexed { index, values ->
-        floatValue.add(index, 360*values.toFloat() / totalSum.toFloat())
-    }
+    val floatValue = data.values.map { 360F * it.toFloat() / totalSum.toFloat() }
 
     val colors = mutableListOf(
         Purple200,
@@ -55,12 +51,12 @@ fun ChartDonut(
         colors += List(extraSize) { Color(Random().nextInt().absoluteValue) }
     }
 
-    var animationPlayed by remember { mutableStateOf(false) }
+    var animationState by remember { mutableStateOf(false) }
 
     var lastValue = 0f
 
     val animateSize by animateFloatAsState(
-        targetValue = if (animationPlayed) radiusOuter.value * 2f else 0f,
+        targetValue = if (animationState) radiusOuter.value * 2f else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
             delayMillis = 0,
@@ -69,7 +65,7 @@ fun ChartDonut(
     )
 
     val animateRotation by animateFloatAsState(
-        targetValue = if (animationPlayed) 90f * 11f else 0f,
+        targetValue = if (animationState) 90f * 11f else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
             delayMillis = 0,
@@ -78,7 +74,7 @@ fun ChartDonut(
     )
 
     val animateScaling by animateDpAsState(
-        targetValue = if (animationPlayed) 24.dp else 0.dp,
+        targetValue = if (animationState) 24.dp else 0.dp,
         animationSpec = tween(
             animDuration,
             delayMillis = 0,
@@ -87,7 +83,7 @@ fun ChartDonut(
     )
 
     LaunchedEffect(key1 = true) {
-        animationPlayed = true
+        animationState = true
     }
 
     Column(
@@ -97,9 +93,9 @@ fun ChartDonut(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var text = NumberFormat.getNumberInstance(Locale.US).format(totalSum).replace(',', ' ')
-        if (text.isEmpty() or (text == "0"))
-            text = ""
-        val text2 = "$text ₽"
+        text = if (text.isEmpty() or (text == "0"))
+            ""
+        else "$text ₽"
         val textStyle = TextStyle(
             fontSize = TextUnit(animateScaling.value, TextUnitType.Sp)
         )
@@ -143,7 +139,7 @@ fun ChartDonut(
                         (canvasWidth - textSize.width) / 2.4f,
                         (canvasHeight - textSize.height) / 2f
                     ),
-                    text = text2,
+                    text = text,
                     style = textStyle
                 )
             }

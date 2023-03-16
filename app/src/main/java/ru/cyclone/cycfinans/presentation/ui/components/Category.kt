@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.components
+package ru.cyclone.cycfinans.presentation.ui.components
 
 import android.view.KeyEvent
 import androidx.compose.foundation.background
@@ -21,18 +21,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import kotlinx.coroutines.flow.first
-import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
-import java.util.*
 import com.beust.klaxon.Json
 import com.beust.klaxon.Klaxon
+import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
+import java.util.*
 
 data class Category(
     @Json(name = "category_table")
@@ -43,7 +41,6 @@ data class Category(
 )
 
 object Categories {
-    const val categoryPreferencesKey = "CategoryPreferencesKey"
     private val categories = listOf(
         "Food",
         "Clothes",
@@ -79,9 +76,7 @@ object Categories {
         locale: Locale,
         type: Boolean,
     ) : List<String> {
-        var extraCategories = PreferencesController().fileNameList.map { it }
-//        val dataList = dataStore.data.first()[stringPreferencesKey(categoryPreferencesKey)]?.replace("null\n", "")?.split("\n")?.distinct()
-//        if (!dataList.isNullOrEmpty()) { extraCategories = dataList }
+        val extraCategories = PreferencesController().fileNameList.map { it }
 
         val categoryList = getCategoryByLocationAndType(
             extraCategories.mapNotNull { Klaxon().parse<Category>(it) },

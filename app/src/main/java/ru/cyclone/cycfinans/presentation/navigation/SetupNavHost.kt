@@ -8,14 +8,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.cyclone.cycfinans.presentation.components.BottomNavigationBar
+import ru.cyclone.cycfinans.presentation.screens.calendar.AddNote
+import ru.cyclone.cycfinans.presentation.screens.calendar.CalendarScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainScreen
 import ru.cyclone.cycfinans.presentation.screens.settings.SetCategoryScreen
 import ru.cyclone.cycfinans.presentation.screens.settings.SettingsScreen
 import ru.cyclone.cycfinans.presentation.screens.statistics.StatisticsScreen
-import ru.cyclone.cycfinans.presentation.screens.target.AddTarget
-import ru.cyclone.cycfinans.presentation.screens.target.TargetScreen
+import ru.cyclone.cycfinans.presentation.ui.components.BottomNavigationBar
 import ru.cyclone.cycnote.R
 
 sealed class Screens(
@@ -24,7 +24,7 @@ sealed class Screens(
     val iconId: Int
 ) {
     object MainScreen: Screens(rout = "main_screen", iconId = R.drawable.home, title = "Главная")
-    object TargetScreen: Screens(rout = "target_screen", iconId = R.drawable.star, title = "Цели")
+    object CalendarScreen: Screens(rout = "target_screen", iconId = R.drawable.star, title = "Цели")
     object StatisticsScreen: Screens(rout = "statistics_screen", iconId = R.drawable.data_usage, title = "Статистика")
     object SettingsScreen: Screens(rout = "settings_screen", iconId = R.drawable.settings, title = "Настройки")
 }
@@ -33,7 +33,7 @@ sealed class AdditionalScreens(
     val rout: String
 ) {
     object MainDetailsScreen: AdditionalScreens(rout = "mainDetails_screen")
-    object AddTargetScreen: AdditionalScreens(rout = "targetDetails_screen")
+    object AddNoteScreen: AdditionalScreens(rout = "add_note_screen")
     object SetCategoryScreen: AdditionalScreens(rout = "set_category")
 }
 
@@ -44,7 +44,7 @@ fun SetupNavHost(navController: NavHostController) {
 
     showNavigationBar = when (navBackStackEntry?.destination?.route) {
         Screens.MainScreen.rout -> true
-        Screens.TargetScreen.rout -> true
+        Screens.CalendarScreen.rout -> true
         Screens.StatisticsScreen.rout -> true
         Screens.SettingsScreen.rout -> true
         else -> false
@@ -69,11 +69,20 @@ fun SetupNavHost(navController: NavHostController) {
                     it.arguments?.getString("year")
                 )
             }
-            composable(route = Screens.TargetScreen.rout) {
-                TargetScreen(navController = navController)
+            composable(route = Screens.CalendarScreen.rout) {
+                CalendarScreen(navController = navController)
             }
-            composable(route = AdditionalScreens.AddTargetScreen.rout) {
-                AddTarget(navController = navController)
+            composable(route = AdditionalScreens.AddNoteScreen.rout + "{id}/{content}") {
+                AddNote(navController = navController,
+                    it.arguments?.getString("id"),
+                    it.arguments?.getString("content")
+                )
+            }
+            composable(route = AdditionalScreens.AddNoteScreen.rout) {
+                AddNote(navController = navController,
+                    it.arguments?.getString("id"),
+                    it.arguments?.getString("content")
+                )
             }
             composable(route = Screens.StatisticsScreen.rout) {
                 StatisticsScreen(navController = navController)

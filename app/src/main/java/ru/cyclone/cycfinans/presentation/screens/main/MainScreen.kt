@@ -1,17 +1,18 @@
 package ru.cyclone.cycfinans.presentation.screens.main
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -20,10 +21,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
-import ru.cyclone.cycfinans.presentation.components.Calendar
-import ru.cyclone.cycfinans.presentation.components.DayBox
-import ru.cyclone.cycfinans.presentation.components.MainBox
-import ru.cyclone.cycfinans.presentation.components.WidgetMain
+import ru.cyclone.cycfinans.presentation.ui.components.Calendar
+import ru.cyclone.cycfinans.presentation.ui.components.DayBox
+import ru.cyclone.cycfinans.presentation.ui.components.FastNotes
+import ru.cyclone.cycfinans.presentation.ui.components.MainBox
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import java.time.LocalDate
@@ -53,7 +54,7 @@ fun MainScreen(navController: NavHostController) {
     }
 
     val c = Calendar.getInstance()
-    val currentDay = LocalDate.now().dayOfMonth
+    val actualDate = Pair(LocalDate.now().dayOfMonth, YearMonth.now())
     val fullIncome = history.value?.filter {
         c.timeInMillis = it.time.time
         it.type
@@ -111,6 +112,13 @@ fun MainScreen(navController: NavHostController) {
             ) {
                 items(monthList.size) { index ->
                     val i = index+1
+                    if (
+                        (i == 1) and
+                        (currentMonth.value + 1 != actualDate.second.month.value) or
+                        (currentYear != actualDate.second.year)
+                    ) {
+                        FastNotes()
+                    }
                     val income = history.value?.filter {
                         c.timeInMillis = it.time.time
                         (c.get(Calendar.DAY_OF_MONTH) == i) and (it.type)
@@ -119,31 +127,12 @@ fun MainScreen(navController: NavHostController) {
                         c.timeInMillis = it.time.time
                         (c.get(Calendar.DAY_OF_MONTH) == i) and (!it.type)
                     }?.sumOf { it.price }
-                    if (i == currentDay) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(120.dp)
-                                .padding(bottom = 12.dp, start = 12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .clip(RoundedCornerShape(24.dp))
-                                    .clickable { },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Edit,
-                                    contentDescription = "new",
-                                )
-                            }
-
-                            WidgetMain()
-                            WidgetMain()
-                            WidgetMain()
-                        }
+                    if (
+                        (i == actualDate.first) and
+                        (currentMonth.value + 1 == actualDate.second.month.value) and
+                        (currentYear == actualDate.second.year)
+                    ) {
+                        FastNotes()
                     }
 
                     if ((income != null) and (expenses != null)) {
@@ -163,8 +152,17 @@ fun MainScreen(navController: NavHostController) {
                         )
                     }
                 }
-                coroutineScope.launch {
-                    scrollState.animateScrollToItem(currentDay - 1)
+                if (
+                    (currentMonth.value + 1 == actualDate.second.month.value) and
+                    (currentYear == actualDate.second.year)
+                ) {
+                    coroutineScope.launch {
+                        scrollState.animateScrollToItem(actualDate.first - 1)
+                    }
+                } else {
+                    coroutineScope.launch {
+                        scrollState.animateScrollToItem(0)
+                    }
                 }
             }
         }

@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.cyclone.cycfinans.data.local.AppDatabase
+import ru.cyclone.cycfinans.data.local.dao.NoteRepositoryImpl
 import ru.cyclone.cycfinans.data.local.dao.PromotionRepositoryImpl
 //import ru.cyclone.cycfinans.data.local.dao.TargeteRepositoryImpl
 
@@ -15,7 +16,6 @@ import ru.cyclone.cycfinans.data.local.dao.PromotionRepositoryImpl
 @InstallIn(SingletonComponent::class)
 @Module
 class DatabaseModule {
-
     @Provides
     fun provideAppDate(@ApplicationContext appContext: Context): AppDatabase {
         return Room.databaseBuilder(
@@ -30,11 +30,10 @@ class DatabaseModule {
         return appDatabase.promotionDao()
     }
 
-//    @Provides
-//    fun provideTargetDao(appDatabase: AppDatabase): TargeteRepositoryImpl{
-//        return appDatabase.targeteDao()
-//    }
-
+    @Provides
+    fun provideTargetDao(appDatabase: AppDatabase): NoteRepositoryImpl{
+        return appDatabase.noteDao()
+    }
 }
 
 

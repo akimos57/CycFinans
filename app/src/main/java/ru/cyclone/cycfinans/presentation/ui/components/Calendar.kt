@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.components
+package ru.cyclone.cycfinans.presentation.ui.components
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -58,9 +58,6 @@ fun Calendar(
         AlertDialog(
             backgroundColor = MaterialTheme.colors.secondary,
             shape = RoundedCornerShape(10),
-            title = {
-
-            },
             text = {
                 Column {
                     Row(
@@ -168,7 +165,6 @@ fun Calendar(
                             }
                         }
                     }
-//                    }
                 }
             },
             buttons = {

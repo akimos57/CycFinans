@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.components
+package ru.cyclone.cycfinans.presentation.ui.components
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -10,7 +10,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 
 @Composable
 fun LinearProgress(

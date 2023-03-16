@@ -9,6 +9,10 @@ class PreferencesController {
         private const val DIVIDER_STRING = "\n"
     }
     var fileNameList : MutableList<String> = update()
+        set(value) {
+            field = value
+            saveLists()
+        }
     @SuppressLint("SdCardPath")
     private val storage =  StorageController("/data/user/0/ru.cyclone.cycnote/files", "config", DIVIDER_STRING, DIVIDER)
 

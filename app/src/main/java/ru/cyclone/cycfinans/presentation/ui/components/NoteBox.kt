@@ -1,7 +1,6 @@
-package ru.cyclone.cycfinans.presentation.components
+package ru.cyclone.cycfinans.presentation.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -9,18 +8,17 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
+import ru.cyclone.cycfinans.domain.model.Note
+import java.sql.Date
+import java.text.DateFormat
 
 @Composable
-fun TargetBox(
+fun NoteBox(
     modifier: Modifier,
-//    title: String,
-
+    note: Note
 ) {
     Box(
         modifier = Modifier
@@ -40,7 +38,7 @@ fun TargetBox(
                     .padding(start = 24.dp, top = 16.dp)
             ) {
                 Text(
-                    text = "Поездка в Москву",
+                    text = note.content,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -50,23 +48,16 @@ fun TargetBox(
                     .fillMaxWidth()
                     .padding(start = 24.dp)
             ) {
-                Column() {
+                Column {
+                    val time = DateFormat.getDateInstance().format(Date(note.time.time))
                     Text(
-                        text = "Собрано 32 000 ₽",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal
-                    )
-                    Text(
-                        text = "Осталось 8 000 ₽",
+                        text = time,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal
                     )
                 }
 
             }
-
-
         }
-
     }
 }
