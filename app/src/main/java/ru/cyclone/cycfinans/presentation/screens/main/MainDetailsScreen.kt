@@ -3,6 +3,7 @@ package ru.cyclone.cycfinans.presentation.screens.main
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -26,6 +27,7 @@ import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.components.EditPromotion
+import ru.cyclone.cycfinans.presentation.ui.components.EmptyNoteBox
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.components.PromotionBox
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
@@ -41,7 +43,8 @@ fun MainDetailsScreen(
     navController: NavHostController,
     day: String?,
     month: String?,
-    year: String?
+    year: String?,
+    onReturned: MutableState<() -> Unit>
 ) {
     val date = Calendar.getInstance()
     date.clear()
@@ -51,6 +54,10 @@ fun MainDetailsScreen(
     viewModel.date = date
     val promotions = viewModel.promotions.observeAsState(listOf()).value
     val notes by viewModel.notes.observeAsState()
+
+    onReturned.value = {
+        viewModel.updateNotes()
+    }
 
     var type = false
 
@@ -93,23 +100,21 @@ fun MainDetailsScreen(
                         .padding(start = 16.dp)
                 )
                 Spacer(Modifier.weight(1f))
-                if (notes?.size != 0) {
-                    Box(
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                        .clickable {
+                            showNotes = true
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.List,
+                        contentDescription = "open_notes",
                         modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(24.dp))
-                            .clickable {
-                                showNotes = true
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.List,
-                            contentDescription = "open_notes",
-                            modifier = Modifier
-                                .size(25.dp)
-                        )
-                    }
+                            .size(25.dp)
+                    )
                 }
             }
             Row(
@@ -387,87 +392,98 @@ fun MainDetailsScreen(
             Dialog(
                 onDismissRequest = { showNotes = false }
             ) {
-                Column {
-                    notes?.forEach { note ->
-                        val showDialog1 = remember { mutableStateOf(false) }
-                        if (showDialog1.value) {
-                            Dialog(
-                                onDismissRequest = { showDialog1.value = false }) {
-                                Box(
-                                    modifier = Modifier
-                                        .height(120.dp)
-                                        .width(250.dp)
-                                        .clip(RoundedCornerShape(24.dp))
-                                        .background(MaterialTheme.colors.secondary)
-                                ) {
-                                    Row(
+                LazyColumn {
+                    notes?.let {
+                        items(it.size) { index ->
+                            val showDialog1 = remember { mutableStateOf(false) }
+                            if (showDialog1.value) {
+                                Dialog(
+                                    onDismissRequest = { showDialog1.value = false }) {
+                                    Box(
                                         modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(top = 24.dp),
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-                                        Text(
-                                            text = "Удалить?",
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight.Medium,
-                                        )
-                                    }
-
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxSize(),
-                                        verticalArrangement = Arrangement.Bottom
+                                            .height(120.dp)
+                                            .width(250.dp)
+                                            .clip(RoundedCornerShape(24.dp))
+                                            .background(MaterialTheme.colors.secondary)
                                     ) {
                                         Row(
                                             modifier = Modifier
-                                                .fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.End
+                                                .fillMaxWidth()
+                                                .padding(top = 24.dp),
+                                            horizontalArrangement = Arrangement.Center
                                         ) {
-                                            OutlinedButton(
+                                            Text(
+                                                text = "Удалить?",
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Medium,
+                                            )
+                                        }
+
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxSize(),
+                                            verticalArrangement = Arrangement.Bottom
+                                        ) {
+                                            Row(
                                                 modifier = Modifier
-                                                    .padding(end = 20.dp),
-                                                shape = CircleShape,
-                                                border = BorderStroke(1.dp, color = Color.Transparent),
-                                                colors = ButtonDefaults.outlinedButtonColors(
-                                                    backgroundColor = MaterialTheme.colors.secondary,
-                                                    contentColor = MaterialTheme.colors.primaryVariant
-                                                ),
-                                                onClick = { showDialog1.value = false }) {
-                                                Text(
-                                                    text = "Отмена",
-                                                    fontSize = 14.sp,
-                                                    fontWeight = FontWeight.Medium
-                                                )
-                                            }
-                                            OutlinedButton(
-                                                modifier = Modifier
-                                                    .padding(end = 20.dp),
-                                                shape = CircleShape,
-                                                border = BorderStroke(1.dp, color = Color.Transparent),
-                                                colors = ButtonDefaults.outlinedButtonColors(
-                                                    backgroundColor = fab2,
-                                                    contentColor = MaterialTheme.colors.primaryVariant
-                                                ),
-                                                onClick = { showDialog1.value = false; viewModel.deleteNote(note = note) }) {
-                                                Text(
-                                                    text = "Удалить",
-                                                    fontSize = 14.sp,
-                                                    fontWeight = FontWeight.Medium,
-                                                )
+                                                    .fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.End
+                                            ) {
+                                                OutlinedButton(
+                                                    modifier = Modifier
+                                                        .padding(end = 20.dp),
+                                                    shape = CircleShape,
+                                                    border = BorderStroke(1.dp, color = Color.Transparent),
+                                                    colors = ButtonDefaults.outlinedButtonColors(
+                                                        backgroundColor = MaterialTheme.colors.secondary,
+                                                        contentColor = MaterialTheme.colors.primaryVariant
+                                                    ),
+                                                    onClick = { showDialog1.value = false }) {
+                                                    Text(
+                                                        text = "Отмена",
+                                                        fontSize = 14.sp,
+                                                        fontWeight = FontWeight.Medium
+                                                    )
+                                                }
+                                                OutlinedButton(
+                                                    modifier = Modifier
+                                                        .padding(end = 20.dp),
+                                                    shape = CircleShape,
+                                                    border = BorderStroke(1.dp, color = Color.Transparent),
+                                                    colors = ButtonDefaults.outlinedButtonColors(
+                                                        backgroundColor = fab2,
+                                                        contentColor = MaterialTheme.colors.primaryVariant
+                                                    ),
+                                                    onClick = { showDialog1.value = false; viewModel.deleteNote(note = notes!![index]) }) {
+                                                    Text(
+                                                        text = "Удалить",
+                                                        fontSize = 14.sp,
+                                                        fontWeight = FontWeight.Medium,
+                                                    )
+                                                }
                                             }
                                         }
-                                    }
 
+                                    }
                                 }
                             }
+                            NoteBox(
+                                note = notes!![index],
+                                modifier = Modifier
+                                    .combinedClickable (
+                                        onClick = { navController.navigate(AdditionalScreens.AddNoteScreen.rout +
+                                                notes!![index].id + '/' +
+                                                notes!![index].content.ifBlank { "" })},
+                                        onLongClick = { showDialog1.value = true }
+                                    )
+                            )
                         }
-                        NoteBox(
-                            note = note,
+                    }
+                    item {
+                        EmptyNoteBox (
                             modifier = Modifier
-                                .combinedClickable (
-                                    onClick = { navController.navigate(AdditionalScreens.AddNoteScreen.rout + note.id + '/' + note.content.ifBlank { "" })},
-                                    onLongClick = { showDialog1.value = true }
-                                )
+                                .clickable {
+                                    navController.navigate(AdditionalScreens.AddNoteScreen.rout) }
                         )
                     }
                 }

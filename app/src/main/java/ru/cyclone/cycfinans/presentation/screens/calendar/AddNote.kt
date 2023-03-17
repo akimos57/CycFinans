@@ -10,12 +10,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Note
-import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.gold
 import java.sql.Time
 import java.util.*
@@ -39,7 +35,8 @@ import java.util.*
 fun AddNote(
     navController: NavHostController,
     noteId: String?,
-    noteContent: String?
+    noteContent: String?,
+    onReturned: MutableState<() -> Unit>
 ) {
     navController.enableOnBackPressed(true)
     val vm = hiltViewModel<AddNoteVM>()
@@ -64,7 +61,6 @@ fun AddNote(
                     .clip(RoundedCornerShape(24.dp))
                     .background(MaterialTheme.colors.background)
                     .clickable {
-                        navController.navigate(Screens.CalendarScreen.rout)
                         if (content.isBlank() and (note != null)) {
                             vm.deleteNote(note!!)
                         } else if (note != null) {
@@ -73,16 +69,20 @@ fun AddNote(
                                     id = note!!.id,
                                     content = content,
                                     time = note!!.time
-                                )
+                                ),
+                                onSuccess = onReturned.value
                             )
                         } else if (content.isNotBlank()) {
                             vm.addNote(
                                 Note(
                                     content = content,
                                     time = Time(Calendar.getInstance().timeInMillis)
-                                )
+                                ),
+                                onSuccess = onReturned.value
                             )
                         }
+                        onReturned.value()
+                        navController.popBackStack()
                     },
                 contentAlignment = Alignment.Center
             ){
@@ -138,7 +138,6 @@ fun AddNote(
         )
     }
     BackHandler {
-        navController.navigate(Screens.CalendarScreen.rout)
         if (content.isBlank() and (note != null)) {
             vm.deleteNote(note!!)
         } else if (note != null) {
@@ -147,15 +146,19 @@ fun AddNote(
                     id = note!!.id,
                     content = content,
                     time = note!!.time
-                )
+                ),
+                onSuccess = onReturned.value
             )
         } else if (content.isNotBlank()) {
             vm.addNote(
                 Note(
                     content = content,
                     time = Time(Calendar.getInstance().timeInMillis)
-                )
+                ),
+                onSuccess = onReturned.value
             )
         }
+        onReturned.value()
+        navController.popBackStack()
     }
 }

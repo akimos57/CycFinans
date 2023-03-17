@@ -31,9 +31,14 @@ import java.util.*
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun CalendarScreen(navController: NavHostController) {
+fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableState<() -> Unit>) {
     val vm = hiltViewModel<CalendarScreenVM>()
     val notes by vm.notes.observeAsState()
+
+    onAddNoteReturned.value = {
+        vm.updateNotes()
+    }
+
     Scaffold(
         floatingActionButton = {FloatingActionButton(
             onClick = { navController.navigate(AdditionalScreens.AddNoteScreen.rout) {

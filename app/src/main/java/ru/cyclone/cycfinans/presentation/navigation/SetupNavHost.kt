@@ -50,6 +50,8 @@ fun SetupNavHost(navController: NavHostController) {
         else -> false
     }
 
+    val onReturned = remember { mutableStateOf({}) }
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController = navController, showNavigationBar) }
     ) { paddingValues ->
@@ -63,25 +65,34 @@ fun SetupNavHost(navController: NavHostController) {
                 MainScreen(navController = navController)
             }
             composable(route = AdditionalScreens.MainDetailsScreen.rout + "/{day}/{month}/{year}") {
-                MainDetailsScreen(navController = navController,
+                MainDetailsScreen(
+                    navController = navController,
                     it.arguments?.getString("day"),
                     it.arguments?.getString("month"),
-                    it.arguments?.getString("year")
+                    it.arguments?.getString("year"),
+                    onReturned
                 )
             }
             composable(route = Screens.CalendarScreen.rout) {
-                CalendarScreen(navController = navController)
+                CalendarScreen(
+                    navController = navController,
+                    onReturned
+                )
             }
             composable(route = AdditionalScreens.AddNoteScreen.rout + "{id}/{content}") {
-                AddNote(navController = navController,
+                AddNote(
+                    navController = navController,
                     it.arguments?.getString("id"),
-                    it.arguments?.getString("content")
+                    it.arguments?.getString("content"),
+                    onReturned
                 )
             }
             composable(route = AdditionalScreens.AddNoteScreen.rout) {
-                AddNote(navController = navController,
+                AddNote(
+                    navController = navController,
                     it.arguments?.getString("id"),
-                    it.arguments?.getString("content")
+                    it.arguments?.getString("content"),
+                    onReturned
                 )
             }
             composable(route = Screens.StatisticsScreen.rout) {

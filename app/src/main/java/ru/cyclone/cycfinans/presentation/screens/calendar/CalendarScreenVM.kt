@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.domain.model.Note
-import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.domain.usecases.note.DeleteNoteUseCase
 import ru.cyclone.cycfinans.domain.usecases.note.GetAllNotesUseCase
 import javax.inject.Inject
@@ -21,7 +20,7 @@ class CalendarScreenVM @Inject constructor(
     val notes: LiveData<List<Note>>
         get() = _notes
 
-    private fun updateNotes() {
+    fun updateNotes() {
        viewModelScope.launch {
            _notes.postValue(getAllNotesUseCase.invoke())
        }
