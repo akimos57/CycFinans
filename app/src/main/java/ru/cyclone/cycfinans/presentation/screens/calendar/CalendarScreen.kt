@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -21,37 +22,60 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.CalendarInput
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
+import ru.cyclone.cycfinans.presentation.ui.components.Calendar
 import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
+import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycfinans.presentation.ui.theme.gold
+import java.time.LocalDate
+import java.time.Month
+import java.time.Year
+import java.time.YearMonth
+import java.time.format.TextStyle
 import java.util.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableState<() -> Unit>) {
     val vm = hiltViewModel<CalendarScreenVM>()
-    val notes by vm.notes.observeAsState()
+    val notes = vm.notes.observeAsState(listOf()).value
+    var visible by remember {
+        mutableStateOf(false)
+    }
+    val currentMonth = remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+    val currentYear = Year.now().value
+    var month = Month.of(currentMonth.value + 1).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    var date by remember {
+        mutableStateOf("$month, $currentYear")
+    }
+
+    val actualDate = Pair(LocalDate.now().dayOfMonth, YearMonth.now())
 
     onAddNoteReturned.value = {
         vm.updateNotes()
     }
 
     Scaffold(
-        floatingActionButton = {FloatingActionButton(
-            onClick = { navController.navigate(AdditionalScreens.AddNoteScreen.rout) {
-                launchSingleTop = true
-            }},
-            backgroundColor = gold
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = "add",
-                modifier = Modifier
-                    .height(33.dp)
-                    .width(33.dp)
-            )
-        }}
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(AdditionalScreens.AddNoteScreen.rout) {
+                        launchSingleTop = true
+                    }
+                },
+                backgroundColor = blue
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "add",
+                    modifier = Modifier
+                        .height(33.dp)
+                        .width(33.dp)
+                )
+            }
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -59,10 +83,34 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                 .fillMaxSize()
         ) {
             val calendarInputList by remember {
-                mutableStateOf(createCalendarList())
+                mutableStateOf(createCalendarList(currentMonth = currentMonth))
             }
+
             var clickedCalendarElem by remember {
                 mutableStateOf<CalendarInput?>(null)
+            }
+
+            TextButton(
+                modifier = Modifier
+                    .padding(top = 20.dp, start = 20.dp, end = 20.dp)
+                    .clip(RoundedCornerShape(16.dp)),
+                onClick = { visible = true },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.background
+                )
+            ) {
+                Text(
+                    modifier = Modifier,
+                    text = date,
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Light
+                )
+                Icon(
+                    imageVector = Icons.Filled.ArrowDropDown,
+                    contentDescription = "arrow",
+                    modifier = Modifier
+                        .size(33.dp)
+                )
             }
             Column {
                 Box(
@@ -75,7 +123,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                         onDayClick = { day ->
                             clickedCalendarElem = calendarInputList.first { it.day == day }
                         },
-                        month = "Март",
+                        month = "",
                         modifier = Modifier
                             .padding(20.dp)
                             .fillMaxWidth()
@@ -96,11 +144,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                     }
                 }
             }
-            val calendar = Calendar.getInstance()
-            notes?.filter{ note ->
-                calendar.timeInMillis = note.time.time
-                calendar[Calendar.DAY_OF_MONTH] == clickedCalendarElem?.day
-            }?.forEach { note ->
+            notes.forEach { note ->
                 val showDialog1 = remember { mutableStateOf(false) }
                 if (showDialog1.value) {
                     Dialog(
@@ -173,28 +217,46 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                         }
                     }
                 }
-                NoteBox(
-                    note = note,
-                    modifier = Modifier
-                        .combinedClickable (
-                            onClick =  {navController.navigate(AdditionalScreens.AddNoteScreen.rout + note.id + '/' + note.content.ifBlank { "" })},
-                            onLongClick = {showDialog1.value = true}
-                        )
+                    NoteBox(
+                        note = note,
+                        modifier = Modifier
+                            .combinedClickable (
+                                onClick =  {navController.navigate(AdditionalScreens.AddNoteScreen.rout + note.id + '/' + note.content.ifBlank { "" })},
+                                onLongClick = {showDialog1.value = true}
+                            )
                     )
                 }
             }
+        Calendar(
+            visible = visible,
+            currentMonth = currentMonth.value,
+            currentYear = currentYear,
+            confirmButtonClicked = { _month, _year ->
+                currentMonth.value = _month - 1
+                month =
+                    Month.of(_month).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                date = "$month, $_year"
+                visible = false
+            },
+            cancelClicked = {
+                visible = false
+            },
+            onDismiss = { visible = false }
+        )
         }
     }
-private fun createCalendarList(): List<CalendarInput> {
+
+private fun createCalendarList(currentMonth:MutableState<Int>): List<CalendarInput> {
     val calendarInputs = mutableListOf<CalendarInput>()
-    for (i in 1..31) {
+    for (i in 1..Month.of(currentMonth.value + 1).length(Year.now().isLeap)) {
         calendarInputs.add(
             CalendarInput(
                 i,
                 toDos = listOf(
                     "Day $i:",
                     "title",
-                    "content"
+                    "content",
                 )
             )
         )

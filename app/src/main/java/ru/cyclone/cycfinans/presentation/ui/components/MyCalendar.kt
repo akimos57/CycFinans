@@ -57,11 +57,6 @@ fun MyCalendar(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Text(
-            text = month,
-            fontWeight = FontWeight.Light,
-            fontSize = 36.sp
-        )
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
@@ -104,7 +99,7 @@ fun MyCalendar(
             clipPath(path) {
                 drawCircle(
                     brush = Brush.radialGradient(
-                        listOf(fab1.copy(0.8f), fab1.copy(0.2f)),
+                        listOf(blue.copy(0.8f), blue.copy(0.2f)),
                         center = clickAnimationOffset,
                         radius = animationRadius + 0.1f
                     ),
