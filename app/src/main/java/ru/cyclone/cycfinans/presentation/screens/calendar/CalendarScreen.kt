@@ -9,7 +9,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,7 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import ru.cyclone.cycfinans.domain.model.CalendarInput
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
+import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.gold
 
@@ -47,36 +49,44 @@ fun CalendarScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp, horizontal = 26.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-//                Box(
-//                    modifier = Modifier
-//                        .width(48.dp)
-//                        .height(48.dp)
-//                        .clip(RoundedCornerShape(24.dp))
-//                        .clickable { navController.navigate(Screens.MainScreen.rout) },
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Filled.ArrowBack,
-//                        contentDescription = "back",
-//                        modifier = Modifier
-//                            .height(25.dp)
-//                            .width(25.dp)
-//                    )
-//                }
-                Text(
-                    text = "Цели",
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Light,
-                    modifier = Modifier
-                        .padding(start = 16.dp, bottom = 16.dp)
-                )
-            }
+                val calendarInputList by remember {
+                    mutableStateOf(createCalendarList())
+                }
+                var clickedCalendarElem by remember {
+                    mutableStateOf<CalendarInput?>(null)
+                }
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        MyCalendar(
+                            calendarInput = calendarInputList,
+                            onDayClick = { day ->
+                                clickedCalendarElem = calendarInputList.first { it.day == day }
+                            },
+                            month = "Март",
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .fillMaxWidth()
+                                .aspectRatio(1.3f)
+                        )
+                    }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                        ) {
+                            clickedCalendarElem?.toDos?.forEach{
+                                Text(
+                                    text = if(it.contains("Day")) it else "- $it",
+                                    fontSize = if(it.contains("Day")) 25.sp else 18.sp,
+                                    fontWeight = FontWeight.Light
+                                )
+                            }
+                        }
+                }
 
             notes.value?.forEach { note ->
                 NoteBox(
@@ -87,4 +97,20 @@ fun CalendarScreen(navController: NavHostController) {
             }
         }
     }
+}
+private fun createCalendarList(): List<CalendarInput> {
+    val calendarInputs = mutableListOf<CalendarInput>()
+    for (i in 1..31) {
+        calendarInputs.add(
+            CalendarInput(
+                i,
+                toDos = listOf(
+                    "Day $i:",
+                    "title",
+                    "content"
+                )
+            )
+        )
+    }
+    return calendarInputs
 }

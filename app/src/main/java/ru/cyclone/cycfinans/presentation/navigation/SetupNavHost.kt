@@ -24,7 +24,7 @@ sealed class Screens(
     val iconId: Int
 ) {
     object MainScreen: Screens(rout = "main_screen", iconId = R.drawable.home, title = "Главная")
-    object CalendarScreen: Screens(rout = "target_screen", iconId = R.drawable.star, title = "Цели")
+    object CalendarScreen: Screens(rout = "target_screen", iconId = R.drawable.dashboard, title = "Календарь")
     object StatisticsScreen: Screens(rout = "statistics_screen", iconId = R.drawable.data_usage, title = "Статистика")
     object SettingsScreen: Screens(rout = "settings_screen", iconId = R.drawable.settings, title = "Настройки")
 }
