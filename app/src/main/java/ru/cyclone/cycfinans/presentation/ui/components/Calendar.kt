@@ -59,7 +59,9 @@ fun Calendar(
             backgroundColor = MaterialTheme.colors.secondary,
             shape = RoundedCornerShape(10),
             text = {
-                Column {
+                Column(
+                    modifier = Modifier
+                ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),

@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Note
 import java.sql.Date
+import java.sql.Time
 import java.text.DateFormat
 
 @Composable
@@ -23,7 +24,7 @@ fun NoteBox(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
+            .height(120.dp)
             .padding(horizontal = 16.dp, vertical = 4.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(MaterialTheme.colors.secondary)
@@ -31,33 +32,21 @@ fun NoteBox(
         Column(
             modifier = modifier
                 .fillMaxSize()
+                .padding(start = 16.dp, top = 16.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 24.dp, top = 16.dp)
-            ) {
+
+            val time = DateFormat.getDateInstance().format(Date(note.time.time))
+            Text(
+                text = time,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Normal
+            )
                 Text(
                     text = note.content,
-                    fontSize = 24.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 24.dp)
-            ) {
-                Column {
-                    val time = DateFormat.getDateInstance().format(Date(note.time.time))
-                    Text(
-                        text = time,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal
-                    )
-                }
-
-            }
         }
     }
-}
+

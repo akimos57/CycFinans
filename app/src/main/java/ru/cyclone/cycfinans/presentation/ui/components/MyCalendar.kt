@@ -37,7 +37,7 @@ fun MyCalendar(
     modifier: Modifier = Modifier,
     calendarInput: List<CalendarInput>,
     onDayClick:(Int) -> Unit,
-    strokeWidth: Float = 5f,
+    strokeWidth: Float = 2f,
     month: String
 ) {
     var canvasSize by remember {
@@ -120,23 +120,23 @@ fun MyCalendar(
                     width = strokeWidth
                 )
             )
-            for(i in 1 until CALENDAR_ROWS) {
-                drawLine(
-                    color = blue,
-                    start = Offset(0f,ySteps*i),
-                    end = Offset(canvasWidth,ySteps*i),
-                    strokeWidth = strokeWidth
-                )
-            }
-            for(i in 1 until CALENDAR_COLUMNS) {
-                drawLine(
-                    color = blue,
-                    start = Offset(xSteps*i,0f),
-                    end = Offset(xSteps*i,canvasHeight),
-                    strokeWidth = strokeWidth
-                )
-            }
-            val textHeight = 17.dp.toPx()
+//            for(i in 1 until CALENDAR_ROWS) {
+//                drawLine(
+//                    color = blue,
+//                    start = Offset(0f,ySteps*i),
+//                    end = Offset(canvasWidth,ySteps*i),
+//                    strokeWidth = 0f
+//                )
+//            }
+//            for(i in 1 until CALENDAR_COLUMNS) {
+//                drawLine(
+//                    color = blue,
+//                    start = Offset(xSteps*i,0f),
+//                    end = Offset(xSteps*i,canvasHeight),
+//                    strokeWidth = 0f
+//                )
+//            }
+            val textHeight = 16.dp.toPx()
             for(i in calendarInput.indices) {
                 val textPositionX = xSteps * (i% CALENDAR_COLUMNS) + strokeWidth
                 val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight + strokeWidth/2
@@ -155,21 +155,4 @@ fun MyCalendar(
             }
         }
     }
-}
-
-private fun createCalendarList(): List<CalendarInput> {
-    val calendarInputs = mutableListOf<CalendarInput>()
-    for (i in 1..31) {
-        calendarInputs.add(
-            CalendarInput(
-                i,
-                toDos = listOf(
-                    "Day $i:",
-                    "title",
-                    "content"
-                )
-            )
-        )
-    }
-    return calendarInputs
 }
