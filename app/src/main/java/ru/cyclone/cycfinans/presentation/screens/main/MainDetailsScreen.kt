@@ -92,22 +92,24 @@ fun MainDetailsScreen(
                     modifier = Modifier
                         .padding(start = 16.dp)
                 )
-                Spacer(modifier = Modifier.width(1.dp))
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(24.dp))
-                        .clickable {
-                            showNotes = true
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.List,
-                        contentDescription = "open_notes",
+                Spacer(Modifier.weight(1f))
+                if (notes?.size != 0) {
+                    Box(
                         modifier = Modifier
-                            .size(25.dp)
-                    )
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(24.dp))
+                            .clickable {
+                                showNotes = true
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.List,
+                            contentDescription = "open_notes",
+                            modifier = Modifier
+                                .size(25.dp)
+                        )
+                    }
                 }
             }
             Row(
