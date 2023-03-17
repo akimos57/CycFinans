@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -26,10 +27,7 @@ import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
-import ru.cyclone.cycfinans.presentation.ui.components.EditPromotion
-import ru.cyclone.cycfinans.presentation.ui.components.EmptyNoteBox
-import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
-import ru.cyclone.cycfinans.presentation.ui.components.PromotionBox
+import ru.cyclone.cycfinans.presentation.ui.components.*
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import java.sql.Time
@@ -117,6 +115,7 @@ fun MainDetailsScreen(
                     )
                 }
             }
+            NotesInDetails(navController = navController)
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -267,6 +266,7 @@ fun MainDetailsScreen(
                     },
                     floatingActionButtonPosition = FabPosition.Center
                 ) { paddingValues ->
+
                     EditPromotion(
                         show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
                             time = Time(date.timeInMillis),
@@ -384,107 +384,6 @@ fun MainDetailsScreen(
                                     )
                             )
                         }
-                    }
-                }
-            }
-        }
-        if (showNotes) {
-            Dialog(
-                onDismissRequest = { showNotes = false }
-            ) {
-                LazyColumn {
-                    notes?.let {
-                        items(it.size) { index ->
-                            val showDialog1 = remember { mutableStateOf(false) }
-                            if (showDialog1.value) {
-                                Dialog(
-                                    onDismissRequest = { showDialog1.value = false }) {
-                                    Box(
-                                        modifier = Modifier
-                                            .height(120.dp)
-                                            .width(250.dp)
-                                            .clip(RoundedCornerShape(24.dp))
-                                            .background(MaterialTheme.colors.secondary)
-                                    ) {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(top = 24.dp),
-                                            horizontalArrangement = Arrangement.Center
-                                        ) {
-                                            Text(
-                                                text = "Удалить?",
-                                                fontSize = 20.sp,
-                                                fontWeight = FontWeight.Medium,
-                                            )
-                                        }
-
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxSize(),
-                                            verticalArrangement = Arrangement.Bottom
-                                        ) {
-                                            Row(
-                                                modifier = Modifier
-                                                    .fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.End
-                                            ) {
-                                                OutlinedButton(
-                                                    modifier = Modifier
-                                                        .padding(end = 20.dp),
-                                                    shape = CircleShape,
-                                                    border = BorderStroke(1.dp, color = Color.Transparent),
-                                                    colors = ButtonDefaults.outlinedButtonColors(
-                                                        backgroundColor = MaterialTheme.colors.secondary,
-                                                        contentColor = MaterialTheme.colors.primaryVariant
-                                                    ),
-                                                    onClick = { showDialog1.value = false }) {
-                                                    Text(
-                                                        text = "Отмена",
-                                                        fontSize = 14.sp,
-                                                        fontWeight = FontWeight.Medium
-                                                    )
-                                                }
-                                                OutlinedButton(
-                                                    modifier = Modifier
-                                                        .padding(end = 20.dp),
-                                                    shape = CircleShape,
-                                                    border = BorderStroke(1.dp, color = Color.Transparent),
-                                                    colors = ButtonDefaults.outlinedButtonColors(
-                                                        backgroundColor = fab2,
-                                                        contentColor = MaterialTheme.colors.primaryVariant
-                                                    ),
-                                                    onClick = { showDialog1.value = false; viewModel.deleteNote(note = notes!![index]) }) {
-                                                    Text(
-                                                        text = "Удалить",
-                                                        fontSize = 14.sp,
-                                                        fontWeight = FontWeight.Medium,
-                                                    )
-                                                }
-                                            }
-                                        }
-
-                                    }
-                                }
-                            }
-                            NoteBox(
-                                note = notes!![index],
-                                modifier = Modifier
-                                    .combinedClickable (
-                                        onClick = { navController.navigate(AdditionalScreens.AddNoteScreen.rout +
-                                                notes!![index].id + '/' +
-                                                notes!![index].content.ifBlank { "" })},
-                                        onLongClick = { showDialog1.value = true }
-                                    )
-                            )
-                        }
-                    }
-                    item {
-                        EmptyNoteBox (
-                            modifier = Modifier
-                                .clickable {
-                                    navController.navigate(AdditionalScreens.AddNoteScreen.rout) }
-                        )
                     }
                 }
             }
