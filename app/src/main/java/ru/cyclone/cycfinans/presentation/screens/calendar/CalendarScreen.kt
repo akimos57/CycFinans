@@ -1,6 +1,5 @@
 package ru.cyclone.cycfinans.presentation.screens.calendar
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -29,7 +28,6 @@ import ru.cyclone.cycfinans.presentation.ui.theme.gold
 import java.util.*
 
 @OptIn(ExperimentalFoundationApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableState<() -> Unit>) {
     val vm = hiltViewModel<CalendarScreenVM>()
@@ -54,9 +52,10 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                     .width(33.dp)
             )
         }}
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
         ) {
             val calendarInputList by remember {
