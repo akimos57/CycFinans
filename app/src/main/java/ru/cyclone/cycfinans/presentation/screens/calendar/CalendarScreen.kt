@@ -26,32 +26,29 @@ import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycfinans.presentation.ui.theme.gold
+import java.util.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CalendarScreen(navController: NavHostController) {
     val vm = hiltViewModel<CalendarScreenVM>()
-    val notes = vm.notes.observeAsState(listOf()).value
+    val notes by vm.notes.observeAsState()
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(AdditionalScreens.AddNoteScreen.rout) {
-                        launchSingleTop = true
-                    }
-                },
-                backgroundColor = gold
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "add",
-                    modifier = Modifier
-                        .height(33.dp)
-                        .width(33.dp)
-                )
-            }
-        }
+        floatingActionButton = {FloatingActionButton(
+            onClick = { navController.navigate(AdditionalScreens.AddNoteScreen.rout) {
+                launchSingleTop = true
+            }},
+            backgroundColor = gold
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = "add",
+                modifier = Modifier
+                    .height(33.dp)
+                    .width(33.dp)
+            )
+        }}
     ) {
         Column(
             modifier = Modifier
@@ -95,7 +92,11 @@ fun CalendarScreen(navController: NavHostController) {
                     }
                 }
             }
-            notes.forEach { note ->
+            val calendar = Calendar.getInstance()
+            notes?.filter{ note ->
+                calendar.timeInMillis = note.time.time
+                calendar[Calendar.DAY_OF_MONTH] == clickedCalendarElem?.day
+            }?.forEach { note ->
                 val showDialog1 = remember { mutableStateOf(false) }
                 if (showDialog1.value) {
                     Dialog(
@@ -168,13 +169,13 @@ fun CalendarScreen(navController: NavHostController) {
                         }
                     }
                 }
-                    NoteBox(
-                        note = note,
-                        modifier = Modifier
-                            .combinedClickable (
-                                onClick =  {navController.navigate(AdditionalScreens.AddNoteScreen.rout + note.id + '/' + note.content.ifBlank { "" })},
-                                onLongClick = {showDialog1.value = true}
-                            )
+                NoteBox(
+                    note = note,
+                    modifier = Modifier
+                        .combinedClickable (
+                            onClick =  {navController.navigate(AdditionalScreens.AddNoteScreen.rout + note.id + '/' + note.content.ifBlank { "" })},
+                            onLongClick = {showDialog1.value = true}
+                        )
                     )
                 }
             }
@@ -189,7 +190,7 @@ private fun createCalendarList(): List<CalendarInput> {
                 toDos = listOf(
                     "Day $i:",
                     "title",
-                    "content",
+                    "content"
                 )
             )
         )

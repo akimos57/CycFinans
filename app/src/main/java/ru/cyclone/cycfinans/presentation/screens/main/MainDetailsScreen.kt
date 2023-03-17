@@ -9,10 +9,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.List
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,9 +23,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Promotion
-import ru.cyclone.cycfinans.presentation.ui.components.EditPromotion
-import ru.cyclone.cycfinans.presentation.ui.components.PromotionBox
+import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
+import ru.cyclone.cycfinans.presentation.ui.components.EditPromotion
+import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
+import ru.cyclone.cycfinans.presentation.ui.components.PromotionBox
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import java.sql.Time
@@ -49,235 +50,344 @@ fun MainDetailsScreen(
     val viewModel = hiltViewModel<MainDetailsScreenVM>()
     viewModel.date = date
     val promotions = viewModel.promotions.observeAsState(listOf()).value
+    val notes by viewModel.notes.observeAsState()
 
     var type = false
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
+    var showNotes by remember { mutableStateOf(false) }
+
+    Box {
+        Column {
+            Row(
                 modifier = Modifier
-                    .width(48.dp)
-                    .height(48.dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .clickable {
-                        navController.navigate(Screens.MainScreen.rout) {
-                            popUpTo(Screens.MainScreen.rout) {
-                                inclusive = true
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                        .clickable {
+                            navController.navigate(Screens.MainScreen.rout) {
+                                popUpTo(Screens.MainScreen.rout) {
+                                    inclusive = true
+                                }
                             }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "back",
+                        modifier = Modifier
+                            .height(25.dp)
+                            .width(25.dp)
+                    )
+                }
+                Text(
+                    text = "$day ${ Month.of(month.toInt()).getDisplayName(TextStyle.FULL, Locale.getDefault()) }, $year",
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Light,
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                )
+                Spacer(modifier = Modifier.width(1.dp))
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                        .clickable {
+                            showNotes = true
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.List,
+                        contentDescription = "open_notes",
+                        modifier = Modifier
+                            .size(25.dp)
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                val s = remember { mutableStateOf(false)}
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxWidth(0.5f)
+                        .fillMaxHeight(),
+                    floatingActionButton = {
+                        FloatingActionButton(
+                            onClick = { s.value = true; type = true },
+                            modifier = Modifier,
+                            backgroundColor = fab1
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "add",
+                                modifier = Modifier
+                                    .height(33.dp)
+                                    .width(33.dp)
+                            )
                         }
                     },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "back",
-                    modifier = Modifier
-                        .height(25.dp)
-                        .width(25.dp)
-                )
-            }
-            Text(
-                text = "$day ${ Month.of(month.toInt()).getDisplayName(TextStyle.FULL, Locale.getDefault()) }, $year",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Light,
-                modifier = Modifier
-                    .padding(start = 16.dp)
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            val s = remember { mutableStateOf(false)}
-            Scaffold(
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .fillMaxHeight(),
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = { s.value = true; type = true },
-                        modifier = Modifier,
-                        backgroundColor = fab1
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "add",
-                            modifier = Modifier
-                                .height(33.dp)
-                                .width(33.dp)
-                        )
-                    }
-                },
-                floatingActionButtonPosition = FabPosition.Center
-            ) { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    Row(
+                    floatingActionButtonPosition = FabPosition.Center
+                ) { paddingValues ->
+                    Column(
                         modifier = Modifier
+                            .padding(paddingValues)
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        horizontalArrangement = Arrangement.Center
+                            .fillMaxHeight()
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        Text(
-                            text = "Доходы",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Light
-                        )
-                    }
-                    promotions.filter { it.type }.forEach { promotion ->
-                        val showDialog = remember { mutableStateOf(false) }
-                        val showDialog1 = remember { mutableStateOf(false) }
-                        EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion, promotion.time.time)
-                        if (showDialog1.value) {
-                            Dialog(
-                                onDismissRequest = { showDialog1.value = false }) {
-                                Box(
-                                    modifier = Modifier
-                                        .height(120.dp)
-                                        .width(250.dp)
-                                        .clip(RoundedCornerShape(24.dp))
-                                        .background(MaterialTheme.colors.secondary)
-                                ) {
-                                    Row(
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Доходы",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Light
+                            )
+                        }
+                        promotions.filter { it.type }.forEach { promotion ->
+                            val showDialog = remember { mutableStateOf(false) }
+                            val showDialog1 = remember { mutableStateOf(false) }
+                            EditPromotion(showDialog.value, viewModel, onDismiss = { showDialog.value = false }, promotion, promotion.time.time)
+                            if (showDialog1.value) {
+                                Dialog(
+                                    onDismissRequest = { showDialog1.value = false }) {
+                                    Box(
                                         modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(top = 24.dp),
-                                        horizontalArrangement = Arrangement.Center
-                                    ) {
-                                        Text(
-                                            text = "Удалить?",
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight.Medium,
-                                        )
-                                    }
-
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxSize(),
-                                        verticalArrangement = Arrangement.Bottom
+                                            .height(120.dp)
+                                            .width(250.dp)
+                                            .clip(RoundedCornerShape(24.dp))
+                                            .background(MaterialTheme.colors.secondary)
                                     ) {
                                         Row(
                                             modifier = Modifier
-                                                .fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.End
+                                                .fillMaxWidth()
+                                                .padding(top = 24.dp),
+                                            horizontalArrangement = Arrangement.Center
                                         ) {
-                                            OutlinedButton(
+                                            Text(
+                                                text = "Удалить?",
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Medium,
+                                            )
+                                        }
+
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxSize(),
+                                            verticalArrangement = Arrangement.Bottom
+                                        ) {
+                                            Row(
                                                 modifier = Modifier
-                                                    .padding(end = 20.dp),
-                                                shape = CircleShape,
-                                                border = BorderStroke(1.dp, color = Color.Transparent),
-                                                colors = ButtonDefaults.outlinedButtonColors(
-                                                    backgroundColor = MaterialTheme.colors.secondary,
-                                                    contentColor = MaterialTheme.colors.primaryVariant
-                                                ),
-                                                onClick = { showDialog1.value = false }) {
-                                                Text(
-                                                    text = "Отмена",
-                                                    fontSize = 14.sp,
-                                                    fontWeight = FontWeight.Medium
-                                                )
-                                            }
-                                            OutlinedButton(
-                                                modifier = Modifier
-                                                    .padding(end = 20.dp),
-                                                shape = CircleShape,
-                                                border = BorderStroke(1.dp, color = Color.Transparent),
-                                                colors = ButtonDefaults.outlinedButtonColors(
-                                                    backgroundColor = fab2,
-                                                    contentColor = MaterialTheme.colors.primaryVariant
-                                                ),
-                                                onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
-                                                Text(
-                                                    text = "Удалить",
-                                                    fontSize = 14.sp,
-                                                    fontWeight = FontWeight.Medium,
-                                                )
+                                                    .fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.End
+                                            ) {
+                                                OutlinedButton(
+                                                    modifier = Modifier
+                                                        .padding(end = 20.dp),
+                                                    shape = CircleShape,
+                                                    border = BorderStroke(1.dp, color = Color.Transparent),
+                                                    colors = ButtonDefaults.outlinedButtonColors(
+                                                        backgroundColor = MaterialTheme.colors.secondary,
+                                                        contentColor = MaterialTheme.colors.primaryVariant
+                                                    ),
+                                                    onClick = { showDialog1.value = false }) {
+                                                    Text(
+                                                        text = "Отмена",
+                                                        fontSize = 14.sp,
+                                                        fontWeight = FontWeight.Medium
+                                                    )
+                                                }
+                                                OutlinedButton(
+                                                    modifier = Modifier
+                                                        .padding(end = 20.dp),
+                                                    shape = CircleShape,
+                                                    border = BorderStroke(1.dp, color = Color.Transparent),
+                                                    colors = ButtonDefaults.outlinedButtonColors(
+                                                        backgroundColor = fab2,
+                                                        contentColor = MaterialTheme.colors.primaryVariant
+                                                    ),
+                                                    onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
+                                                    Text(
+                                                        text = "Удалить",
+                                                        fontSize = 14.sp,
+                                                        fontWeight = FontWeight.Medium,
+                                                    )
+                                                }
                                             }
                                         }
-                                    }
 
+                                    }
                                 }
                             }
+                            PromotionBox(
+                                promotion,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .combinedClickable(
+                                        onClick = { showDialog.value = true },
+                                        onLongClick = { showDialog1.value = true }
+                                    )
+                            )
                         }
-                        PromotionBox(
-                            promotion,
+                    }
+                }
+                Scaffold(
+                    modifier = Modifier,
+                    floatingActionButton = {
+                        FloatingActionButton(
+                            onClick = { s.value = true; type = false },
+                            modifier = Modifier,
+                            backgroundColor = fab2
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "add",
+                                modifier = Modifier
+                                    .size(33.dp)
+                            )
+                        }
+                    },
+                    floatingActionButtonPosition = FabPosition.Center
+                ) { paddingValues ->
+                    EditPromotion(
+                        show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
+                            time = Time(date.timeInMillis),
+                            type = type,
+                            category = "",
+                            colorCategory = 0,
+                            price = 0
+                        ), date = date.timeInMillis
+                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .fillMaxSize()
+                    ) {
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .combinedClickable(
-                                    onClick = { showDialog.value = true },
-                                    onLongClick = { showDialog1.value = true }
-                                )
-                        )
+                                .padding(bottom = 16.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "Расходы",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Light
+                            )
+                        }
+                        promotions.filter { !it.type }.forEach { promotion ->
+                            val showDialog = remember { mutableStateOf(false) }
+                            val showDialog1 = remember { mutableStateOf(false) }
+                            EditPromotion(
+                                showDialog.value,
+                                viewModel,
+                                onDismiss = { showDialog.value = false },
+                                promotion,
+                                promotion.time.time
+                            )
+                            if (showDialog1.value) {
+                                Dialog(
+                                    onDismissRequest = { showDialog1.value = false }) {
+                                    Box(
+                                        modifier = Modifier
+                                            .height(120.dp)
+                                            .width(250.dp)
+                                            .clip(RoundedCornerShape(24.dp))
+                                            .background(MaterialTheme.colors.secondary)
+                                    ) {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(top = 24.dp),
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Text(
+                                                text = "Удалить?",
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Medium,
+                                            )
+                                        }
+
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxSize(),
+                                            verticalArrangement = Arrangement.Bottom
+                                        ) {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.End
+                                            ) {
+                                                OutlinedButton(
+                                                    modifier = Modifier
+                                                        .padding(end = 20.dp),
+                                                    shape = CircleShape,
+                                                    border = BorderStroke(1.dp, color = Color.Transparent),
+                                                    colors = ButtonDefaults.outlinedButtonColors(
+                                                        backgroundColor = MaterialTheme.colors.secondary,
+                                                        contentColor = MaterialTheme.colors.primaryVariant
+                                                    ),
+                                                    onClick = { showDialog1.value = false }) {
+                                                    Text(
+                                                        text = "Отмена",
+                                                        fontSize = 14.sp,
+                                                        fontWeight = FontWeight.Medium
+                                                    )
+                                                }
+                                                OutlinedButton(
+                                                    modifier = Modifier
+                                                        .padding(end = 20.dp),
+                                                    shape = CircleShape,
+                                                    border = BorderStroke(1.dp, color = Color.Transparent),
+                                                    colors = ButtonDefaults.outlinedButtonColors(
+                                                        backgroundColor = fab2,
+                                                        contentColor = MaterialTheme.colors.primaryVariant
+                                                    ),
+                                                    onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
+                                                    Text(
+                                                        text = "Удалить",
+                                                        fontSize = 14.sp,
+                                                        fontWeight = FontWeight.Medium,
+                                                    )
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                            PromotionBox(
+                                promotion,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .combinedClickable(
+                                        onClick = { showDialog.value = true },
+                                        onLongClick = { showDialog1.value = true }
+                                    )
+                            )
+                        }
                     }
                 }
             }
-            Scaffold(
-                modifier = Modifier,
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = { s.value = true; type = false },
-                        modifier = Modifier,
-                        backgroundColor = fab2
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "add",
-                            modifier = Modifier
-                                .size(33.dp)
-                        )
-                    }
-                },
-                floatingActionButtonPosition = FabPosition.Center
-            ) { paddingValues ->
-                EditPromotion(
-                    show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
-                        time = Time(date.timeInMillis),
-                        type = type,
-                        category = "",
-                        colorCategory = 0,
-                        price = 0
-                    ), date = date.timeInMillis
-                )
-                Column(
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize()
-                ) {
-                    Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                        Text(
-                            text = "Расходы",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Light
-                        )
-                    }
-                    promotions.filter { !it.type }.forEach { promotion ->
-                        val showDialog = remember { mutableStateOf(false) }
+        }
+        if (showNotes) {
+            Dialog(
+                onDismissRequest = { showNotes = false }
+            ) {
+                Column {
+                    notes?.forEach { note ->
                         val showDialog1 = remember { mutableStateOf(false) }
-                        EditPromotion(
-                            showDialog.value,
-                            viewModel,
-                            onDismiss = { showDialog.value = false },
-                            promotion,
-                            promotion.time.time
-                        )
                         if (showDialog1.value) {
                             Dialog(
                                 onDismissRequest = { showDialog1.value = false }) {
@@ -336,7 +446,7 @@ fun MainDetailsScreen(
                                                     backgroundColor = fab2,
                                                     contentColor = MaterialTheme.colors.primaryVariant
                                                 ),
-                                                onClick = { showDialog1.value = false; viewModel.deletePromotion(promotion = promotion) }) {
+                                                onClick = { showDialog1.value = false; viewModel.deleteNote(note = note) }) {
                                                 Text(
                                                     text = "Удалить",
                                                     fontSize = 14.sp,
@@ -349,12 +459,11 @@ fun MainDetailsScreen(
                                 }
                             }
                         }
-                        PromotionBox(
-                            promotion,
+                        NoteBox(
+                            note = note,
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .combinedClickable(
-                                    onClick = { showDialog.value = true },
+                                .combinedClickable (
+                                    onClick = { navController.navigate(AdditionalScreens.AddNoteScreen.rout + note.id + '/' + note.content.ifBlank { "" })},
                                     onLongClick = { showDialog1.value = true }
                                 )
                         )
