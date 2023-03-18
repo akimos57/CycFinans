@@ -9,36 +9,29 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
-import ru.cyclone.cycfinans.domain.model.CalendarInput
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
-import ru.cyclone.cycfinans.presentation.ui.theme.fab1
+import java.time.LocalDate
+import java.time.YearMonth
 
 private const val CALENDAR_ROWS = 5
 private const val CALENDAR_COLUMNS = 7
 @Composable
 fun MyCalendar(
     modifier: Modifier = Modifier,
-    calendarInput: List<CalendarInput>,
-    onDayClick:(Int) -> Unit,
+    onDaySelected:(Int) -> Unit,
     strokeWidth: Float = 2f,
-    month: String
+    yearMonth: MutableState<YearMonth?>
 ) {
     var canvasSize by remember {
         mutableStateOf(Size.Zero)
@@ -49,6 +42,9 @@ fun MyCalendar(
     var animationRadius by remember {
         mutableStateOf(0f)
     }
+
+    var day by remember { mutableStateOf(LocalDate.now().dayOfMonth) }
+    var firstDayOfWeek by remember { mutableStateOf(LocalDate.now().dayOfWeek.value) }
 
     val scope = rememberCoroutineScope()
 
@@ -63,14 +59,15 @@ fun MyCalendar(
                 .pointerInput(true) {
                     detectTapGestures(
                         onTap = { offset ->
-                            val column = (offset.x / canvasSize.width * CALENDAR_COLUMNS).toInt() + 1
-                            val row = (offset.y / canvasSize.height * CALENDAR_ROWS).toInt() + 1
-                            val day = column + (row-1) * CALENDAR_COLUMNS
-                            if (day <= calendarInput.size) {
-                                onDayClick(day)
+                            val column = (offset.x / canvasSize.width * CALENDAR_COLUMNS).toInt()
+                            val row = (offset.y / canvasSize.height * CALENDAR_ROWS).toInt()
+                            day = (column + (row) * CALENDAR_COLUMNS) - firstDayOfWeek + 1
+
+                            if (yearMonth.value!!.isValidDay(day)) {
+                                onDaySelected(day)
                                 clickAnimationOffset = offset
                                 scope.launch {
-                                    animate(0f,225f, animationSpec = tween(300)) { value, _ ->
+                                    animate(0f, 225f, animationSpec = tween(300)) { value, _ ->
                                         animationRadius = value
                                     }
                                 }
@@ -79,11 +76,9 @@ fun MyCalendar(
                     )
                 }
         ) {
-            val canvasHeight = size.height
-            val canvasWidth = size.width
-            canvasSize = Size(canvasWidth, canvasHeight)
-            val ySteps = canvasHeight / CALENDAR_ROWS
-            val xSteps = canvasWidth / CALENDAR_COLUMNS
+            canvasSize = Size(size.width, size.height)
+            val ySteps = size.height / CALENDAR_ROWS
+            val xSteps = size.width / CALENDAR_COLUMNS
 
             val column = (clickAnimationOffset.x / canvasSize.width * CALENDAR_COLUMNS).toInt() + 1
             val row = (clickAnimationOffset.y / canvasSize.height * CALENDAR_ROWS).toInt() + 1
@@ -115,37 +110,33 @@ fun MyCalendar(
                     width = strokeWidth
                 )
             )
-//            for(i in 1 until CALENDAR_ROWS) {
-//                drawLine(
-//                    color = blue,
-//                    start = Offset(0f,ySteps*i),
-//                    end = Offset(canvasWidth,ySteps*i),
-//                    strokeWidth = 0f
-//                )
-//            }
-//            for(i in 1 until CALENDAR_COLUMNS) {
-//                drawLine(
-//                    color = blue,
-//                    start = Offset(xSteps*i,0f),
-//                    end = Offset(xSteps*i,canvasHeight),
-//                    strokeWidth = 0f
-//                )
-//            }
             val textHeight = 16.dp.toPx()
-            for(i in calendarInput.indices) {
-                val textPositionX = xSteps * (i% CALENDAR_COLUMNS) + strokeWidth
-                val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight + strokeWidth/2
-                drawContext.canvas.nativeCanvas.apply {
-                    drawText(
-                        "${i+1}",
-                        textPositionX,
-                        textPositionY,
-                        Paint().apply {
-                            textSize = textHeight
-                            color = color2.toArgb()
-                            isFakeBoldText = true
-                        }
-                    )
+            val calendar = java.util.Calendar.getInstance()
+            calendar.set(yearMonth.value!!.year, yearMonth.value!!.monthValue - 1, 1)
+
+            firstDayOfWeek = calendar[java.util.Calendar.DAY_OF_WEEK] - 1
+            for(i in 0..34) {
+                val textPositionX = (i % CALENDAR_COLUMNS) * xSteps + strokeWidth
+                val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight
+                val weekColor = when (i % CALENDAR_COLUMNS) {
+                    5 -> Color.Green.toArgb()
+                    6 -> Color.Red.toArgb()
+                    else -> color2.toArgb()
+                }
+
+                if (i in firstDayOfWeek until yearMonth.value!!.lengthOfMonth() + firstDayOfWeek) {
+                    drawContext.canvas.nativeCanvas.apply {
+                        drawText(
+                            "${ i - firstDayOfWeek + 1}",
+                            textPositionX,
+                            textPositionY,
+                            Paint().apply {
+                                textSize = textHeight
+                                color = weekColor
+                                isFakeBoldText = true
+                            }
+                        )
+                    }
                 }
             }
         }

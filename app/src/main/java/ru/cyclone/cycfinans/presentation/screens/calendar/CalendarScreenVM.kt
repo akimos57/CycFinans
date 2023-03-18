@@ -9,6 +9,8 @@ import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.domain.usecases.note.DeleteNoteUseCase
 import ru.cyclone.cycfinans.domain.usecases.note.GetAllNotesUseCase
+import java.time.LocalDate
+import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +22,9 @@ class CalendarScreenVM @Inject constructor(
     val notes: LiveData<List<Note>>
         get() = _notes
 
+    val yearMonth = MutableLiveData<YearMonth>()
+    val day = MutableLiveData<Int>()
+
     fun updateNotes() {
        viewModelScope.launch {
            _notes.postValue(getAllNotesUseCase.invoke())
@@ -27,6 +32,8 @@ class CalendarScreenVM @Inject constructor(
     }
     init {
         updateNotes()
+        yearMonth.value = YearMonth.now()
+        day.value = LocalDate.now().dayOfMonth
     }
     fun deleteNote(
         onSuccess: () -> Unit = {},

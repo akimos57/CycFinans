@@ -36,12 +36,16 @@ fun AddNote(
     navController: NavHostController,
     noteId: String?,
     noteContent: String?,
+    timeSting: String? = "",
     onReturned: MutableState<() -> Unit>
 ) {
     navController.enableOnBackPressed(true)
     val vm = hiltViewModel<AddNoteVM>()
     val note by vm.note.observeAsState()
     noteId?.toLong()?.let { vm.getNoteById(id = it) }
+    var time = System.currentTimeMillis()
+    if (timeSting?.isNotBlank() == true)
+        time = timeSting.toLong()
 
     var content by rememberSaveable { mutableStateOf(noteContent?:"") }
 
@@ -76,7 +80,7 @@ fun AddNote(
                             vm.addNote(
                                 Note(
                                     content = content,
-                                    time = Time(Calendar.getInstance().timeInMillis)
+                                    time = Time(time)
                                 ),
                                 onSuccess = onReturned.value
                             )

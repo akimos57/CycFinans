@@ -20,17 +20,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import ru.cyclone.cycfinans.domain.model.CalendarInput
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.ui.components.Calendar
 import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
-import ru.cyclone.cycfinans.presentation.ui.theme.gold
-import java.time.LocalDate
 import java.time.Month
-import java.time.Year
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
@@ -43,15 +39,19 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
     var visible by remember {
         mutableStateOf(false)
     }
-    val currentMonth = remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
-    val currentYear = Year.now().value
-    var month = Month.of(currentMonth.value + 1).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
-        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-    var date by remember {
-        mutableStateOf("$month, $currentYear")
-    }
+    val yearMonth by vm.yearMonth.observeAsState()
+    val day by vm.day.observeAsState()
 
-    val actualDate = Pair(LocalDate.now().dayOfMonth, YearMonth.now())
+    val currentYearMonth = remember { mutableStateOf(yearMonth) }
+    var currentDay by remember { mutableStateOf(day) }
+
+    var monthString by remember { mutableStateOf(
+        Month.of(currentYearMonth.value!!.monthValue).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    ) }
+    var dateString by remember {
+        mutableStateOf("$monthString, ${ currentYearMonth.value!!.year }")
+    }
 
     onAddNoteReturned.value = {
         vm.updateNotes()
@@ -61,7 +61,10 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(AdditionalScreens.AddNoteScreen.rout) {
+                    val calendar = Calendar.Builder()
+                        .setDate(currentYearMonth.value!!.year, currentYearMonth.value!!.monthValue - 1, currentDay!!)
+                        .build()
+                    navController.navigate(AdditionalScreens.AddNoteScreen.rout + calendar.timeInMillis) {
                         launchSingleTop = true
                     }
                 },
@@ -82,14 +85,6 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            val calendarInputList by remember {
-                mutableStateOf(createCalendarList(currentMonth = currentMonth))
-            }
-
-            var clickedCalendarElem by remember {
-                mutableStateOf<CalendarInput?>(null)
-            }
-
             TextButton(
                 modifier = Modifier
                     .padding(top = 20.dp, start = 20.dp, end = 20.dp)
@@ -101,7 +96,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
             ) {
                 Text(
                     modifier = Modifier,
-                    text = date,
+                    text = dateString,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Light
                 )
@@ -119,124 +114,132 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                     contentAlignment = Alignment.Center
                 ) {
                     MyCalendar(
-                        calendarInput = calendarInputList,
-                        onDayClick = { day ->
-                            clickedCalendarElem = calendarInputList.first { it.day == day }
+                        onDaySelected = { day ->
+                            currentDay = day
                         },
-                        month = "",
+                        yearMonth = currentYearMonth,
                         modifier = Modifier
                             .padding(20.dp)
                             .fillMaxWidth()
                             .aspectRatio(1.3f)
                     )
                 }
-                Column(
+                Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(10.dp)
-                ) {
-                    clickedCalendarElem?.toDos?.forEach {
-                        Text(
-                            text = if (it.contains("Day")) it else "- $it",
-                            fontSize = if (it.contains("Day")) 25.sp else 18.sp,
-                            fontWeight = FontWeight.Light
-                        )
-                    }
-                }
+                        .padding(10.dp),
+                    text = "Day $currentDay",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Light
+                )
             }
-            notes.forEach { note ->
-                val showDialog1 = remember { mutableStateOf(false) }
-                if (showDialog1.value) {
-                    Dialog(
-                        onDismissRequest = { showDialog1.value = false }) {
-                        Box(
-                            modifier = Modifier
-                                .height(120.dp)
-                                .width(250.dp)
-                                .clip(RoundedCornerShape(24.dp))
-                                .background(MaterialTheme.colors.secondary)
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 24.dp),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "Удалить?",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Medium,
-                                )
-                            }
 
-                            Column(
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                notes.filter { note ->
+                    val c = Calendar.getInstance()
+                    c.timeInMillis = note.time.time
+                    (currentYearMonth.value?.year == c.get(Calendar.YEAR)) and
+                            ((currentYearMonth.value?.month?.value?.minus(1)) == c.get(Calendar.MONTH)) and
+                            (currentDay == c.get(Calendar.DATE))
+                }.forEach { note ->
+                    val showDialog1 = remember { mutableStateOf(false) }
+                    if (showDialog1.value) {
+                        Dialog(
+                            onDismissRequest = { showDialog1.value = false }) {
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxSize(),
-                                verticalArrangement = Arrangement.Bottom
+                                    .height(120.dp)
+                                    .width(250.dp)
+                                    .clip(RoundedCornerShape(24.dp))
+                                    .background(MaterialTheme.colors.secondary)
                             ) {
                                 Row(
                                     modifier = Modifier
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.End
+                                        .fillMaxWidth()
+                                        .padding(top = 24.dp),
+                                    horizontalArrangement = Arrangement.Center
                                 ) {
-                                    OutlinedButton(
+                                    Text(
+                                        text = "Удалить?",
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Medium,
+                                    )
+                                }
+
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxSize(),
+                                    verticalArrangement = Arrangement.Bottom
+                                ) {
+                                    Row(
                                         modifier = Modifier
-                                            .padding(end = 20.dp),
-                                        shape = CircleShape,
-                                        border = BorderStroke(1.dp, color = Color.Transparent),
-                                        colors = ButtonDefaults.outlinedButtonColors(
-                                            backgroundColor = MaterialTheme.colors.secondary,
-                                            contentColor = MaterialTheme.colors.primaryVariant
-                                        ),
-                                        onClick = { showDialog1.value = false }) {
-                                        Text(
-                                            text = "Отмена",
-                                            fontSize = 14.sp,
-                                            fontWeight = FontWeight.Medium
-                                        )
-                                    }
-                                    OutlinedButton(
-                                        modifier = Modifier
-                                            .padding(end = 20.dp),
-                                        shape = CircleShape,
-                                        border = BorderStroke(1.dp, color = Color.Transparent),
-                                        colors = ButtonDefaults.outlinedButtonColors(
-                                            backgroundColor = fab2,
-                                            contentColor = MaterialTheme.colors.primaryVariant
-                                        ),
-                                        onClick = { showDialog1.value = false; vm.deleteNote(note = note) }) {
-                                        Text(
-                                            text = "Удалить",
-                                            fontSize = 14.sp,
-                                            fontWeight = FontWeight.Medium,
-                                        )
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.End
+                                    ) {
+                                        OutlinedButton(
+                                            modifier = Modifier
+                                                .padding(end = 20.dp),
+                                            shape = CircleShape,
+                                            border = BorderStroke(1.dp, color = Color.Transparent),
+                                            colors = ButtonDefaults.outlinedButtonColors(
+                                                backgroundColor = MaterialTheme.colors.secondary,
+                                                contentColor = MaterialTheme.colors.primaryVariant
+                                            ),
+                                            onClick = { showDialog1.value = false }) {
+                                            Text(
+                                                text = "Отмена",
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Medium
+                                            )
+                                        }
+                                        OutlinedButton(
+                                            modifier = Modifier
+                                                .padding(end = 20.dp),
+                                            shape = CircleShape,
+                                            border = BorderStroke(1.dp, color = Color.Transparent),
+                                            colors = ButtonDefaults.outlinedButtonColors(
+                                                backgroundColor = fab2,
+                                                contentColor = MaterialTheme.colors.primaryVariant
+                                            ),
+                                            onClick = { showDialog1.value = false; vm.deleteNote(note = note) }) {
+                                            Text(
+                                                text = "Удалить",
+                                                fontSize = 14.sp,
+                                                fontWeight = FontWeight.Medium,
+                                            )
+                                        }
                                     }
                                 }
                             }
-
                         }
                     }
-                }
                     NoteBox(
                         note = note,
                         modifier = Modifier
                             .combinedClickable (
-                                onClick =  {navController.navigate(AdditionalScreens.AddNoteScreen.rout + note.id + '/' + note.content.ifBlank { "" })},
+                                onClick =  {navController.navigate(AdditionalScreens.AddNoteScreen.rout +
+                                        note.id + '/' +
+                                        note.content.ifBlank { "" } + '/' +
+                                        note.time.time.toString()
+                                )},
                                 onLongClick = {showDialog1.value = true}
                             )
                     )
                 }
             }
+        }
         Calendar(
             visible = visible,
-            currentMonth = currentMonth.value,
-            currentYear = currentYear,
+            currentMonth = currentYearMonth.value!!.monthValue - 1,
+            currentYear = currentYearMonth.value!!.year,
             confirmButtonClicked = { _month, _year ->
-                currentMonth.value = _month - 1
-                month =
+                currentYearMonth.value = YearMonth.of(_year, _month)
+                monthString =
                     Month.of(_month).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
                         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-                date = "$month, $_year"
+                dateString = "$monthString, $_year"
                 visible = false
             },
             cancelClicked = {
@@ -244,22 +247,5 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
             },
             onDismiss = { visible = false }
         )
-        }
     }
-
-private fun createCalendarList(currentMonth:MutableState<Int>): List<CalendarInput> {
-    val calendarInputs = mutableListOf<CalendarInput>()
-    for (i in 1..Month.of(currentMonth.value + 1).length(Year.now().isLeap)) {
-        calendarInputs.add(
-            CalendarInput(
-                i,
-                toDos = listOf(
-                    "Day $i:",
-                    "title",
-                    "content",
-                )
-            )
-        )
-    }
-    return calendarInputs
 }

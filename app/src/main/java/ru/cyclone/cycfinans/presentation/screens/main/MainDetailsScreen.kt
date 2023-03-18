@@ -3,8 +3,6 @@ package ru.cyclone.cycfinans.presentation.screens.main
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -25,7 +23,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Promotion
-import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.components.*
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
@@ -45,7 +42,6 @@ fun MainDetailsScreen(
     onReturned: MutableState<() -> Unit>
 ) {
     val date = Calendar.getInstance()
-    date.clear()
     date.set(year!!.toInt(), month!!.toInt() - 1, day!!.toInt())
 
     val viewModel = hiltViewModel<MainDetailsScreenVM>()

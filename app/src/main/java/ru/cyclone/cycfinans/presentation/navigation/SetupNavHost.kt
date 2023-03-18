@@ -82,17 +82,37 @@ fun SetupNavHost(navController: NavHostController) {
             composable(route = AdditionalScreens.AddNoteScreen.rout + "{id}/{content}") {
                 AddNote(
                     navController = navController,
-                    it.arguments?.getString("id"),
-                    it.arguments?.getString("content"),
-                    onReturned
+                    noteId = it.arguments?.getString("id"),
+                    noteContent = it.arguments?.getString("content"),
+                    timeSting = it.arguments?.getString("time"),
+                    onReturned = onReturned
                 )
             }
             composable(route = AdditionalScreens.AddNoteScreen.rout) {
                 AddNote(
                     navController = navController,
-                    it.arguments?.getString("id"),
-                    it.arguments?.getString("content"),
-                    onReturned
+                    noteId = it.arguments?.getString("id"),
+                    noteContent = it.arguments?.getString("content"),
+                    timeSting = it.arguments?.getString("time"),
+                    onReturned = onReturned
+                )
+            }
+            composable(route = AdditionalScreens.AddNoteScreen.rout + "{id}/{content}/{time}") {
+                AddNote(
+                    navController = navController,
+                    noteId = it.arguments?.getString("id"),
+                    noteContent = it.arguments?.getString("content"),
+                    timeSting = it.arguments?.getString("time"),
+                    onReturned = onReturned
+                )
+            }
+            composable(route = AdditionalScreens.AddNoteScreen.rout + "{time}") {
+                AddNote(
+                    navController = navController,
+                    noteId = it.arguments?.getString("id"),
+                    noteContent = it.arguments?.getString("content"),
+                    timeSting = it.arguments?.getString("time"),
+                    onReturned = onReturned
                 )
             }
             composable(route = Screens.StatisticsScreen.rout) {
