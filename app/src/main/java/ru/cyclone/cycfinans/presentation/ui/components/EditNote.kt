@@ -1,5 +1,4 @@
 @file:Suppress("DEPRECATION")
-
 package ru.cyclone.cycfinans.presentation.ui.components
 
 import android.app.TimePickerDialog
@@ -34,9 +33,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun EditPromotion(
+fun EditNote(
     show: Boolean,
-    vm: MainDetailsScreenVM,
     onDismiss: () -> Unit,
     promotion: Promotion,
     date: Long,
@@ -57,7 +55,7 @@ fun EditPromotion(
                 q.set(Calendar.MINUTE, selectedMinute)
                 time = Time(q.timeInMillis)
             }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], true)
-        
+
         CategoryChooseDialog(show = showDialog, onDismiss = { showDialog.value = false }, category_picker = category, type = promotion.type)
         Dialog(
             onDismissRequest = onDismiss
@@ -144,40 +142,8 @@ fun EditPromotion(
                             }
                             OutlinedButton(
                                 onClick = {
-                                    val color = Color.White.toArgb()
-                                    if (price != "0") {
-                                        vm.addPromotion(
-                                            Promotion(
-                                                id = promotion.id,
-                                                type = promotion.type,
-                                                category = category.value,
-                                                colorCategory = color,
-                                                price = price.toInt(),
-                                                time = time
-                                            ),
-                                            onSuccess = {
-                                                if (!Categories.getAll(
-                                                        Locale.getDefault(),
-                                                        promotion.type,
-                                                    )
-                                                        .contains(category.value) and category.value.isNotEmpty()
-                                                ) {
-                                                    val result = Klaxon().toJsonString(
-                                                        Category(
-                                                            category.value,
-                                                            promotion.type,
-                                                            Locale.getDefault().language
-                                                        )
-                                                    )
-                                                    preferencesController.fileNameList.add(result)
-                                                    preferencesController.saveLists()
-                                                }
-                                            }
-                                        )
-                                    }
                                     onDismiss()
                                 },
-//                            modifier = Modifier.padding(end = 20.dp), 
                                 shape = CircleShape,
                                 colors = ButtonDefaults.outlinedButtonColors(
                                     backgroundColor = fab1,

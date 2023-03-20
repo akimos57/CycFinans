@@ -18,13 +18,16 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import java.time.LocalDate
 import java.time.YearMonth
+import java.util.Calendar
+import kotlin.time.Duration.Companion.days
 
-private const val CALENDAR_ROWS = 5
+private const val CALENDAR_ROWS = 6
 private const val CALENDAR_COLUMNS = 7
 @Composable
 fun MyCalendar(
@@ -115,14 +118,53 @@ fun MyCalendar(
             calendar.set(yearMonth.value!!.year, yearMonth.value!!.monthValue - 1, 1)
 
             firstDayOfWeek = calendar[java.util.Calendar.DAY_OF_WEEK] - 1
-            for(i in 0..34) {
+
+            val daysOfWeek = mutableListOf(
+                "Пн",
+                "Вт",
+//                "Ср",
+//                "Чт",
+//                "Пт",
+//                "Сб",
+//                "Вс",
+            )
+
+
+            for (i in 0..6) {
                 val textPositionX = (i % CALENDAR_COLUMNS) * xSteps + strokeWidth
                 val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight
                 val weekColor = when (i % CALENDAR_COLUMNS) {
-                    5 -> Color.Green.toArgb()
                     6 -> Color.Red.toArgb()
                     else -> color2.toArgb()
                 }
+
+                for (iq1 in 0..1) {
+                    var i = 0
+                    val ir = i++
+                    val iq = daysOfWeek[i]
+                    drawContext.canvas.nativeCanvas.apply {
+                        drawText(
+                            "$iq",
+                            textPositionX,
+                            textPositionY,
+                            Paint().apply {
+                                textSize = textHeight
+                                color = weekColor
+                                isFakeBoldText = true
+                            }
+                        )
+                    }
+                }
+            }
+
+            for(i in 7..34) {
+                val textPositionX = (i % CALENDAR_COLUMNS) * xSteps + strokeWidth
+                val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight
+                val weekColor = when (i % CALENDAR_COLUMNS) {
+                    6 -> Color.Red.toArgb()
+                    else -> color2.toArgb()
+                }
+
 
                 if (i in firstDayOfWeek until yearMonth.value!!.lengthOfMonth() + firstDayOfWeek) {
                     drawContext.canvas.nativeCanvas.apply {

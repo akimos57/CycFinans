@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
+import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,11 +55,11 @@ fun PromotionBox(
                     Text(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally),
-                        text = "Others",
+                        text = "Другое",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
-                        color = fab1
+                        color = if(promotion.type) fab1 else fab2
                     )
                 } else {
                     Text(
@@ -68,7 +69,7 @@ fun PromotionBox(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Normal,
                         textAlign = TextAlign.Center,
-                        color = fab1
+                        color = if(promotion.type) fab1 else fab2
                     )
                 }
                 Text(

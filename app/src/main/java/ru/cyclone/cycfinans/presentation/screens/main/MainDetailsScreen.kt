@@ -47,7 +47,6 @@ fun MainDetailsScreen(
     val viewModel = hiltViewModel<MainDetailsScreenVM>()
     viewModel.date = date
     val promotions = viewModel.promotions.observeAsState(listOf()).value
-    val notes by viewModel.notes.observeAsState()
 
     onReturned.value = {
         viewModel.updateNotes()
@@ -55,7 +54,6 @@ fun MainDetailsScreen(
 
     var type = false
 
-    var showNotes by remember { mutableStateOf(false) }
 
     Box {
         Column {
@@ -93,30 +91,13 @@ fun MainDetailsScreen(
                     modifier = Modifier
                         .padding(start = 16.dp)
                 )
-                Spacer(Modifier.weight(1f))
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(24.dp))
-                        .clickable {
-                            showNotes = true
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.List,
-                        contentDescription = "open_notes",
-                        modifier = Modifier
-                            .size(25.dp)
-                    )
-                }
             }
             NotesInDetails(navController = navController)
             Row(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                val s = remember { mutableStateOf(false)}
+                val s = remember { mutableStateOf(false) }
                 Scaffold(
                     modifier = Modifier
                         .fillMaxWidth(0.5f)

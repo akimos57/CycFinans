@@ -8,6 +8,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -44,6 +45,20 @@ fun ChartDonut(
         fab2,
         gold,
         Purple700,
+        diagram1,
+        diagram2,
+        diagram3,
+        diagram4,
+        diagram5,
+        diagram6,
+        diagram7,
+        diagram8,
+        diagram9,
+        diagram10,
+        diagram11,
+        diagram12,
+        diagram13,
+        diagram14,
     )
 
     val extraSize = data.values.size - colors.size
@@ -97,7 +112,8 @@ fun ChartDonut(
             ""
         else "$text ₽"
         val textStyle = TextStyle(
-            fontSize = TextUnit(animateScaling.value, TextUnitType.Sp)
+            fontSize = TextUnit(animateScaling.value, TextUnitType.Sp),
+            color = MaterialTheme.colors.primaryVariant
         )
         val textMeasurer = rememberTextMeasurer()
         val textLayoutResult: TextLayoutResult =
@@ -136,7 +152,7 @@ fun ChartDonut(
                 drawText(
                     textMeasurer = textMeasurer,
                     topLeft = Offset(
-                        (canvasWidth - textSize.width) / 2.4f,
+                        (canvasWidth - textSize.width) / 2f,
                         (canvasHeight - textSize.height) / 2f
                     ),
                     text = text,
@@ -202,7 +218,7 @@ fun DetailsPieChartItem(
                     Text(
                         modifier = Modifier
                             .padding(start = 15.dp),
-                        text = data.first,
+                        text = data.first.ifEmpty { "Другое" },
                         fontWeight = FontWeight.Medium,
                         fontSize = 16.sp,
                     )

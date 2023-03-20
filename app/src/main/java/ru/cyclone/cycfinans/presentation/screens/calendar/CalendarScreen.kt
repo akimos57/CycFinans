@@ -26,6 +26,8 @@ import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
+import java.sql.Time
+import java.text.SimpleDateFormat
 import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -49,6 +51,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
         Month.of(currentYearMonth.value!!.monthValue).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     ) }
+
     var dateString by remember {
         mutableStateOf("$monthString, ${ currentYearMonth.value!!.year }")
     }
@@ -56,6 +59,9 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
     onAddNoteReturned.value = {
         vm.updateNotes()
     }
+
+//    var time2 by remember { mutableStateOf(Time()) }
+//    val time3 = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time2)
 
     Scaffold(
         floatingActionButton = {
@@ -108,10 +114,27 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                 )
             }
             Column {
+//                val daysOfWeek = mutableListOf(
+//                    "Пн",
+//                    "Вт",
+//                    "Ср",
+//                    "Чт",
+//                    "Пт",
+//                    "Сб",
+//                    "Вс",
+//                )
+//                Row(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 20.dp)
+//                        .background(blue)
+//                ) {
+//                    Text(text = "$daysOfWeek")
+//                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+//                    contentAlignment = Alignment.Center
                 ) {
                     MyCalendar(
                         onDaySelected = { day ->
@@ -128,7 +151,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    text = "Day $currentDay",
+                    text = " $monthString, $currentDay",
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Light
                 )
@@ -217,7 +240,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                     }
                     NoteBox(
                         note = note,
-                        modifier = Modifier
+                        modifierClickable = Modifier
                             .combinedClickable (
                                 onClick =  {navController.navigate(AdditionalScreens.AddNoteScreen.rout +
                                         note.id + '/' +
@@ -225,7 +248,9 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                                         note.time.time.toString()
                                 )},
                                 onLongClick = {showDialog1.value = true}
-                            )
+                            ),
+                        modifierSizeBox = Modifier
+                            .padding(horizontal = 20.dp, vertical = 4.dp),
                     )
                 }
             }

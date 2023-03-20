@@ -35,7 +35,8 @@ fun NotesInDetails(navController:NavHostController) {
     val notes by viewModel.notes.observeAsState()
     LazyRow(
         modifier = Modifier
-            .padding(start = 4.dp),
+            .padding(start = 4.dp)
+            .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         item {
@@ -124,14 +125,16 @@ fun NotesInDetails(navController:NavHostController) {
 
                 NoteBox(
                     note = notes!![index],
-                    modifier = Modifier
+                    modifierClickable = Modifier
                         .combinedClickable (
                             onClick = { navController.navigate(
                                 AdditionalScreens.AddNoteScreen.rout +
                                     notes!![index].id + '/' +
                                     notes!![index].content.ifBlank { "" })},
                             onLongClick = { showDialog1.value = true }
-                        )
+                        ),
+                    modifierSizeBox = Modifier
+                        .padding(horizontal = 4.dp)
                 )
             }
         }

@@ -130,7 +130,7 @@ fun AddNote(
             textStyle = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Medium),
             placeholder = {
                 Text(
-                    text = "Enter note",
+                    text = "Напоминание",
                     fontSize = 22.sp
                 )
             },
