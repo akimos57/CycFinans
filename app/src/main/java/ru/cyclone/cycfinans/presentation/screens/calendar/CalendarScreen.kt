@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,8 +25,6 @@ import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
-import java.sql.Time
-import java.text.SimpleDateFormat
 import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle

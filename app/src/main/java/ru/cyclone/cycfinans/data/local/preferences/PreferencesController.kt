@@ -1,20 +1,20 @@
 package ru.cyclone.cycfinans.data.local.preferences
 
 import android.annotation.SuppressLint
+import ru.cyclone.cycnote.BuildConfig
 import java.io.File
 
-class PreferencesController {
+class PreferencesController(
+    tableName: String
+) {
     private companion object {
         private val DIVIDER = "\n".toByteArray()
         private const val DIVIDER_STRING = "\n"
     }
     var fileNameList : MutableList<String> = update()
-        set(value) {
-            field = value
-            saveLists()
-        }
+
     @SuppressLint("SdCardPath")
-    private val storage =  StorageController("/data/user/0/ru.cyclone.cycnote/files", "config", DIVIDER_STRING, DIVIDER)
+    private val storage =  StorageController("/data/user/0/${ BuildConfig.APPLICATION_ID }/files", tableName, DIVIDER_STRING, DIVIDER)
 
     fun saveLists() {
         storage.file.writeText("")

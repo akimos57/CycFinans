@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.beust.klaxon.Klaxon
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
+import ru.cyclone.cycfinans.domain.model.Categories
+import ru.cyclone.cycfinans.domain.model.Category
+import ru.cyclone.cycfinans.domain.model.CategoryChooseDialog
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
 import ru.cyclone.cycfinans.presentation.ui.theme.*
@@ -46,7 +49,7 @@ fun EditPromotion(
         val category = remember { mutableStateOf(promotion.category) }
         var time by remember { mutableStateOf(Time(date)) }
         val showDialog = remember { mutableStateOf(false) }
-        val preferencesController = PreferencesController()
+        val preferencesController = PreferencesController("tableName")
 
         val c = Calendar.getInstance()
         val tp = TimePickerDialog(LocalContext.current,
@@ -139,7 +142,8 @@ fun EditPromotion(
                                 Text(
                                     text = "Отмена",
                                     color = MaterialTheme.colors.primaryVariant,
-                                    fontSize = 16.sp
+                                    fontSize = 16.sp,
+                                    modifier = Modifier.clickable { onDismiss() }
                                 )
                             }
                             OutlinedButton(

@@ -18,14 +18,15 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-import java.util.Calendar
-import kotlin.time.Duration.Companion.days
+import java.time.format.TextStyle
+import java.util.*
 
 private const val CALENDAR_ROWS = 6
 private const val CALENDAR_COLUMNS = 7
@@ -46,10 +47,22 @@ fun MyCalendar(
         mutableStateOf(0f)
     }
 
+    val scope = rememberCoroutineScope()
+
     var day by remember { mutableStateOf(LocalDate.now().dayOfMonth) }
     var firstDayOfWeek by remember { mutableStateOf(LocalDate.now().dayOfWeek.value) }
 
-    val scope = rememberCoroutineScope()
+    val calendar = Calendar.getInstance()
+    calendar.set(yearMonth.value!!.year, yearMonth.value!!.monthValue - 1, 1)
+
+    val preferencesController = PreferencesController("firstDayOfWeek_table")
+
+    var dayOfWeekCounter = calendar.firstDayOfWeek
+    firstDayOfWeek = 1
+    if (preferencesController.fileNameList.size > 0) {
+        dayOfWeekCounter = preferencesController.fileNameList.first().toInt()
+        firstDayOfWeek = preferencesController.fileNameList.first().toInt() - 2
+    }
 
     val color2 = MaterialTheme.colors.primaryVariant
     Column(
@@ -64,7 +77,7 @@ fun MyCalendar(
                         onTap = { offset ->
                             val column = (offset.x / canvasSize.width * CALENDAR_COLUMNS).toInt()
                             val row = (offset.y / canvasSize.height * CALENDAR_ROWS).toInt()
-                            day = (column + (row) * CALENDAR_COLUMNS) - firstDayOfWeek + 1
+                            day = (column + (row) * CALENDAR_COLUMNS) - firstDayOfWeek + 1 - 7
 
                             if (yearMonth.value!!.isValidDay(day)) {
                                 onDaySelected(day)
@@ -114,37 +127,32 @@ fun MyCalendar(
                 )
             )
             val textHeight = 16.dp.toPx()
-            val calendar = java.util.Calendar.getInstance()
-            calendar.set(yearMonth.value!!.year, yearMonth.value!!.monthValue - 1, 1)
+            var redColorMarker = 0
 
-            firstDayOfWeek = calendar[java.util.Calendar.DAY_OF_WEEK] - 1
-
-            val daysOfWeek = mutableListOf(
-                "Пн",
-                "Вт",
-//                "Ср",
-//                "Чт",
-//                "Пт",
-//                "Сб",
-//                "Вс",
-            )
-
-
-            for (i in 0..6) {
+            for(i in 0..41) {
                 val textPositionX = (i % CALENDAR_COLUMNS) * xSteps + strokeWidth
                 val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight
-                val weekColor = when (i % CALENDAR_COLUMNS) {
-                    6 -> Color.Red.toArgb()
-                    else -> color2.toArgb()
-                }
+                var weekColor = if ((i % CALENDAR_COLUMNS == redColorMarker) and
+                    (i % CALENDAR_COLUMNS != 0)
+                ) {
+                    Color.Red.toArgb()
+                } else color2.toArgb()
 
-                for (iq1 in 0..1) {
-                    var i = 0
-                    val ir = i++
-                    val iq = daysOfWeek[i]
+                if (i < 7) {
+                    val dayOfWeek = DayOfWeek.of(dayOfWeekCounter).getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.getDefault()
+                    )
+                    if (dayOfWeekCounter == 7) {
+                        dayOfWeekCounter = 1
+                        redColorMarker = i
+                        weekColor = Color.Red.toArgb()
+                    } else {
+                        dayOfWeekCounter++
+                    }
                     drawContext.canvas.nativeCanvas.apply {
                         drawText(
-                            "$iq",
+                            dayOfWeek,
                             textPositionX,
                             textPositionY,
                             Paint().apply {
@@ -155,21 +163,11 @@ fun MyCalendar(
                         )
                     }
                 }
-            }
 
-            for(i in 7..34) {
-                val textPositionX = (i % CALENDAR_COLUMNS) * xSteps + strokeWidth
-                val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight
-                val weekColor = when (i % CALENDAR_COLUMNS) {
-                    6 -> Color.Red.toArgb()
-                    else -> color2.toArgb()
-                }
-
-
-                if (i in firstDayOfWeek until yearMonth.value!!.lengthOfMonth() + firstDayOfWeek) {
+                if (i in firstDayOfWeek + 7 until yearMonth.value!!.lengthOfMonth() + firstDayOfWeek + 7) {
                     drawContext.canvas.nativeCanvas.apply {
                         drawText(
-                            "${ i - firstDayOfWeek + 1}",
+                            "${ i - firstDayOfWeek - 7 + calendar.firstDayOfWeek }",
                             textPositionX,
                             textPositionY,
                             Paint().apply {

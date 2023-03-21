@@ -11,7 +11,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -34,7 +37,8 @@ fun ChartDonut(
     data: Map<String, Int>,
     radiusOuter: Dp = 90.dp,
     chartBarWidth: Dp = 20.dp,
-    animDuration: Int = 2000
+    animDuration: Int = 2000,
+    animationState: MutableState<Boolean>
 ) {
     val totalSum = data.values.sum()
     val floatValue = data.values.map { 360F * it.toFloat() / totalSum.toFloat() }
@@ -61,17 +65,20 @@ fun ChartDonut(
         diagram14,
     )
 
+    val dataSize = data.values.size
+    if (dataSize > colors.size) {
+        colors += Color(Random().nextInt().absoluteValue)
+    }
+
     val extraSize = data.values.size - colors.size
     if (data.values.size > colors.size) {
         colors += List(extraSize) { Color(Random().nextInt().absoluteValue) }
     }
 
-    var animationState by remember { mutableStateOf(false) }
-
     var lastValue = 0f
 
     val animateSize by animateFloatAsState(
-        targetValue = if (animationState) radiusOuter.value * 2f else 0f,
+        targetValue = if (animationState.value) radiusOuter.value * 2f else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
             delayMillis = 0,
@@ -80,7 +87,7 @@ fun ChartDonut(
     )
 
     val animateRotation by animateFloatAsState(
-        targetValue = if (animationState) 90f * 11f else 0f,
+        targetValue = if (animationState.value) 90f * 11f else 0f,
         animationSpec = tween(
             durationMillis = animDuration,
             delayMillis = 0,
@@ -89,7 +96,7 @@ fun ChartDonut(
     )
 
     val animateScaling by animateDpAsState(
-        targetValue = if (animationState) 24.dp else 0.dp,
+        targetValue = if (animationState.value) 24.dp else 0.dp,
         animationSpec = tween(
             animDuration,
             delayMillis = 0,
@@ -98,7 +105,7 @@ fun ChartDonut(
     )
 
     LaunchedEffect(key1 = true) {
-        animationState = true
+        animationState.value = true
     }
 
     Column(

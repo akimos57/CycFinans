@@ -77,7 +77,6 @@ class MainDetailsScreenVM @Inject constructor(
     fun updateNotes() {
         viewModelScope.launch {
             getAllNotesUseCase.invoke().let { notes: List<Note> ->
-                println(notes)
                 _notes.postValue(notes.filter { note ->
                     val c = Calendar.getInstance()
                     c.timeInMillis = note.time.time

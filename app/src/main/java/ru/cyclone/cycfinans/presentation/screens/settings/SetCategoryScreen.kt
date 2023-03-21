@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.beust.klaxon.Klaxon
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
-import ru.cyclone.cycfinans.presentation.ui.components.Category
+import ru.cyclone.cycfinans.domain.model.Category
 import ru.cyclone.cycnote.R
 import java.util.*
 
@@ -30,7 +30,7 @@ fun SetCategoryScreen() {
     val focusRequester = remember { FocusRequester() }
     val focus = LocalFocusManager.current
 
-    val preferencesController = PreferencesController()
+    val preferencesController = PreferencesController("categories")
     Scaffold(
         topBar = {
             val appName = stringResource(id = R.string.app_name)

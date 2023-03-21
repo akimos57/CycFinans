@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.domain.model
 
 import android.view.KeyEvent
 import androidx.compose.foundation.background
@@ -76,7 +76,7 @@ object Categories {
         locale: Locale,
         type: Boolean,
     ) : List<String> {
-        val extraCategories = PreferencesController().fileNameList.map { it }
+        val extraCategories = PreferencesController("tableName").fileNameList.map { it }
 
         val categoryList = getCategoryByLocationAndType(
             extraCategories.mapNotNull { Klaxon().parse<Category>(it) },

@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
+import ru.cyclone.cycfinans.presentation.ui.components.FirstDayOfTheWeekChooser
 
 @Composable
 fun SettingsScreen(navController: NavHostController) {
@@ -65,6 +66,13 @@ fun SettingsScreen(navController: NavHostController) {
                     .padding(vertical = 10.dp, horizontal = 10.dp)
             )
         }
+        Spacer( modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(colorResource(id = ru.cyclone.cycnote.R.color.secondary_gray))
+        )
+
+        FirstDayOfTheWeekChooser()
         Spacer( modifier = Modifier
             .fillMaxWidth()
             .height(1.dp)

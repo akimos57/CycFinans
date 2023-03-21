@@ -25,9 +25,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.components.Calendar
 import ru.cyclone.cycfinans.presentation.ui.components.ChartDonut
-import ru.cyclone.cycfinans.presentation.navigation.Screens
 import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -53,6 +53,11 @@ fun StatisticsScreen(navController: NavHostController) {
     val categories = vm.categories.observeAsState()
     val categories1 = vm.categories1.observeAsState()
 
+    val pagerState = rememberPagerState()
+    val coroutine = rememberCoroutineScope()
+
+    val animationState = remember { mutableStateOf(false) }
+    val animationState1 = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -128,8 +133,6 @@ fun StatisticsScreen(navController: NavHostController) {
                 onDismiss = { visible = false }
             )
         }
-        val pagerState = rememberPagerState()
-        val coroutine = rememberCoroutineScope()
         Row(
             modifier = Modifier,
             horizontalArrangement = Arrangement.Center
@@ -170,6 +173,8 @@ fun StatisticsScreen(navController: NavHostController) {
                                             .clickable {
                                                 coroutine.launch {
                                                     pagerState.scrollToPage(1)
+                                                    animationState1.value = true
+                                                    animationState.value = false
                                                 }
                                             },
                                         verticalArrangement = Arrangement.Center
@@ -197,6 +202,8 @@ fun StatisticsScreen(navController: NavHostController) {
                                             .clickable {
                                                 coroutine.launch {
                                                     pagerState.scrollToPage(0)
+                                                    animationState.value = true
+                                                    animationState1.value = false
                                                 }
                                             },
                                         verticalArrangement = Arrangement.Center
@@ -232,8 +239,14 @@ fun StatisticsScreen(navController: NavHostController) {
             state = pagerState
         ) { page ->
             when (page) {
-                0 -> categories.value?.let { ChartDonut(data = it) }
-                1 -> categories1.value?.let { ChartDonut(data = it) }
+                0 -> categories.value?.let { ChartDonut(
+                    data = it,
+                    animationState = animationState
+                ) }
+                1 -> categories1.value?.let { ChartDonut(
+                    data = it,
+                    animationState = animationState1
+                ) }
             }
         }
     }

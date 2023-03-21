@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -23,10 +22,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.beust.klaxon.Klaxon
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
+import ru.cyclone.cycfinans.domain.model.CategoryChooseDialog
 import ru.cyclone.cycfinans.domain.model.Promotion
-import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
 import ru.cyclone.cycfinans.presentation.ui.theme.*
 import java.sql.Time
 import java.text.SimpleDateFormat
@@ -44,7 +42,7 @@ fun EditNote(
         val category = remember { mutableStateOf(promotion.category) }
         var time by remember { mutableStateOf(Time(date)) }
         val showDialog = remember { mutableStateOf(false) }
-        val preferencesController = PreferencesController()
+        val preferencesController = PreferencesController("tableName")
 
         val c = Calendar.getInstance()
         val tp = TimePickerDialog(LocalContext.current,
