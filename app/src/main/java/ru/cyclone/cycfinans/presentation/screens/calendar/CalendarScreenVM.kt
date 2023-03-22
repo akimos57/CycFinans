@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.domain.model.Note
+import ru.cyclone.cycfinans.domain.usecases.note.AddNoteUseCase
 import ru.cyclone.cycfinans.domain.usecases.note.DeleteNoteUseCase
 import ru.cyclone.cycfinans.domain.usecases.note.GetAllNotesUseCase
 import java.time.LocalDate
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarScreenVM @Inject constructor(
     private val getAllNotesUseCase: GetAllNotesUseCase,
-    private val deleteNoteUseCase: DeleteNoteUseCase
+    private val deleteNoteUseCase: DeleteNoteUseCase,
+    private val addNoteUseCase: AddNoteUseCase
 ) : ViewModel() {
     private val _notes = MutableLiveData<List<Note>>()
     val notes: LiveData<List<Note>>
@@ -27,7 +29,7 @@ class CalendarScreenVM @Inject constructor(
 
     fun updateNotes() {
        viewModelScope.launch {
-           _notes.postValue(getAllNotesUseCase.invoke())
+           _notes.postValue(getAllNotesUseCase.invoke().sortedByDescending { it.time })
        }
     }
     init {
@@ -36,8 +38,8 @@ class CalendarScreenVM @Inject constructor(
         day.value = LocalDate.now().dayOfMonth
     }
     fun deleteNote(
-        onSuccess: () -> Unit = {},
-        note: Note
+        note: Note,
+        onSuccess: () -> Unit = {}
     ) {
         viewModelScope.launch {
             notes.value?.let {
@@ -45,6 +47,14 @@ class CalendarScreenVM @Inject constructor(
                 updateNotes()
                 onSuccess()
             }
+        }
+    }
+
+    fun addNote(note: Note, onSuccess: () -> Unit = {}) {
+        viewModelScope.launch {
+            addNoteUseCase.invoke(note = note)
+            updateNotes()
+            onSuccess()
         }
     }
 }

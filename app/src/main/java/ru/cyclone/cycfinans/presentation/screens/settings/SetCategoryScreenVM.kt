@@ -17,7 +17,7 @@ class SetCategoryScreenVM @Inject constructor() : ViewModel() {
     private fun updateLimits() {
         viewModelScope.launch {
             categories.postValue(
-                PreferencesController("tableName").fileNameList.mapNotNull { Klaxon().parse<Category>(it) }.associate {
+                PreferencesController("extra_categories").fileNameList.mapNotNull { Klaxon().parse<Category>(it) }.associate {
                     Pair(it.name, if (it.limit != 0) it.limit.toString() else "")
                 }
             )

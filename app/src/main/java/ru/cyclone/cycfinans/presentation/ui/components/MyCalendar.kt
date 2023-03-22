@@ -34,8 +34,10 @@ private const val CALENDAR_COLUMNS = 7
 fun MyCalendar(
     modifier: Modifier = Modifier,
     onDaySelected:(Int) -> Unit,
+    onDayDoubleTap:(Int) -> Unit,
     strokeWidth: Float = 2f,
-    yearMonth: MutableState<YearMonth?>
+    yearMonth: MutableState<YearMonth?>,
+    notEmptyDays: List<Int>
 ) {
     var canvasSize by remember {
         mutableStateOf(Size.Zero)
@@ -50,15 +52,15 @@ fun MyCalendar(
     val scope = rememberCoroutineScope()
 
     var day by remember { mutableStateOf(LocalDate.now().dayOfMonth) }
-    var firstDayOfWeek by remember { mutableStateOf(LocalDate.now().dayOfWeek.value) }
 
     val calendar = Calendar.getInstance()
     calendar.set(yearMonth.value!!.year, yearMonth.value!!.monthValue - 1, 1)
 
     val preferencesController = PreferencesController("firstDayOfWeek_table")
 
+    var firstDayOfWeek by remember { mutableStateOf(1) }
     var dayOfWeekCounter = calendar.firstDayOfWeek
-    firstDayOfWeek = 1
+    val firstMonthDayInWeek = calendar.firstDayOfWeek + 1
     if (preferencesController.fileNameList.size > 0) {
         dayOfWeekCounter = preferencesController.fileNameList.first().toInt()
         firstDayOfWeek = preferencesController.fileNameList.first().toInt() - 2
@@ -77,10 +79,25 @@ fun MyCalendar(
                         onTap = { offset ->
                             val column = (offset.x / canvasSize.width * CALENDAR_COLUMNS).toInt()
                             val row = (offset.y / canvasSize.height * CALENDAR_ROWS).toInt()
-                            day = (column + (row) * CALENDAR_COLUMNS) - firstDayOfWeek + 1 - 7
+                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstMonthDayInWeek + 2
 
                             if (yearMonth.value!!.isValidDay(day)) {
                                 onDaySelected(day)
+                                clickAnimationOffset = offset
+                                scope.launch {
+                                    animate(0f, 225f, animationSpec = tween(300)) { value, _ ->
+                                        animationRadius = value
+                                    }
+                                }
+                            }
+                        },
+                        onDoubleTap = { offset ->
+                            val column = (offset.x / canvasSize.width * CALENDAR_COLUMNS).toInt()
+                            val row = (offset.y / canvasSize.height * CALENDAR_ROWS).toInt()
+                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstMonthDayInWeek + 2
+
+                            if (yearMonth.value!!.isValidDay(day)) {
+                                onDayDoubleTap(day)
                                 clickAnimationOffset = offset
                                 scope.launch {
                                     animate(0f, 225f, animationSpec = tween(300)) { value, _ ->
@@ -127,32 +144,32 @@ fun MyCalendar(
                 )
             )
             val textHeight = 16.dp.toPx()
-            var redColorMarker = 0
+            var weekendPoint : Int? = null
 
             for(i in 0..41) {
                 val textPositionX = (i % CALENDAR_COLUMNS) * xSteps + strokeWidth
                 val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight
-                var weekColor = if ((i % CALENDAR_COLUMNS == redColorMarker) and
-                    (i % CALENDAR_COLUMNS != 0)
-                ) {
-                    Color.Red.toArgb()
-                } else color2.toArgb()
+
+                var weekColor = color2.toArgb()
 
                 if (i < 7) {
-                    val dayOfWeek = DayOfWeek.of(dayOfWeekCounter).getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.getDefault()
-                    )
+                    val dayOfWeek = DayOfWeek.of(dayOfWeekCounter)
+                    if (dayOfWeek.value == 7) {
+                        weekendPoint = i
+                        weekColor = Color.Red.toArgb()
+                    }
+
                     if (dayOfWeekCounter == 7) {
                         dayOfWeekCounter = 1
-                        redColorMarker = i
-                        weekColor = Color.Red.toArgb()
                     } else {
                         dayOfWeekCounter++
                     }
                     drawContext.canvas.nativeCanvas.apply {
                         drawText(
-                            dayOfWeek,
+                            dayOfWeek.getDisplayName(
+                                TextStyle.SHORT,
+                                Locale.getDefault()
+                            ),
                             textPositionX,
                             textPositionY,
                             Paint().apply {
@@ -164,10 +181,14 @@ fun MyCalendar(
                     }
                 }
 
-                if (i in firstDayOfWeek + 7 until yearMonth.value!!.lengthOfMonth() + firstDayOfWeek + 7) {
+                if (i in 6 + firstMonthDayInWeek until yearMonth.value!!.lengthOfMonth() + 6 + firstMonthDayInWeek) {
+                    val canvasDay = i - 7 - firstMonthDayInWeek + 2
+                    if ((i % CALENDAR_COLUMNS) == weekendPoint)
+                        weekColor = Color.Red.toArgb()
+
                     drawContext.canvas.nativeCanvas.apply {
                         drawText(
-                            "${ i - firstDayOfWeek - 7 + calendar.firstDayOfWeek }",
+                            "$canvasDay",
                             textPositionX,
                             textPositionY,
                             Paint().apply {
@@ -176,6 +197,17 @@ fun MyCalendar(
                                 isFakeBoldText = true
                             }
                         )
+                        if (canvasDay in notEmptyDays) {
+                            println(xSteps)
+                            drawCircle(
+                                textPositionX - strokeWidth + xSteps - 10F - 4F, // - Radius + END Padding
+                                textPositionY - textHeight + 10F + 4F, // + Radius + TOP Padding
+                                10F,
+                                Paint().apply {
+                                    color = Color.Blue.toArgb()
+                                }
+                            )
+                        }
                     }
                 }
             }

@@ -23,7 +23,10 @@ import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
-import ru.cyclone.cycfinans.presentation.ui.components.*
+import ru.cyclone.cycfinans.presentation.ui.components.Calendar
+import ru.cyclone.cycfinans.presentation.ui.components.DayBox
+import ru.cyclone.cycfinans.presentation.ui.components.MainBox
+import ru.cyclone.cycfinans.presentation.ui.components.NotesInDetails
 import java.time.LocalDate
 import java.time.Month
 import java.time.Year
@@ -114,7 +117,7 @@ fun MainScreen(navController: NavHostController) {
                         (currentMonth.value + 1 != actualDate.second.month.value) or
                         (currentYear != actualDate.second.year)
                     ) {
-                        NotesInDetails(navController = navController)
+                        NotesInDetails()
                     }
                     val income = history.value?.filter {
                         c.timeInMillis = it.time.time
@@ -129,7 +132,7 @@ fun MainScreen(navController: NavHostController) {
                         (currentMonth.value + 1 == actualDate.second.month.value) and
                         (currentYear == actualDate.second.year)
                     ) {
-                        NotesInDetails(navController = navController)
+                        NotesInDetails()
                     }
 
                     if ((income != null) and (expenses != null)) {

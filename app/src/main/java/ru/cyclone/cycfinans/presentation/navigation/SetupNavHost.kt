@@ -8,11 +8,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.cyclone.cycfinans.presentation.screens.calendar.AddNote
 import ru.cyclone.cycfinans.presentation.screens.calendar.CalendarScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainScreen
-import ru.cyclone.cycfinans.presentation.screens.settings.SetCategoryScreen
+import ru.cyclone.cycfinans.presentation.screens.settings.EditCategoriesListScreen
+import ru.cyclone.cycfinans.presentation.screens.settings.SetCategoryLimitsScreen
 import ru.cyclone.cycfinans.presentation.screens.settings.SettingsScreen
 import ru.cyclone.cycfinans.presentation.screens.statistics.StatisticsScreen
 import ru.cyclone.cycfinans.presentation.ui.components.BottomNavigationBar
@@ -33,8 +33,8 @@ sealed class AdditionalScreens(
     val rout: String
 ) {
     object MainDetailsScreen: AdditionalScreens(rout = "mainDetails_screen")
-    object AddNoteScreen: AdditionalScreens(rout = "add_note_screen")
-    object SetCategoryScreen: AdditionalScreens(rout = "set_category")
+    object SetCategoryLimitsScreen: AdditionalScreens(rout = "set_category_limits_screen")
+    object EditCategoriesListScreen: AdditionalScreens(rout = "edit_categories_screen")
 }
 
 @Composable
@@ -79,50 +79,17 @@ fun SetupNavHost(navController: NavHostController) {
                     onReturned
                 )
             }
-            composable(route = AdditionalScreens.AddNoteScreen.rout + "{id}/{content}") {
-                AddNote(
-                    navController = navController,
-                    noteId = it.arguments?.getString("id"),
-                    noteContent = it.arguments?.getString("content"),
-                    timeSting = it.arguments?.getString("time"),
-                    onReturned = onReturned
-                )
-            }
-            composable(route = AdditionalScreens.AddNoteScreen.rout) {
-                AddNote(
-                    navController = navController,
-                    noteId = it.arguments?.getString("id"),
-                    noteContent = it.arguments?.getString("content"),
-                    timeSting = it.arguments?.getString("time"),
-                    onReturned = onReturned
-                )
-            }
-            composable(route = AdditionalScreens.AddNoteScreen.rout + "{id}/{content}/{time}") {
-                AddNote(
-                    navController = navController,
-                    noteId = it.arguments?.getString("id"),
-                    noteContent = it.arguments?.getString("content"),
-                    timeSting = it.arguments?.getString("time"),
-                    onReturned = onReturned
-                )
-            }
-            composable(route = AdditionalScreens.AddNoteScreen.rout + "{time}") {
-                AddNote(
-                    navController = navController,
-                    noteId = it.arguments?.getString("id"),
-                    noteContent = it.arguments?.getString("content"),
-                    timeSting = it.arguments?.getString("time"),
-                    onReturned = onReturned
-                )
-            }
             composable(route = Screens.StatisticsScreen.rout) {
                 StatisticsScreen(navController = navController)
             }
             composable(route = Screens.SettingsScreen.rout) {
                 SettingsScreen(navController = navController)
             }
-            composable(route = AdditionalScreens.SetCategoryScreen.rout) {
-                SetCategoryScreen()
+            composable(route = AdditionalScreens.SetCategoryLimitsScreen.rout) {
+                SetCategoryLimitsScreen()
+            }
+            composable(route = AdditionalScreens.EditCategoriesListScreen.rout) {
+                EditCategoriesListScreen()
             }
         }
     }

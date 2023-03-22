@@ -24,13 +24,13 @@ import ru.cyclone.cycnote.R
 import java.util.*
 
 @Composable
-fun SetCategoryScreen() {
+fun SetCategoryLimitsScreen() {
     val vm = hiltViewModel<SetCategoryScreenVM>()
     val limits = vm.categories.observeAsState()
     val focusRequester = remember { FocusRequester() }
     val focus = LocalFocusManager.current
 
-    val preferencesController = PreferencesController("categories")
+    val preferencesController = PreferencesController(stringResource(id = R.string.category_table_name))
     Scaffold(
         topBar = {
             val appName = stringResource(id = R.string.app_name)

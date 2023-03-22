@@ -53,7 +53,6 @@ fun MainDetailsScreen(
 
     var type = false
 
-
     Box {
         Column {
             Row(
@@ -91,7 +90,7 @@ fun MainDetailsScreen(
                         .padding(start = 16.dp)
                 )
             }
-            NotesInDetails(navController = navController)
+            NotesInDetails()
             Row(
                 modifier = Modifier
                     .fillMaxSize()

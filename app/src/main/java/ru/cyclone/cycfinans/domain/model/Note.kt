@@ -9,5 +9,6 @@ data class Note(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val content: String,
-    val time: Time
+    val time: Time,
+    val completed: Boolean = false
 )

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">cycFinance</string>
+
+    <string name="category_table_name">extra_categories</string>
 </resources>

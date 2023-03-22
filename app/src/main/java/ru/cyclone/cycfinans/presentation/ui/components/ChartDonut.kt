@@ -201,7 +201,6 @@ fun DetailsPieChart(
 @Composable
 fun DetailsPieChartItem(
     data: Pair<String, Int>,
-    height: Dp = 45.dp,
     color: Color,
     totalSum: Int
 ) {

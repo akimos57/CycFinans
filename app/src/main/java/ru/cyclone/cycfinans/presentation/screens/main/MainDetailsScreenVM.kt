@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.domain.model.Promotion
+import ru.cyclone.cycfinans.domain.usecases.note.AddNoteUseCase
 import ru.cyclone.cycfinans.domain.usecases.note.DeleteNoteUseCase
 import ru.cyclone.cycfinans.domain.usecases.note.GetAllNotesUseCase
 import ru.cyclone.cycfinans.domain.usecases.promotion.AddPromotionUseCase
@@ -22,7 +23,8 @@ class MainDetailsScreenVM @Inject constructor(
     private val deletePromotionUseCase: DeletePromotionUseCase,
     private val addPromotionUseCase: AddPromotionUseCase,
     private val getAllNotesUseCase: GetAllNotesUseCase,
-    private val deleteNoteUseCase: DeleteNoteUseCase
+    private val deleteNoteUseCase: DeleteNoteUseCase,
+    private val addNoteUseCase: AddNoteUseCase,
 ): ViewModel() {
     private val _promotions = MutableLiveData<List<Promotion>>()
     val promotions: LiveData<List<Promotion>>
@@ -35,6 +37,7 @@ class MainDetailsScreenVM @Inject constructor(
     var date: Calendar? = Calendar.getInstance()
 
     init {
+        updateNotes()
         updateAllPromotions()
     }
 
@@ -48,14 +51,14 @@ class MainDetailsScreenVM @Inject constructor(
 
     private fun updateAllPromotions() {
         viewModelScope.launch {
-            getAllPromotionUseCase.invoke().let {
-                val cm = it.filter { promotion ->
+            getAllPromotionUseCase.invoke().let { promotionList ->
+                val cm = promotionList.filter { promotion ->
                     val c = Calendar.getInstance()
                     c.timeInMillis = promotion.time.time
                     (date?.get(Calendar.YEAR) == c.get(Calendar.YEAR)) and
                             (date?.get(Calendar.MONTH) == c.get(Calendar.MONTH)) and
                             (date?.get(Calendar.DATE) == c.get(Calendar.DATE))
-                }
+                }.sortedBy { it.time }
                 _promotions.postValue(cm)
             }
         }
@@ -88,9 +91,20 @@ class MainDetailsScreenVM @Inject constructor(
         }
     }
 
+    fun addNote(
+        note: Note,
+        onSuccess: () -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            addNoteUseCase.invoke(note = note)
+            updateNotes()
+            onSuccess()
+        }
+    }
+
     fun deleteNote(
-        onSuccess: () -> Unit = {},
-        note: Note
+        note: Note,
+        onSuccess: () -> Unit = {}
     ) {
         viewModelScope.launch {
             notes.value?.let {

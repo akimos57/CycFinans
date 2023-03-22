@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.ui.components.Calendar
 import ru.cyclone.cycfinans.presentation.ui.components.EditNote
@@ -26,6 +27,7 @@ import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
+import java.sql.Time
 import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -54,26 +56,28 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
         mutableStateOf("$monthString, ${ currentYearMonth.value!!.year }")
     }
 
+    val showEditNoteDialog = remember { mutableStateOf(false) }
+    val noteState = remember { mutableStateOf(Note(
+        content = "",
+        time = Time(System.currentTimeMillis())
+    )) }
+
     onAddNoteReturned.value = {
         vm.updateNotes()
     }
-
-//    var time2 by remember { mutableStateOf(Time()) }
-//    val time3 = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time2)
-
-    val s = remember { mutableStateOf(false) }
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    val calendar = Calendar.Builder()
-                        .setDate(currentYearMonth.value!!.year, currentYearMonth.value!!.monthValue - 1, currentDay!!)
-                        .build()
-                    navController.navigate(AdditionalScreens.AddNoteScreen.rout + calendar.timeInMillis) {
-                        launchSingleTop = true
-                    }
-//                          s.value = true
+                    val calendar = Calendar.getInstance()
+                    calendar.timeInMillis = System.currentTimeMillis()
+                    calendar.set(currentYearMonth.value!!.year, currentYearMonth.value!!.monthValue - 1, currentDay!!)
+                    noteState.value = Note(
+                        content = "",
+                        time = Time(calendar.timeInMillis)
+                    )
+                    showEditNoteDialog.value = true
                 },
                 backgroundColor = blue
             ) {
@@ -89,6 +93,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
     ) { paddingValues ->
         Column(
             modifier = Modifier
+                .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
@@ -115,23 +120,6 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                 )
             }
             Column {
-//                val daysOfWeek = mutableListOf(
-//                    "Пн",
-//                    "Вт",
-//                    "Ср",
-//                    "Чт",
-//                    "Пт",
-//                    "Сб",
-//                    "Вс",
-//                )
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(horizontal = 20.dp)
-//                        .background(blue)
-//                ) {
-//                    Text(text = "$daysOfWeek")
-//                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -141,11 +129,26 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                         onDaySelected = { day ->
                             currentDay = day
                         },
+                        onDayDoubleTap = { day ->
+                            navController.navigate(
+                                AdditionalScreens.MainDetailsScreen.rout + '/' +
+                                        day + '/' +
+                                        currentYearMonth.value?.monthValue + '/' +
+                                        currentYearMonth.value?.year
+                            )
+                        },
                         yearMonth = currentYearMonth,
                         modifier = Modifier
                             .padding(20.dp)
                             .fillMaxWidth()
-                            .aspectRatio(1.3f)
+                            .aspectRatio(1.3f),
+                        notEmptyDays = notes.map {
+                            val c = Calendar.getInstance()
+                            c.timeInMillis = it.time.time
+                            if ((c.get(Calendar.MONTH) + 1 == yearMonth?.month?.value) and (c.get(Calendar.YEAR) == yearMonth?.year)) {
+                                c.get(Calendar.DAY_OF_MONTH)
+                            } else 0
+                        }.filter { it != 0 }
                     )
                 }
                 Text(
@@ -158,24 +161,18 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                 )
             }
 
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
-            ) {
+            Column {
                 notes.filter { note ->
                     val c = Calendar.getInstance()
                     c.timeInMillis = note.time.time
                     (currentYearMonth.value?.year == c.get(Calendar.YEAR)) and
                             ((currentYearMonth.value?.month?.value?.minus(1)) == c.get(Calendar.MONTH)) and
                             (currentDay == c.get(Calendar.DATE))
-                }.forEach { note ->
-                    val showDialog = s
-                    s.value = true
-                    val showDialog1 = remember { mutableStateOf(false) }
-                    EditNote(show = s.value, onDismiss = { s.value = false }, date = 7)
-                    if (showDialog1.value)
-                    {
+                }.sortedBy { it.completed }.forEach { note ->
+                    val showDeleteDialog = remember { mutableStateOf(false) }
+                    if (showDeleteDialog.value) {
                         Dialog(
-                            onDismissRequest = { showDialog1.value = false }) {
+                            onDismissRequest = { showDeleteDialog.value = false }) {
                             Box(
                                 modifier = Modifier
                                     .height(120.dp)
@@ -215,7 +212,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                                                 backgroundColor = MaterialTheme.colors.secondary,
                                                 contentColor = MaterialTheme.colors.primaryVariant
                                             ),
-                                            onClick = { s.value = false }) {
+                                            onClick = { showDeleteDialog.value = false }) {
                                             Text(
                                                 text = "Отмена",
                                                 fontSize = 14.sp,
@@ -231,7 +228,10 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                                                 backgroundColor = fab2,
                                                 contentColor = MaterialTheme.colors.primaryVariant
                                             ),
-                                            onClick = { s.value = false; vm.deleteNote(note = note) }) {
+                                            onClick = {
+                                                vm.deleteNote(note = note)
+                                                showDeleteDialog.value = false
+                                            }) {
                                             Text(
                                                 text = "Удалить",
                                                 fontSize = 14.sp,
@@ -243,23 +243,34 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                             }
                         }
                     }
+
                     NoteBox(
                         note = note,
-                        modifierClickable = Modifier
+                        modifier = Modifier
+                            .padding(horizontal = 20.dp, vertical = 4.dp)
                             .combinedClickable (
-                                onClick =  {navController.navigate(AdditionalScreens.AddNoteScreen.rout +
-                                        note.id + '/' +
-                                        note.content.ifBlank { "" } + '/' +
-                                        note.time.time.toString()
-                                )},
-                                onLongClick = {showDialog1.value = true}
+                                onClick = {
+                                    noteState.value = note
+                                    showEditNoteDialog.value = true
+                                },
+                                onLongClick = { showDeleteDialog.value = true }
                             ),
-                        modifierSizeBox = Modifier
-                            .padding(horizontal = 20.dp, vertical = 4.dp),
+                        onNoteCompleteStateChanged = { completed ->
+                            vm.addNote(note.copy(
+                                completed = completed
+                            ))
+                        }
                     )
+                    noteState.value = note
                 }
             }
         }
+        EditNote(
+            showDialog = showEditNoteDialog,
+            note = noteState,
+            addNote = { note -> vm.addNote(note) },
+            deleteNote = { note -> vm.deleteNote(note) }
+        )
         Calendar(
             visible = visible,
             currentMonth = currentYearMonth.value!!.monthValue - 1,

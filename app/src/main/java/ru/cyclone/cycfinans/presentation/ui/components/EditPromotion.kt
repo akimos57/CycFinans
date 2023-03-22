@@ -3,6 +3,7 @@
 package ru.cyclone.cycfinans.presentation.ui.components
 
 import android.app.TimePickerDialog
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,10 +30,10 @@ import com.beust.klaxon.Klaxon
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.domain.model.Categories
 import ru.cyclone.cycfinans.domain.model.Category
-import ru.cyclone.cycfinans.domain.model.CategoryChooseDialog
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
 import ru.cyclone.cycfinans.presentation.ui.theme.*
+import ru.cyclone.cycnote.R
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -45,11 +47,12 @@ fun EditPromotion(
     date: Long,
 ){
     if (show) {
+        val context = LocalContext.current
         var price by remember { mutableStateOf(promotion.price.toString()) }
         val category = remember { mutableStateOf(promotion.category) }
         var time by remember { mutableStateOf(Time(date)) }
         val showDialog = remember { mutableStateOf(false) }
-        val preferencesController = PreferencesController("tableName")
+        val preferencesController = PreferencesController(stringResource(id = R.string.category_table_name))
 
         val c = Calendar.getInstance()
         val tp = TimePickerDialog(LocalContext.current,
@@ -149,7 +152,7 @@ fun EditPromotion(
                             OutlinedButton(
                                 onClick = {
                                     val color = Color.White.toArgb()
-                                    if (price != "0") {
+                                    if ((price != "0") and (price.length < 9)) {
                                         vm.addPromotion(
                                             Promotion(
                                                 id = promotion.id,
@@ -178,6 +181,8 @@ fun EditPromotion(
                                                 }
                                             }
                                         )
+                                    } else {
+                                        Toast.makeText(context, "Price: $price Error", Toast.LENGTH_SHORT).show()
                                     }
                                     onDismiss()
                                 },
