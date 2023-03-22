@@ -7,9 +7,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/cyclone"
+        android:icon="@drawable/cyclone3"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/cyclone"
+        android:roundIcon="@drawable/cyclone3"
         android:supportsRtl="true"
         android:theme="@style/Theme.CycFinans"
         tools:targetApi="31">
