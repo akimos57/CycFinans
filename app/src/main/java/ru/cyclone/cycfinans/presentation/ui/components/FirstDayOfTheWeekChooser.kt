@@ -9,8 +9,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import java.time.DayOfWeek
@@ -30,6 +32,8 @@ fun FirstDayOfTheWeekChooser() {
         Text(
             textAlign = TextAlign.Start,
             text = "Choose first day of week",
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
             color = MaterialTheme.colors.onSurface,
             modifier = Modifier
                 .fillMaxWidth()

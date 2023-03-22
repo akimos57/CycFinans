@@ -8,23 +8,22 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
-import ru.cyclone.cycfinans.domain.model.CategoryChooseDialog
-import ru.cyclone.cycfinans.domain.model.Promotion
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import ru.cyclone.cycfinans.domain.model.Note
+import ru.cyclone.cycfinans.presentation.screens.calendar.AddNoteVM
 import ru.cyclone.cycfinans.presentation.ui.theme.*
 import java.sql.Time
 import java.text.SimpleDateFormat
@@ -34,15 +33,15 @@ import java.util.*
 fun EditNote(
     show: Boolean,
     onDismiss: () -> Unit,
-    promotion: Promotion,
     date: Long,
-){
+) {
     if (show) {
-        var price by remember { mutableStateOf(promotion.price.toString()) }
-        val category = remember { mutableStateOf(promotion.category) }
+        var content by rememberSaveable { mutableStateOf("") }
         var time by remember { mutableStateOf(Time(date)) }
         val showDialog = remember { mutableStateOf(false) }
-        val preferencesController = PreferencesController("tableName")
+
+        val vm = hiltViewModel<AddNoteVM>()
+        val note by vm.note.observeAsState()
 
         val c = Calendar.getInstance()
         val tp = TimePickerDialog(LocalContext.current,
@@ -52,111 +51,129 @@ fun EditNote(
                 q.set(Calendar.HOUR_OF_DAY, selectedHour)
                 q.set(Calendar.MINUTE, selectedMinute)
                 time = Time(q.timeInMillis)
-            }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], true)
+            }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], true
+        )
 
-        CategoryChooseDialog(show = showDialog, onDismiss = { showDialog.value = false }, category_picker = category, type = promotion.type)
-        Dialog(
-            onDismissRequest = onDismiss
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Center
-            ) {
+        AlertDialog(
+            onDismissRequest = {
+
+        },
+            backgroundColor = MaterialTheme.colors.secondary,
+            shape = RoundedCornerShape(8),
+            text = {
                 Box(
                     modifier = Modifier
-//                        .height(220.dp)
-                        .padding(horizontal = 36.dp)
-                        .clip(RoundedCornerShape(24.dp))
+                        .fillMaxWidth()
                         .background(MaterialTheme.colors.secondary)
                 ) {
-                    Column {
-                        TextField(
-                            value = if (price == "0") "" else price,
-                            onValueChange = { price = it },
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number
-                            ),
-                            colors = TextFieldDefaults.textFieldColors(
-                                backgroundColor = MaterialTheme.colors.secondary
-                            ),
-                            placeholder = {
-                                Text(
-                                    text = "Введите значение",
-                                    fontSize = 18.sp
-                                )
-                            },
-                            textStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Medium)
-                        )
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-                                .clickable { tp.show() },
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time),
-                                color = MaterialTheme.colors.primaryVariant,
-                                fontSize = 18.sp
-                            )
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-                                .clickable { showDialog.value = true },
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = category.value.ifEmpty { "Выберите категорию" },
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = fab2
-                            )
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            OutlinedButton(
-//                                modifier = Modifier.padding(end = 20.dp),
-                                shape = CircleShape,
-                                border = BorderStroke(1.dp, color = Color.Transparent),
-                                colors = ButtonDefaults.outlinedButtonColors(
+                            TextField(
+                                value = if (content == "0") "" else content,
+                                onValueChange = { content = it },
+                                modifier = Modifier,
+//                                    .fillMaxWidth(),
+                                colors = TextFieldDefaults.textFieldColors(
                                     backgroundColor = MaterialTheme.colors.secondary,
+                                    cursorColor = blue,
+                                    focusedIndicatorColor = blue,
+                                    unfocusedIndicatorColor = blue,
+                                    textColor = MaterialTheme.colors.primaryVariant
                                 ),
-                                onClick = { showDialog.value = false }
-                            ) {
-                                Text(
-                                    text = "Отмена",
-                                    color = MaterialTheme.colors.primaryVariant,
-                                    fontSize = 16.sp
-                                )
-                            }
-                            OutlinedButton(
-                                onClick = {
-                                    onDismiss()
+                                placeholder = {
+                                    Text(
+                                        text = "Напоминание",
+                                        fontSize = 18.sp
+                                    )
                                 },
-                                shape = CircleShape,
-                                colors = ButtonDefaults.outlinedButtonColors(
-                                    backgroundColor = fab1,
-                                )
-                            ) {
-                                Text(
-                                    text = "Сохранить",
-                                    color = MaterialTheme.colors.primaryVariant,
-                                    fontSize = 16.sp
-                                )
-                            }
+                                textStyle = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Normal)
+                            )
+                        }
+            },
+            buttons = {
+                Column(
+                    modifier = Modifier
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(30.dp)
+                            .clickable { tp.show() },
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .padding(horizontal = 24.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val isChecked = remember { mutableStateOf(true) }
+                            Text(
+                                text = "Напомнить",
+                                color = MaterialTheme.colors.primaryVariant
+                            )
+                            Checkbox(
+                                checked = isChecked.value,
+                                onCheckedChange = { isChecked.value = it },
+                                colors = CheckboxDefaults.colors(blue),
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .padding(start = 16.dp,end = 16.dp)
+                            )
+                        }
+                        Text(
+                            text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time),
+                            color = MaterialTheme.colors.primaryVariant,
+                            fontSize = 18.sp
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 8.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        OutlinedButton(
+                            shape = CircleShape,
+                            border = BorderStroke(1.dp, color = Color.Transparent),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                backgroundColor = MaterialTheme.colors.secondary,
+                            ),
+                            onClick = { showDialog.value = false }
+                        ) {
+                            Text(
+                                text = "Отмена",
+                                color = MaterialTheme.colors.primaryVariant,
+                                fontSize = 14.sp
+                            )
+                        }
+                        OutlinedButton(
+                            onClick = {
+                                showDialog.value = false
+                            },
+                            shape = CircleShape,
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                backgroundColor = blue,
+                            )
+                        ) {
+                            Text(
+                                text = "Сохранить",
+                                color = MaterialTheme.colors.primaryVariant,
+                                fontSize = 14.sp
+                            )
                         }
                     }
                 }
             }
-        }
+        )
     }
 }
+
+
+
+
+
+
+
+
+
+
+

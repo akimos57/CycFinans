@@ -38,7 +38,7 @@ fun NoteBox(
             .height(120.dp)
             .padding()
             .clip(RoundedCornerShape(16.dp))
-            .border(width = 1.3.dp, color = fab1, shape = RoundedCornerShape(16.dp))
+            .border(width = 1.3.dp, color = blue, shape = RoundedCornerShape(16.dp))
             .background(MaterialTheme.colors.secondary)
     ) {
         Column(
@@ -64,27 +64,23 @@ fun NoteBox(
                         .padding(horizontal = 24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val isChecked = remember { mutableStateOf(true) }
-                    Text(text = "Напомнить")
+                    val isChecked = remember { mutableStateOf(false) }
+                    Text(text = "Выполнено")
                     Checkbox(
                         checked = isChecked.value,
                         onCheckedChange = { isChecked.value = it },
-                        colors = CheckboxDefaults.colors(fab1),
+                        colors = CheckboxDefaults.colors(blue),
                         modifier = Modifier
                             .size(16.dp)
                             .padding(start = 16.dp)
                     )
                 }
-
             }
-
                 Text(
                     text = note.content,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )
-
-
             }
         }
     }

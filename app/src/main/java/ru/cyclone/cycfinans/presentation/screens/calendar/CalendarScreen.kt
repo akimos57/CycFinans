@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.ui.components.Calendar
+import ru.cyclone.cycfinans.presentation.ui.components.EditNote
 import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
@@ -60,6 +61,8 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
 //    var time2 by remember { mutableStateOf(Time()) }
 //    val time3 = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time2)
 
+    val s = remember { mutableStateOf(false) }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -70,6 +73,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                     navController.navigate(AdditionalScreens.AddNoteScreen.rout + calendar.timeInMillis) {
                         launchSingleTop = true
                     }
+//                          s.value = true
                 },
                 backgroundColor = blue
             ) {
@@ -164,8 +168,12 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                             ((currentYearMonth.value?.month?.value?.minus(1)) == c.get(Calendar.MONTH)) and
                             (currentDay == c.get(Calendar.DATE))
                 }.forEach { note ->
+                    val showDialog = s
+                    s.value = true
                     val showDialog1 = remember { mutableStateOf(false) }
-                    if (showDialog1.value) {
+                    EditNote(show = s.value, onDismiss = { s.value = false }, date = 7)
+                    if (showDialog1.value)
+                    {
                         Dialog(
                             onDismissRequest = { showDialog1.value = false }) {
                             Box(
@@ -207,7 +215,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                                                 backgroundColor = MaterialTheme.colors.secondary,
                                                 contentColor = MaterialTheme.colors.primaryVariant
                                             ),
-                                            onClick = { showDialog1.value = false }) {
+                                            onClick = { s.value = false }) {
                                             Text(
                                                 text = "Отмена",
                                                 fontSize = 14.sp,
@@ -223,7 +231,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                                                 backgroundColor = fab2,
                                                 contentColor = MaterialTheme.colors.primaryVariant
                                             ),
-                                            onClick = { showDialog1.value = false; vm.deleteNote(note = note) }) {
+                                            onClick = { s.value = false; vm.deleteNote(note = note) }) {
                                             Text(
                                                 text = "Удалить",
                                                 fontSize = 14.sp,
