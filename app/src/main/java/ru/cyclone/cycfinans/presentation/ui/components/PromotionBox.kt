@@ -25,7 +25,7 @@ import java.util.*
 @Composable
 fun PromotionBox(
     promotion: Promotion,
-    modifier: Modifier = Modifier
+    modifier: Modifier
 ) {
     Column(modifier = Modifier) {
         Box(
@@ -39,6 +39,7 @@ fun PromotionBox(
             Column(
                 modifier = modifier
                     .fillMaxSize()
+                    .clip(RoundedCornerShape(16.dp))
                     .padding(top = 24.dp)
             ) {
                 val price = NumberFormat.getNumberInstance(Locale.US).format(promotion.price).replace(',', ' ')

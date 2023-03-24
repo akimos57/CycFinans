@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.ui.theme.*
+import ru.cyclone.cycnote.R
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
@@ -95,7 +97,7 @@ fun EditNote(
                             ),
                             placeholder = {
                                 Text(
-                                    text = "Напоминание",
+                                    text = stringResource(id = R.string.reminder),
                                     fontSize = 18.sp
                                 )
                             },
@@ -111,7 +113,10 @@ fun EditNote(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(30.dp)
-                            .clickable { tp.show(); dp.show() },
+                            .clickable {
+                                tp.show();
+//                                dp.show()
+                                       },
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -122,7 +127,7 @@ fun EditNote(
                         ) {
                             val isChecked = remember { mutableStateOf(true) }
                             Text(
-                                text = "Напомнить",
+                                text = stringResource(id = R.string.remind),
                                 color = MaterialTheme.colors.primaryVariant
                             )
                             Checkbox(
@@ -135,7 +140,10 @@ fun EditNote(
                             )
                         }
                         Text(
-                            text = SimpleDateFormat("dd.mm.yyyy hh:mm", Locale.getDefault()).format(time),
+                            text = SimpleDateFormat(
+//                                "dd.mm.yyyy " +
+                                        "hh:mm", Locale.getDefault()).format(time
+                            ),
                             color = MaterialTheme.colors.primaryVariant,
                             fontSize = 18.sp
                         )
@@ -155,7 +163,7 @@ fun EditNote(
                             onClick = { showDialog.value = false }
                         ) {
                             Text(
-                                text = "Отмена",
+                                text = stringResource(id = R.string.cancel),
                                 color = MaterialTheme.colors.primaryVariant,
                                 fontSize = 14.sp
                             )
@@ -182,7 +190,7 @@ fun EditNote(
                             )
                         ) {
                             Text(
-                                text = "Сохранить",
+                                text = stringResource(id = R.string.save),
                                 color = MaterialTheme.colors.primaryVariant,
                                 fontSize = 14.sp
                             )

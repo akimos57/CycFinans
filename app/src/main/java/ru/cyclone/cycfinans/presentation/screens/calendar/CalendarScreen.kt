@@ -13,6 +13,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +28,7 @@ import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
+import ru.cyclone.cycnote.R
 import java.sql.Time
 import java.time.Month
 import java.time.YearMonth
@@ -187,7 +189,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                                     horizontalArrangement = Arrangement.Center
                                 ) {
                                     Text(
-                                        text = "Удалить?",
+                                        text = stringResource(id = R.string.delete) +"?",
                                         fontSize = 20.sp,
                                         fontWeight = FontWeight.Medium,
                                     )
@@ -214,7 +216,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                                             ),
                                             onClick = { showDeleteDialog.value = false }) {
                                             Text(
-                                                text = "Отмена",
+                                                text = stringResource(id = R.string.cancel),
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Medium
                                             )
@@ -233,7 +235,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                                                 showDeleteDialog.value = false
                                             }) {
                                             Text(
-                                                text = "Удалить",
+                                                text = stringResource(id = R.string.delete),
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Medium,
                                             )

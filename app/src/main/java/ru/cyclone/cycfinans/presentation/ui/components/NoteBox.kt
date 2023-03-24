@@ -12,11 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
+import ru.cyclone.cycnote.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,7 +49,10 @@ fun NoteBox(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = SimpleDateFormat("dd.mm.yyyy hh:mm", Locale.getDefault()).format(note.time.time),
+                    text = SimpleDateFormat(
+//                        "dd.mm.yyyy " +
+                                "hh:mm", Locale.getDefault()).format(note.time.time
+                    ),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal
                 )
@@ -56,7 +61,7 @@ fun NoteBox(
                         .padding(horizontal = 24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Выполнено")
+                    Text(text = stringResource(id = R.string.done))
                     Checkbox(
                         checked = note.completed,
                         onCheckedChange = {

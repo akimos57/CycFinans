@@ -92,7 +92,7 @@ fun EditPromotion(
                             ),
                             placeholder = {
                                 Text(
-                                    text = "Введите значение",
+                                    text = stringResource(id = R.string.enter_value),
                                     fontSize = 18.sp
                                 )
                             },
@@ -121,9 +121,9 @@ fun EditPromotion(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = category.value.ifEmpty { "Выберите категорию" },
+                                text = category.value.ifEmpty { stringResource(id = R.string.select_a_category) },
                                 fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Medium,
                                 color = fab2
                             )
                         }

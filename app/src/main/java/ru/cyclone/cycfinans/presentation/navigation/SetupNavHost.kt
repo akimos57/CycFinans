@@ -1,9 +1,12 @@
 package ru.cyclone.cycfinans.presentation.navigation
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,15 +21,16 @@ import ru.cyclone.cycfinans.presentation.screens.statistics.StatisticsScreen
 import ru.cyclone.cycfinans.presentation.ui.components.BottomNavigationBar
 import ru.cyclone.cycnote.R
 
+
 sealed class Screens(
-    val title: String,
+    val titleId: Int,
     val rout: String,
     val iconId: Int
 ) {
-    object MainScreen: Screens(rout = "main_screen", iconId = R.drawable.home, title = "Главная")
-    object CalendarScreen: Screens(rout = "target_screen", iconId = R.drawable.dashboard, title = "Календарь")
-    object StatisticsScreen: Screens(rout = "statistics_screen", iconId = R.drawable.data_usage, title = "Статистика")
-    object SettingsScreen: Screens(rout = "settings_screen", iconId = R.drawable.settings, title = "Настройки")
+    object MainScreen: Screens(rout = "main_screen", iconId = R.drawable.home, titleId = R.string.main)
+    object CalendarScreen: Screens(rout = "target_screen", iconId = R.drawable.dashboard, titleId = R.string.calendar)
+    object StatisticsScreen: Screens(rout = "statistics_screen", iconId = R.drawable.data_usage, titleId = R.string.statistics)
+    object SettingsScreen: Screens(rout = "settings_screen", iconId = R.drawable.settings, titleId = R.string.settings)
 }
 
 sealed class AdditionalScreens(
@@ -41,6 +45,7 @@ sealed class AdditionalScreens(
 fun SetupNavHost(navController: NavHostController) {
     var showNavigationBar by remember { mutableStateOf(true) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val s = stringResource(id = R.string.main)
 
     showNavigationBar = when (navBackStackEntry?.destination?.route) {
         Screens.MainScreen.rout -> true

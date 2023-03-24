@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.components.Calendar
 import ru.cyclone.cycfinans.presentation.ui.components.ChartDonut
+import ru.cyclone.cycnote.R
 import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -156,13 +158,13 @@ fun StatisticsScreen(navController: NavHostController) {
                                     Column(
                                         modifier = Modifier
                                             .width(IntrinsicSize.Min)
-                                            .background(Color.LightGray),
+                                            .background(MaterialTheme.colors.primary),
                                         verticalArrangement = Arrangement.Center
                                     ) {
                                         Text(
                                             modifier = Modifier
                                                 .padding(horizontal = 15.dp, vertical = 4.dp),
-                                            text = "Расходы"
+                                            text = stringResource(id = R.string.expenses)
                                         )
                                     }
 
@@ -182,7 +184,7 @@ fun StatisticsScreen(navController: NavHostController) {
                                         Text(
                                             modifier = Modifier
                                                 .padding(horizontal = 15.dp, vertical = 4.dp),
-                                            text = "Доходы"
+                                            text = stringResource(id = R.string.income)
                                         )
                                     }
                                 }
@@ -211,19 +213,19 @@ fun StatisticsScreen(navController: NavHostController) {
                                         Text(
                                             modifier = Modifier
                                                 .padding(horizontal = 15.dp, vertical = 4.dp),
-                                            text = "Расходы"
+                                            text = stringResource(id = R.string.expenses)
                                         )
                                     }
                                     Column(
                                         modifier = Modifier
                                             .width(IntrinsicSize.Min)
-                                            .background(Color.LightGray),
+                                            .background(MaterialTheme.colors.primary),
                                         verticalArrangement = Arrangement.Center
                                     ) {
                                         Text(
                                             modifier = Modifier
                                                 .padding(horizontal = 15.dp, vertical = 4.dp),
-                                            text = "Доходы"
+                                            text = stringResource(id = R.string.income)
                                         )
                                     }
                                 }

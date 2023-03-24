@@ -18,6 +18,10 @@ val cardLight = Color.White
 
 val gold = Color(0xFFFFD700)
 
+val switchDark = Color(0xFF555555)
+
+val switchLight = Color(0xFFD8D8D8)
+
 val blue = Color(0xFF42AAFF)
 
 val categoryColor = Color(0xFFF75B90)

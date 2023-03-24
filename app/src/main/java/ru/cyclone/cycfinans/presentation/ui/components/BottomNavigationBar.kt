@@ -5,11 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
+import ru.cyclone.cycnote.R
 
 @Composable
 fun BottomNavigationBar(
@@ -48,7 +50,9 @@ fun BottomNavigationBar(
                     )
                     },
                     label = {
-                        Text(text = item.title)
+                        Text(
+                            text = stringResource(id = item.titleId)
+                        )
                     },
                     selectedContentColor = fab1,
                     unselectedContentColor = Color.Gray

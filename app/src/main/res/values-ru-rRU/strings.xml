@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">cycFinance</string>
+    <string name="expenses">Расходы</string>
+    <string name="income">Доходы</string>
+    <string name="done">Выполнено</string>
+    <string name="remind">Напомнить</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="enter_value">Введите значение</string>
+    <string name="spent">Потрачено</string>
+    <string name="left">Осталось</string>
+    <string name="others">Другое</string>
+    <string name="select_a_category">Выбрать категорию</string>
+    <string name="dollar">₽</string>
+    <string name="main">Главная</string>
+    <string name="calendar">Календарь</string>
+    <string name="statistics">Статистика</string>
+    <string name="settings">Настройки</string>
+    <string name="delete">Удалить</string>
+    <string name="reminder">Напоминание</string>
+</resources>

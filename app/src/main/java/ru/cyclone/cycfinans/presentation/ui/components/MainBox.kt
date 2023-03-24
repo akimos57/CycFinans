@@ -8,12 +8,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.text.NumberFormat
 import java.util.*
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
+import ru.cyclone.cycnote.R
 
 @Composable
 fun MainBox(
@@ -80,12 +82,12 @@ fun MainBox(
                         val expensesString = NumberFormat.getNumberInstance(Locale.US).format(expenses).replace(',', ' ')
                         val currentPriceString = NumberFormat.getNumberInstance(Locale.US).format(currentPrice).replace(',', ' ')
                         Text(
-                            text = "Потрачено: $expensesString ₽",
+                            text = stringResource(id = R.string.spent)+": $expensesString ₽",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = "Осталось: $currentPriceString ₽",
+                            text = stringResource(id = R.string.left)+": $currentPriceString ₽",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )

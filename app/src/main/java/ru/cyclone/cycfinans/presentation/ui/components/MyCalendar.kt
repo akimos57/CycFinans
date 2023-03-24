@@ -147,7 +147,7 @@ fun MyCalendar(
             var weekendPoint : Int? = null
 
             for(i in 0..41) {
-                val textPositionX = (i % CALENDAR_COLUMNS) * xSteps + strokeWidth
+                val textPositionX = (i % CALENDAR_COLUMNS) * xSteps + strokeWidth + 24f
                 val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight
 
                 var weekColor = color2.toArgb()
@@ -200,11 +200,11 @@ fun MyCalendar(
                         if (canvasDay in notEmptyDays) {
                             println(xSteps)
                             drawCircle(
-                                textPositionX - strokeWidth + xSteps - 10F - 4F, // - Radius + END Padding
+                                textPositionX - strokeWidth + xSteps - 10F - 50F, // - Radius + END Padding
                                 textPositionY - textHeight + 10F + 4F, // + Radius + TOP Padding
                                 10F,
                                 Paint().apply {
-                                    color = Color.Blue.toArgb()
+                                    color = blue.toArgb()
                                 }
                             )
                         }

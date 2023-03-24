@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">cycFinance</string>
+    <string name="expenses">花費</string>
+    <string name="income">收入</string>
+    <string name="done">完畢</string>
+    <string name="remind">提醒</string>
+    <string name="save">節省</string>
+    <string name="cancel">消除</string>
+    <string name="enter_value">輸入值</string>
+    <string name="spent">花費</string>
+    <string name="left">左邊</string>
+    <string name="others">其他</string>
+    <string name="select_a_category">選擇一個類別</string>
+    <string name="dollar">¥</string>
+    <string name="settings">設置</string>
+    <string name="statistics">統計數據</string>
+    <string name="calendar">日曆</string>
+    <string name="main">家</string>
+    <string name="delete">刪除</string>
+    <string name="reminder">提醒</string>
+</resources>

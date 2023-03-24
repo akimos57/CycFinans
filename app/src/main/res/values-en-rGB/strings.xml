@@ -1,29 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">cycFinance</string>
-
-    // app
     <string name="expenses">Expenses</string>
     <string name="income">Income</string>
     <string name="done">Done</string>
     <string name="remind">Remind</string>
-    <string name="reminder">Reminder</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
-    <string name="delete">Delete</string>
     <string name="enter_value">Enter value</string>
     <string name="spent">Spent</string>
     <string name="left">Left</string>
     <string name="others">Others</string>
     <string name="select_a_category">Select a category</string>
-
-    //navigation
+    <string name="dollar">€</string>
     <string name="main">Home</string>
     <string name="calendar">Calendar</string>
     <string name="statistics">Statistics</string>
     <string name="settings">Settings</string>
-
-    // Сurrency
-    <string name="dollar">$</string>
-
-    <string name="category_table_name" translatable="false">extra_categories</string>
+    <string name="delete">Delete</string>
+    <string name="reminder">Reminder</string>
 </resources>
