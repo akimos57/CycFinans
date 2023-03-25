@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
+import java.math.BigDecimal
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,7 +43,7 @@ fun PromotionBox(
                     .clip(RoundedCornerShape(16.dp))
                     .padding(top = 24.dp)
             ) {
-                val price = NumberFormat.getNumberInstance(Locale.US).format(promotion.price).replace(',', ' ')
+                val price = NumberFormat.getNumberInstance(Locale.US).format(BigDecimal(promotion.price)).replace(',', ' ')
                 val text = if (promotion.type) "+ $price ₽" else "- $price ₽"
                 Text(
                     modifier = Modifier

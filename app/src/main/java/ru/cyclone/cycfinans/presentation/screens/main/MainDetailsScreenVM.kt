@@ -58,7 +58,7 @@ class MainDetailsScreenVM @Inject constructor(
                     (date?.get(Calendar.YEAR) == c.get(Calendar.YEAR)) and
                             (date?.get(Calendar.MONTH) == c.get(Calendar.MONTH)) and
                             (date?.get(Calendar.DATE) == c.get(Calendar.DATE))
-                }.sortedBy { it.time }
+                }.sortedByDescending { it.time }
                 _promotions.postValue(cm)
             }
         }

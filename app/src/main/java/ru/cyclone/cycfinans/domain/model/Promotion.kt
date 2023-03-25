@@ -13,7 +13,7 @@ data class Promotion(
     val type: Boolean,
     val category: String,
     val colorCategory: Int,
-    val price: Int
+    val price: String
 )
 
 object TimeConverter {

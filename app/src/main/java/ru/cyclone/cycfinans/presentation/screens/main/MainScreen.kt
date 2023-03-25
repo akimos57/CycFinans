@@ -27,6 +27,7 @@ import ru.cyclone.cycfinans.presentation.ui.components.Calendar
 import ru.cyclone.cycfinans.presentation.ui.components.DayBox
 import ru.cyclone.cycfinans.presentation.ui.components.MainBox
 import ru.cyclone.cycfinans.presentation.ui.components.NotesInDetails
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Month
 import java.time.Year
@@ -58,11 +59,11 @@ fun MainScreen(navController: NavHostController) {
     val fullIncome = history.value?.filter {
         c.timeInMillis = it.time.time
         it.type
-    }?.sumOf { it.price }?:0
+    }?.sumOf { BigDecimal(it.price) }?:BigDecimal(0)
     val fullExpenses = history.value?.filter {
         c.timeInMillis = it.time.time
         !it.type
-    }?.sumOf { it.price }?:0
+    }?.sumOf { BigDecimal(it.price) }?:BigDecimal(0)
 
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -111,7 +112,7 @@ fun MainScreen(navController: NavHostController) {
                 state = scrollState
             ) {
                 items(monthList.size) { index ->
-                    val i = index+1
+                    val i = index + 1
                     if (
                         (i == 1) and
                         (currentMonth.value + 1 != actualDate.second.month.value) or
@@ -122,11 +123,12 @@ fun MainScreen(navController: NavHostController) {
                     val income = history.value?.filter {
                         c.timeInMillis = it.time.time
                         (c.get(Calendar.DAY_OF_MONTH) == i) and (it.type)
-                    }?.sumOf { it.price }
+                    }?.sumOf { BigDecimal(it.price) }?:BigDecimal(0)
                     val expenses = history.value?.filter {
                         c.timeInMillis = it.time.time
                         (c.get(Calendar.DAY_OF_MONTH) == i) and (!it.type)
-                    }?.sumOf { it.price }
+                    }?.sumOf { BigDecimal(it.price) }?:BigDecimal(0)
+
                     if (
                         (i == actualDate.first) and
                         (currentMonth.value + 1 == actualDate.second.month.value) and
@@ -135,22 +137,20 @@ fun MainScreen(navController: NavHostController) {
                         NotesInDetails()
                     }
 
-                    if ((income != null) and (expenses != null)) {
-                        DayBox(
-                            day = i,
-                            modifier = Modifier
-                                .clickable {
-                                    navController.navigate(
-                                        AdditionalScreens.MainDetailsScreen.rout +
-                                                "/$i/${currentMonth.value + 1}/$currentYear"
-                                    ) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                            income = income!!,
-                            expenses = expenses!!
-                        )
-                    }
+                    DayBox(
+                        day = i,
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate(
+                                    AdditionalScreens.MainDetailsScreen.rout +
+                                            "/$i/${currentMonth.value + 1}/$currentYear"
+                                ) {
+                                    launchSingleTop = true
+                                }
+                            },
+                        income = income,
+                        expenses = expenses
+                    )
                 }
                 if (
                     (currentMonth.value + 1 == actualDate.second.month.value) and

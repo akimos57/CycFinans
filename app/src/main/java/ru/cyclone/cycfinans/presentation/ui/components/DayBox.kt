@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
 
@@ -18,8 +19,8 @@ import java.util.*
 fun DayBox(
     day: Int,
     modifier: Modifier = Modifier,
-    income: Int,
-    expenses : Int
+    income: BigDecimal,
+    expenses: BigDecimal
 ) {
     Box(
         modifier = Modifier

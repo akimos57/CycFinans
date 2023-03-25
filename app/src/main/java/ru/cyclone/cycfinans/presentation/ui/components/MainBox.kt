@@ -12,21 +12,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.text.NumberFormat
-import java.util.*
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycnote.R
+import java.math.BigDecimal
+import java.text.NumberFormat
+import java.util.*
 
 @Composable
 fun MainBox(
     modifier: Modifier,
-    income: Int,
-    expenses: Int
+    income: BigDecimal,
+    expenses: BigDecimal
 ) {
     // Средств осталось
     val currentPrice = income - expenses
     // for LinearProgress
-    val progress = if (income != 0) currentPrice/income.toFloat() else 0F
+    val progress = if (income != BigDecimal(0)) currentPrice/income else BigDecimal(0)
 
     Box(
         modifier = Modifier

@@ -11,7 +11,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
-import ru.cyclone.cycnote.R
 
 @Composable
 fun BottomNavigationBar(
@@ -38,10 +37,9 @@ fun BottomNavigationBar(
                     onClick = {
                         navController.navigate(item.rout) {
                             popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                                saveState = false
                             }
                             launchSingleTop = true
-                            restoreState = true
                         }
                     },
                     icon = { Icon(

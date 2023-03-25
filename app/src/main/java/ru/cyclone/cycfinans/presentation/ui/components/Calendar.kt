@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,8 +39,8 @@ fun Calendar(
     cancelClicked: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    val months = List<String>(12) { index ->
-        Month.of(index + 1).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
+    val months = List(12) { index ->
+        Month.of(index + 1).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault()).capitalize(androidx.compose.ui.text.intl.Locale.current)
     }
 
     var month by remember {

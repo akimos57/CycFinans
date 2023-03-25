@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.domain.usecases.promotion.GetAllPromotionUseCase
+import java.math.BigDecimal
 import java.time.YearMonth
 import java.util.*
 import javax.inject.Inject
@@ -15,12 +16,12 @@ import javax.inject.Inject
 class StatisticsScreenVM @Inject constructor(
     private val getAllPromotionUseCase: GetAllPromotionUseCase
 ): ViewModel() {
-    private val _categories = MutableLiveData<Map<String, Int>>()
-    val categories: LiveData<Map<String, Int>>
+    private val _categories = MutableLiveData<Map<String, BigDecimal>>()
+    val categories: LiveData<Map<String, BigDecimal>>
         get() = _categories
 
-    private val _categories1 = MutableLiveData<Map<String, Int>>()
-    val categories1: LiveData<Map<String, Int>>
+    private val _categories1 = MutableLiveData<Map<String, BigDecimal>>()
+    val categories1: LiveData<Map<String, BigDecimal>>
         get() = _categories1
 
     fun updateAllPromotions(date: YearMonth = YearMonth.now()) {
@@ -47,7 +48,7 @@ class StatisticsScreenVM @Inject constructor(
                 _categories.postValue(promotionListExpenses.associate { promotion ->
                     // Calculate the sum of the prices for each category
                     val sum = promotionListExpenses.filter { p -> p.category == promotion.category }.sumOf { p ->
-                        p.price
+                        BigDecimal(p.price)
                     }
                     // Create a pair with the category and the sum
                     Pair(promotion.category, sum)
@@ -55,7 +56,7 @@ class StatisticsScreenVM @Inject constructor(
                 _categories1.postValue(promotionListIncomes.associate { promotion ->
                     // Calculate the sum of the prices for each category
                     val sum = promotionListIncomes.filter { p -> p.category == promotion.category }.sumOf { p ->
-                        p.price
+                        BigDecimal(p.price)
                     }
                     // Create a pair with the category and the sum
                     Pair(promotion.category, sum)

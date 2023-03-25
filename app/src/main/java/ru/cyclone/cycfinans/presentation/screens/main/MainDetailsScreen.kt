@@ -250,7 +250,7 @@ fun MainDetailsScreen(
                             type = type,
                             category = "",
                             colorCategory = 0,
-                            price = 0
+                            price = "0"
                         ), date = date.timeInMillis
                     )
                     Column(

@@ -48,7 +48,7 @@ fun EditPromotion(
 ){
     if (show) {
         val context = LocalContext.current
-        var price by remember { mutableStateOf(promotion.price.toString()) }
+        var price by remember { mutableStateOf(promotion.price) }
         val category = remember { mutableStateOf(promotion.category) }
         var time by remember { mutableStateOf(Time(date)) }
         val showDialog = remember { mutableStateOf(false) }
@@ -152,14 +152,14 @@ fun EditPromotion(
                             OutlinedButton(
                                 onClick = {
                                     val color = Color.White.toArgb()
-                                    if ((price != "0") and (price.length < 9)) {
+                                    if (price != "0") {
                                         vm.addPromotion(
                                             Promotion(
                                                 id = promotion.id,
                                                 type = promotion.type,
                                                 category = category.value,
                                                 colorCategory = color,
-                                                price = price.toInt(),
+                                                price = price,
                                                 time = time
                                             ),
                                             onSuccess = {

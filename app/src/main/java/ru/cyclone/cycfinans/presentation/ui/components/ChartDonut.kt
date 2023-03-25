@@ -26,21 +26,21 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import ru.cyclone.cycfinans.presentation.ui.theme.*
+import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.absoluteValue
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalTextApi::class, ExperimentalUnitApi::class)
 @Composable
 fun ChartDonut(
-    data: Map<String, Int>,
+    data: Map<String, BigDecimal>,
     radiusOuter: Dp = 90.dp,
     chartBarWidth: Dp = 20.dp,
     animDuration: Int = 2000,
     animationState: MutableState<Boolean>
 ) {
-    val totalSum = data.values.sum()
+    val totalSum = data.values.sumOf { it }
     val floatValue = data.values.map { 360F * it.toFloat() / totalSum.toFloat() }
 
     val colors = mutableListOf(
@@ -177,9 +177,9 @@ fun ChartDonut(
 
 @Composable
 fun DetailsPieChart(
-    data: Map<String, Int>,
+    data: Map<String, BigDecimal>,
     colors: List<Color>,
-    totalSum: Int
+    totalSum: BigDecimal
 ) {
     Column(
         modifier = Modifier
@@ -200,9 +200,9 @@ fun DetailsPieChart(
 
 @Composable
 fun DetailsPieChartItem(
-    data: Pair<String, Int>,
+    data: Pair<String, BigDecimal>,
     color: Color,
-    totalSum: Int
+    totalSum: BigDecimal
 ) {
     Surface(
         modifier = Modifier
@@ -239,7 +239,7 @@ fun DetailsPieChartItem(
                     )
                 }
             }
-            val progress = data.second.toFloat() / totalSum.toFloat()
+            val progress = data.second / totalSum
 
             Row(
                 modifier = Modifier
@@ -254,8 +254,7 @@ fun DetailsPieChartItem(
                 )
             }
 
-            val per = progress*100
-            val percent = (per*100).roundToInt() / 100.0
+            val percent = progress / BigDecimal(100)
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),

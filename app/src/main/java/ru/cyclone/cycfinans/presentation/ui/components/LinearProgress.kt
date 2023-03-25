@@ -10,16 +10,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import java.math.BigDecimal
+import java.math.MathContext
 
 @Composable
 fun LinearProgress(
-    progress: Float,
+    progress: BigDecimal,
     color: Color,
     width: Dp,
     height: Dp
 ) {
     LinearProgressIndicator(
-        progress = progress,
+        progress = progress.round(MathContext(2)).toFloat(),
         modifier = Modifier
             .height(height)
             .width(width)
