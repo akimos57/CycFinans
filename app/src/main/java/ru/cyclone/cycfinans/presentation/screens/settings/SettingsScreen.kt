@@ -25,9 +25,19 @@ import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.switchDark
 import ru.cyclone.cycnote.R
 import java.time.DayOfWeek
+import java.util.Currency
 
 @Composable
 fun SettingsScreen(navController: NavHostController) {
+
+    var currentCurrency by remember { mutableStateOf("₽") }
+    val s = currentCurrency
+    @Composable
+    fun Currency(
+        cur: String = s
+    ) {
+
+    }
     Column(
         modifier = Modifier
     ) {
@@ -70,6 +80,7 @@ fun SettingsScreen(navController: NavHostController) {
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(start = 85.dp)
                 .height(0.5.dp)
                 .background(colorResource(id = R.color.secondary_gray))
         )
@@ -118,7 +129,8 @@ fun SettingsScreen(navController: NavHostController) {
         )
         Spacer(
             modifier = Modifier
-                .fillMaxWidth(0.8f)
+                .fillMaxWidth()
+                .padding(start = 85.dp)
                 .height(0.5.dp)
                 .background(colorResource(id = R.color.secondary_gray))
         )
@@ -135,7 +147,7 @@ fun SettingsScreen(navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-
+                                    showTime = false
                                 }
                         ) {
                             Text(
@@ -149,7 +161,7 @@ fun SettingsScreen(navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-
+                                    showTime = false
                                 }
                         ) {
                             Text(
@@ -178,22 +190,94 @@ fun SettingsScreen(navController: NavHostController) {
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(start = 85.dp)
                 .height(0.5.dp)
                 .background(colorResource(id = R.color.secondary_gray))
         )
+        var showLanguage by remember { mutableStateOf(false) }
         SettingsElement(
             title = "Язык",
             icon = R.drawable.language,
             click = {
-
+                showLanguage = true
             }
         )
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(start = 85.dp)
                 .height(0.5.dp)
                 .background(colorResource(id = R.color.secondary_gray))
         )
+        if (showLanguage) {
+            Dialog(onDismissRequest = { showLanguage = false }) {
+                Box(
+                    modifier = Modifier
+                        .width(200.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colors.secondary)
+                ) {
+                    Column {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    showLanguage = false
+                                }
+                        ) {
+                            Text(
+                                text = "Русский",
+                                fontSize = 18.sp,
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp, horizontal = 24.dp)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    showLanguage = false
+                                }
+                        ) {
+                            Text(
+                                text = "English",
+                                fontSize = 18.sp,
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp, horizontal = 24.dp)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    showLanguage = false
+                                }
+                        ) {
+                            Text(
+                                text = "中國人",
+                                fontSize = 18.sp,
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp, horizontal = 24.dp)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    showLanguage = false
+                                }
+                        ) {
+                            Text(
+                                text = "한국인",
+                                fontSize = 18.sp,
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp, horizontal = 24.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
         var showCurrency by remember { mutableStateOf(false) }
         SettingsElement(
             title = "Валюта",
@@ -205,6 +289,7 @@ fun SettingsScreen(navController: NavHostController) {
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(start = 85.dp)
                 .height(0.5.dp)
                 .background(colorResource(id = R.color.secondary_gray))
         )
@@ -217,16 +302,22 @@ fun SettingsScreen(navController: NavHostController) {
                         .background(MaterialTheme.colors.secondary)
                 ) {
                     Column {
+                            val rub = "₽"
+                            val usd = "$"
+                            val eur = "€"
+                            val cny = "¥"
+                            val kpw = "₩"
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-
+                                    showCurrency = false
+                                    currentCurrency = rub
                                 },
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Text(
-                                text = "₽",
+                                text = rub,
                                 modifier = Modifier
                                     .padding(vertical = 12.dp)
                             )
@@ -240,12 +331,13 @@ fun SettingsScreen(navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-
+                                    showCurrency = false
+                                    currentCurrency = usd
                                 },
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Text(
-                                text = "$",
+                                text = usd,
                                 modifier = Modifier
                                     .padding(vertical = 12.dp)
                             )
@@ -259,12 +351,13 @@ fun SettingsScreen(navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-
+                                    showCurrency = false
+                                    currentCurrency = eur
                                 },
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Text(
-                                text = "€",
+                                text = eur,
                                 modifier = Modifier
                                     .padding(vertical = 12.dp)
                             )
@@ -278,12 +371,13 @@ fun SettingsScreen(navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-
+                                    showCurrency = false
+                                    currentCurrency = cny
                                 },
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Text(
-                                text = "¥",
+                                text = cny,
                                 modifier = Modifier
                                     .padding(vertical = 12.dp)
                             )
@@ -297,12 +391,13 @@ fun SettingsScreen(navController: NavHostController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-
+                                    showCurrency = false
+                                    currentCurrency = kpw
                                 },
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             Text(
-                                text = "₩",
+                                text = kpw,
                                 modifier = Modifier
                                     .padding(vertical = 12.dp)
                             )
@@ -327,6 +422,7 @@ fun SettingsScreen(navController: NavHostController) {
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(start = 85.dp)
                 .height(0.5.dp)
                 .background(colorResource(id = R.color.secondary_gray))
         )

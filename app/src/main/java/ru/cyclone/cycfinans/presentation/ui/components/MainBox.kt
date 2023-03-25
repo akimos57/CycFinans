@@ -28,6 +28,7 @@ fun MainBox(
     // for LinearProgress
     val progress = if (income != 0) currentPrice/income.toFloat() else 0F
 
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
