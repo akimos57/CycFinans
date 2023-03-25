@@ -29,6 +29,7 @@ fun MainBox(
     // for LinearProgress
     val progress = if (income != BigDecimal(0)) currentPrice/income else BigDecimal(0)
 
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
