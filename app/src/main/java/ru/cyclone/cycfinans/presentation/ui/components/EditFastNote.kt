@@ -1,6 +1,7 @@
 @file:Suppress("DEPRECATION")
 package ru.cyclone.cycfinans.presentation.ui.components
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -30,7 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun EditNote(
+fun EditFastNote(
     note: MutableState<Note>,
     showDialog: MutableState<Boolean>,
     addNote: (Note) -> Unit,
@@ -38,10 +39,18 @@ fun EditNote(
 ) {
     if (showDialog.value) {
         var content by rememberSaveable { mutableStateOf(note.value.content) }
-        var time by remember { mutableStateOf(note.value.time) }
+        var time by remember { mutableStateOf(Time(System.currentTimeMillis())) }
         var isCompleted by rememberSaveable { mutableStateOf(note.value.completed) }
 
         val c = Calendar.getInstance()
+        val dp = DatePickerDialog(LocalContext.current,
+            { _, _year: Int, _month: Int, _dayOfMonth: Int ->
+                val q = Calendar.getInstance()
+                q.timeInMillis = time.time
+                q.set(_year, _month, _dayOfMonth)
+                time = Time(q.timeInMillis)
+            }, c[Calendar.YEAR], c[Calendar.MONTH], c[Calendar.DAY_OF_MONTH]
+        )
         val tp = TimePickerDialog(LocalContext.current,
             { _, selectedHour: Int, selectedMinute: Int ->
                 val q = Calendar.getInstance()
@@ -52,6 +61,13 @@ fun EditNote(
             }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], true
         )
 
+        dp.setOnCancelListener { tp.dismiss() }
+        dp.setOnDismissListener {
+            if (content.isNotBlank()) {
+                isCompleted = true
+                note.value = note.value.copy(time = time)
+            }
+        }
         tp.setOnDismissListener {
             if (content.isNotBlank()) {
                 isCompleted = true
@@ -102,7 +118,7 @@ fun EditNote(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(30.dp)
-                            .clickable { tp.show() },
+                            .clickable { tp.show(); dp.show() },
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -125,7 +141,7 @@ fun EditNote(
                             )
                         }
                         Text(
-                            text = SimpleDateFormat("hh:mm", Locale.getDefault()).format(time),
+                            text = SimpleDateFormat("dd.mm.yyyy hh:mm", Locale.getDefault()).format(time),
                             color = MaterialTheme.colors.primaryVariant,
                             fontSize = 18.sp
                         )

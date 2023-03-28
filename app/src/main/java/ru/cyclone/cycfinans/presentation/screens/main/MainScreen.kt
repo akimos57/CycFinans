@@ -36,7 +36,7 @@ import java.time.format.TextStyle
 import java.util.*
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController, onReturned: MutableState<() -> Unit>) {
     val vm = hiltViewModel<MainScreenVM>()
     var visible by remember {
         mutableStateOf(false)
@@ -52,6 +52,10 @@ fun MainScreen(navController: NavHostController) {
 
     var date by remember {
         mutableStateOf("$month, $currentYear")
+    }
+
+    onReturned.value = {
+        vm.getHistory(YearMonth.of(currentYear, currentMonth.value + 1))
     }
 
     val c = Calendar.getInstance()
@@ -99,7 +103,9 @@ fun MainScreen(navController: NavHostController) {
             }
             MainBox(
                 modifier = Modifier
-                    .clickable { navController.navigate(Screens.StatisticsScreen.rout) },
+                    .clickable { navController.navigate(Screens.StatisticsScreen.rout){
+                        launchSingleTop = true
+                    } },
                 income = fullIncome,
                 expenses = fullExpenses
             )

@@ -25,16 +25,17 @@ import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycnote.R
 import java.sql.Time
+import java.util.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NotesInDetails() {
+fun NotesInDetails(date: Calendar) {
     val viewModel = hiltViewModel<MainDetailsScreenVM>()
     val notes by viewModel.notes.observeAsState()
     val showEditNoteDialog = remember { mutableStateOf(false) }
     val editedNote = remember { mutableStateOf(Note(
         content = "",
-        time = Time(System.currentTimeMillis())
+        time = Time(date.time.time)
     )) }
     Row(
         modifier = Modifier
@@ -49,7 +50,7 @@ fun NotesInDetails() {
                 .clickable {
                     editedNote.value = Note(
                         content = "",
-                        time = Time(System.currentTimeMillis())
+                        time = Time(date.time.time)
                     )
                     showEditNoteDialog.value = true
                 }

@@ -36,8 +36,7 @@ fun FastNotes() {
     val editedNote = remember { mutableStateOf(Note(
         content = "",
         time = Time(System.currentTimeMillis())
-    )
-    ) }
+    )) }
     Row(
         modifier = Modifier
             .horizontalScroll(rememberScrollState())
@@ -152,26 +151,34 @@ fun FastNotes() {
                 ),
                 onNoteCompleteStateChanged = {
                     viewModel.addNote(note.copy(completed = it))
+                    editedNote.value = Note(
+                        note.id,
+                        note.content,
+                        note.time,
+                        note.completed
+                    )
                 }
             )
         }
-        EditNote(
+        EditFastNote(
             note = editedNote,
             showDialog = showEditNoteDialog,
-            addNote = { note -> viewModel.addNote(
-                FastNote(
+            addNote = { note -> viewModel.addNote(FastNote(
                 note.id,
                 note.content,
                 note.time,
                 note.completed
-            )
-            ) },
+            )) {
+                viewModel.updateNotes()
+            } },
             deleteNote = { note -> viewModel.deleteNote(FastNote(
                 note.id,
                 note.content,
                 note.time,
                 note.completed
-            )) }
+            )) {
+                viewModel.updateNotes()
+            } }
         )
     }
 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
+import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -37,8 +38,15 @@ fun MyCalendar(
     onDayDoubleTap:(Int) -> Unit,
     strokeWidth: Float = 2f,
     yearMonth: MutableState<YearMonth?>,
-    notEmptyDays: List<Int>
+    notEmptyDaysState: State<List<Note>>
 ) {
+    val notEmptyDays = notEmptyDaysState.value.map {
+        val c = Calendar.getInstance()
+        c.timeInMillis = it.time.time
+        if ((c.get(Calendar.MONTH) + 1 == yearMonth.value?.month?.value) and (c.get(Calendar.YEAR) == yearMonth.value?.year)) {
+            c.get(Calendar.DAY_OF_MONTH)
+        } else 0
+    }.filter { it != 0 }
     var canvasSize by remember {
         mutableStateOf(Size.Zero)
     }
@@ -59,11 +67,14 @@ fun MyCalendar(
     val preferencesController = PreferencesController("firstDayOfWeek_table")
 
     var dayOfWeekCounter = calendar.firstDayOfWeek
-    var firstDayInWeek = calendar.firstDayOfWeek + 1
+    var firstDayInWeek = calendar.firstDayOfWeek - 1
     if (preferencesController.fileNameList.size > 0) {
         dayOfWeekCounter = preferencesController.fileNameList.first().toInt()
-        firstDayInWeek = preferencesController.fileNameList.first().toInt()
+        firstDayInWeek = preferencesController.fileNameList.first().toInt() - 1
     }
+
+    firstDayInWeek = (if (firstDayInWeek != 0) (7 - firstDayInWeek) else 0) + calendar[Calendar.DAY_OF_WEEK] - 2
+    val firstDayInWeekWithOffset = if (firstDayInWeek < 0) 7 + firstDayInWeek else (firstDayInWeek) % 7
 
     val color2 = MaterialTheme.colors.primaryVariant
     Column(
@@ -78,7 +89,7 @@ fun MyCalendar(
                         onTap = { offset ->
                             val column = (offset.x / canvasSize.width * CALENDAR_COLUMNS).toInt()
                             val row = (offset.y / canvasSize.height * CALENDAR_ROWS).toInt()
-                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstDayInWeek + 2
+                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstDayInWeekWithOffset + 1
 
                             if (yearMonth.value!!.isValidDay(day)) {
                                 onDaySelected(day)
@@ -93,7 +104,7 @@ fun MyCalendar(
                         onDoubleTap = { offset ->
                             val column = (offset.x / canvasSize.width * CALENDAR_COLUMNS).toInt()
                             val row = (offset.y / canvasSize.height * CALENDAR_ROWS).toInt()
-                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstDayInWeek + 1
+                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstDayInWeekWithOffset + 1
 
                             if (yearMonth.value!!.isValidDay(day)) {
                                 onDayDoubleTap(day)
@@ -180,8 +191,8 @@ fun MyCalendar(
                     }
                 }
 
-                if (i in 6 + firstDayInWeek until yearMonth.value!!.lengthOfMonth() + 6 + firstDayInWeek) {
-                    val canvasDay = i - 7 - firstDayInWeek + 2
+                if (i in 7 + firstDayInWeekWithOffset until yearMonth.value!!.lengthOfMonth() + 7 + firstDayInWeekWithOffset) {
+                    val canvasDay = i - 7 - firstDayInWeekWithOffset + 1
                     if ((i % CALENDAR_COLUMNS) == weekendPoint)
                         weekColor = Color.Red.toArgb()
 
@@ -197,7 +208,6 @@ fun MyCalendar(
                             }
                         )
                         if (canvasDay in notEmptyDays) {
-                            println(xSteps)
                             drawCircle(
                                 textPositionX - strokeWidth + xSteps - 10F - 50F, // - Radius + END Padding
                                 textPositionY - textHeight + 10F + 4F, // + Radius + TOP Padding

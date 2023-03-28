@@ -23,7 +23,7 @@ import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.ui.components.Calendar
-import ru.cyclone.cycfinans.presentation.ui.components.EditNote
+import ru.cyclone.cycfinans.presentation.ui.components.EditFastNote
 import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
@@ -37,9 +37,9 @@ import java.util.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableState<() -> Unit>) {
+fun CalendarScreen(navController: NavHostController, onReturned: MutableState<() -> Unit>) {
     val vm = hiltViewModel<CalendarScreenVM>()
-    val notes = vm.notes.observeAsState(listOf()).value
+    val notes = vm.notes.observeAsState(listOf())
     var visible by remember {
         mutableStateOf(false)
     }
@@ -64,7 +64,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
         time = Time(System.currentTimeMillis())
     )) }
 
-    onAddNoteReturned.value = {
+    onReturned.value = {
         vm.updateNotes()
     }
 
@@ -144,13 +144,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                             .padding(20.dp)
                             .fillMaxWidth()
                             .aspectRatio(1.3f),
-                        notEmptyDays = notes.map {
-                            val c = Calendar.getInstance()
-                            c.timeInMillis = it.time.time
-                            if ((c.get(Calendar.MONTH) + 1 == yearMonth?.month?.value) and (c.get(Calendar.YEAR) == yearMonth?.year)) {
-                                c.get(Calendar.DAY_OF_MONTH)
-                            } else 0
-                        }.filter { it != 0 }
+                        notEmptyDaysState = notes
                     )
                 }
                 Text(
@@ -164,7 +158,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
             }
 
             Column {
-                notes.filter { note ->
+                notes.value.filter { note ->
                     val c = Calendar.getInstance()
                     c.timeInMillis = note.time.time
                     (currentYearMonth.value?.year == c.get(Calendar.YEAR)) and
@@ -267,7 +261,7 @@ fun CalendarScreen(navController: NavHostController, onAddNoteReturned: MutableS
                 }
             }
         }
-        EditNote(
+        EditFastNote(
             showDialog = showEditNoteDialog,
             note = noteState,
             addNote = { note -> vm.addNote(note) },

@@ -41,8 +41,8 @@ class MainScreenVM @Inject constructor(
 
     fun getHistory(_yearMonth: YearMonth){
         viewModelScope.launch {
-            getAllPromotionUseCase.invoke().let { promotions1 ->
-                _promotions.postValue(promotions1.filter {
+            getAllPromotionUseCase.invoke().let { promotions ->
+                _promotions.postValue(promotions.filter {
                     val c = Calendar.getInstance()
                     c.time = it.time
                     (c.get(Calendar.MONTH) + 1 == _yearMonth.month.value) and (c.get(Calendar.YEAR) == _yearMonth.year)
@@ -51,7 +51,7 @@ class MainScreenVM @Inject constructor(
         }
     }
 
-    private fun updateNotes() {
+    fun updateNotes() {
         viewModelScope.launch {
             getAllFastNotesUseCase.invoke().let { notes: List<FastNote> ->
                 _notes.postValue(notes.filter { note ->

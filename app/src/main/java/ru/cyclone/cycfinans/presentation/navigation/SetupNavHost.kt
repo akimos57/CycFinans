@@ -1,12 +1,9 @@
 package ru.cyclone.cycfinans.presentation.navigation
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -45,7 +42,6 @@ sealed class AdditionalScreens(
 fun SetupNavHost(navController: NavHostController) {
     var showNavigationBar by remember { mutableStateOf(true) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val s = stringResource(id = R.string.main)
 
     showNavigationBar = when (navBackStackEntry?.destination?.route) {
         Screens.MainScreen.rout -> true
@@ -67,21 +63,28 @@ fun SetupNavHost(navController: NavHostController) {
                 .padding(paddingValues)
         ) {
             composable(route = Screens.MainScreen.rout) {
-                MainScreen(navController = navController)
+                MainScreen(
+                    navController = navController,
+                    onReturned = onReturned
+                )
             }
-            composable(route = AdditionalScreens.MainDetailsScreen.rout + "/{day}/{month}/{year}") {
+            composable(route = AdditionalScreens.MainDetailsScreen.rout +
+                    "/{day}" +
+                    "/{month}" +
+                    "/{year}"
+            ) {
                 MainDetailsScreen(
                     navController = navController,
                     it.arguments?.getString("day"),
                     it.arguments?.getString("month"),
                     it.arguments?.getString("year"),
-                    onReturned
+                    onReturned = onReturned
                 )
             }
             composable(route = Screens.CalendarScreen.rout) {
                 CalendarScreen(
                     navController = navController,
-                    onReturned
+                    onReturned = onReturned
                 )
             }
             composable(route = Screens.StatisticsScreen.rout) {

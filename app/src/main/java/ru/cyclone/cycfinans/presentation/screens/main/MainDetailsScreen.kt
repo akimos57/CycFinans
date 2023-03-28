@@ -23,7 +23,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Promotion
-import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.components.*
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
@@ -49,10 +48,6 @@ fun MainDetailsScreen(
     viewModel.date = date
     val promotions = viewModel.promotions.observeAsState(listOf()).value
 
-    onReturned.value = {
-        viewModel.updateNotes()
-    }
-
     var type = false
 
     Box {
@@ -68,11 +63,8 @@ fun MainDetailsScreen(
                         .size(48.dp)
                         .clip(RoundedCornerShape(24.dp))
                         .clickable {
-                            navController.navigate(Screens.MainScreen.rout) {
-                                popUpTo(Screens.MainScreen.rout) {
-                                    inclusive = true
-                                }
-                            }
+                            onReturned.value.invoke()
+                            navController.popBackStack()
                         },
                     contentAlignment = Alignment.Center
                 ) {
@@ -92,7 +84,7 @@ fun MainDetailsScreen(
                         .padding(start = 16.dp)
                 )
             }
-            NotesInDetails()
+            NotesInDetails(date)
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -243,7 +235,6 @@ fun MainDetailsScreen(
                     },
                     floatingActionButtonPosition = FabPosition.Center
                 ) { paddingValues ->
-
                     EditPromotion(
                         show = s.value, vm = viewModel, onDismiss = { s.value = false }, promotion = Promotion(
                             time = Time(date.timeInMillis),
@@ -367,10 +358,7 @@ fun MainDetailsScreen(
         }
     }
     BackHandler {
-        navController.navigate(Screens.MainScreen.rout) {
-            popUpTo(Screens.MainScreen.rout) {
-                inclusive = true
-            }
-        }
+        onReturned.value.invoke()
+        navController.popBackStack()
     }
 }
