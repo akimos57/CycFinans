@@ -58,12 +58,11 @@ fun MyCalendar(
 
     val preferencesController = PreferencesController("firstDayOfWeek_table")
 
-    var firstDayOfWeek by remember { mutableStateOf(1) }
     var dayOfWeekCounter = calendar.firstDayOfWeek
-    val firstMonthDayInWeek = calendar.firstDayOfWeek + 1
+    var firstDayInWeek = calendar.firstDayOfWeek + 1
     if (preferencesController.fileNameList.size > 0) {
         dayOfWeekCounter = preferencesController.fileNameList.first().toInt()
-        firstDayOfWeek = preferencesController.fileNameList.first().toInt() - 2
+        firstDayInWeek = preferencesController.fileNameList.first().toInt()
     }
 
     val color2 = MaterialTheme.colors.primaryVariant
@@ -79,7 +78,7 @@ fun MyCalendar(
                         onTap = { offset ->
                             val column = (offset.x / canvasSize.width * CALENDAR_COLUMNS).toInt()
                             val row = (offset.y / canvasSize.height * CALENDAR_ROWS).toInt()
-                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstMonthDayInWeek + 2
+                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstDayInWeek + 2
 
                             if (yearMonth.value!!.isValidDay(day)) {
                                 onDaySelected(day)
@@ -94,7 +93,7 @@ fun MyCalendar(
                         onDoubleTap = { offset ->
                             val column = (offset.x / canvasSize.width * CALENDAR_COLUMNS).toInt()
                             val row = (offset.y / canvasSize.height * CALENDAR_ROWS).toInt()
-                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstMonthDayInWeek + 2
+                            day = (column + (row) * CALENDAR_COLUMNS) - 7 - firstDayInWeek + 1
 
                             if (yearMonth.value!!.isValidDay(day)) {
                                 onDayDoubleTap(day)
@@ -181,8 +180,8 @@ fun MyCalendar(
                     }
                 }
 
-                if (i in 6 + firstMonthDayInWeek until yearMonth.value!!.lengthOfMonth() + 6 + firstMonthDayInWeek) {
-                    val canvasDay = i - 7 - firstMonthDayInWeek + 2
+                if (i in 6 + firstDayInWeek until yearMonth.value!!.lengthOfMonth() + 6 + firstDayInWeek) {
+                    val canvasDay = i - 7 - firstDayInWeek + 2
                     if ((i % CALENDAR_COLUMNS) == weekendPoint)
                         weekColor = Color.Red.toArgb()
 

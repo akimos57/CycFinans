@@ -25,8 +25,8 @@ import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.components.Calendar
 import ru.cyclone.cycfinans.presentation.ui.components.DayBox
+import ru.cyclone.cycfinans.presentation.ui.components.FastNotes
 import ru.cyclone.cycfinans.presentation.ui.components.MainBox
-import ru.cyclone.cycfinans.presentation.ui.components.NotesInDetails
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Month
@@ -48,7 +48,7 @@ fun MainScreen(navController: NavHostController) {
 
     var month = Month.of(currentMonth.value + 1).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-    val currentYear = Year.now().value
+    var currentYear by remember { mutableStateOf(Year.now().value) }
 
     var date by remember {
         mutableStateOf("$month, $currentYear")
@@ -115,10 +115,10 @@ fun MainScreen(navController: NavHostController) {
                     val i = index + 1
                     if (
                         (i == 1) and
-                        (currentMonth.value + 1 != actualDate.second.month.value) or
-                        (currentYear != actualDate.second.year)
+                        ((currentMonth.value + 1 != actualDate.second.month.value) or
+                        (currentYear != actualDate.second.year))
                     ) {
-                        NotesInDetails()
+                        FastNotes()
                     }
                     val income = history.value?.filter {
                         c.timeInMillis = it.time.time
@@ -134,7 +134,7 @@ fun MainScreen(navController: NavHostController) {
                         (currentMonth.value + 1 == actualDate.second.month.value) and
                         (currentYear == actualDate.second.year)
                     ) {
-                        NotesInDetails()
+                        FastNotes()
                     }
 
                     DayBox(
@@ -172,6 +172,7 @@ fun MainScreen(navController: NavHostController) {
             currentYear = currentYear,
             confirmButtonClicked = { _month, _year ->
                 currentMonth.value = _month - 1
+                currentYear = _year
                 month =
                     Month.of(_month).getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
                         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }

@@ -8,10 +8,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.cyclone.cycfinans.data.local.AppDatabase
+import ru.cyclone.cycfinans.data.local.dao.FastNoteRepositoryImpl
 import ru.cyclone.cycfinans.data.local.dao.NoteRepositoryImpl
 import ru.cyclone.cycfinans.data.local.dao.PromotionRepositoryImpl
-//import ru.cyclone.cycfinans.data.local.dao.TargeteRepositoryImpl
-
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -31,8 +30,13 @@ class DatabaseModule {
     }
 
     @Provides
-    fun provideTargetDao(appDatabase: AppDatabase): NoteRepositoryImpl{
+    fun provideNoteDao(appDatabase: AppDatabase): NoteRepositoryImpl{
         return appDatabase.noteDao()
+    }
+
+    @Provides
+    fun provideFastNoteDao(appDatabase: AppDatabase): FastNoteRepositoryImpl {
+        return appDatabase.fastNoteDao()
     }
 }
 

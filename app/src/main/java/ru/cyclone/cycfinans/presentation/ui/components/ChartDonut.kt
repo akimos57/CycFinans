@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import ru.cyclone.cycfinans.presentation.ui.theme.*
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.absoluteValue
@@ -239,7 +240,7 @@ fun DetailsPieChartItem(
                     )
                 }
             }
-            val progress = data.second / totalSum
+            val progress = data.second.divide(totalSum, 2, RoundingMode.HALF_UP)
 
             Row(
                 modifier = Modifier
@@ -254,7 +255,7 @@ fun DetailsPieChartItem(
                 )
             }
 
-            val percent = progress / BigDecimal(100)
+            val percent = progress * BigDecimal(100)
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),

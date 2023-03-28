@@ -36,11 +36,6 @@ class MainDetailsScreenVM @Inject constructor(
 
     var date: Calendar? = Calendar.getInstance()
 
-    init {
-        updateNotes()
-        updateAllPromotions()
-    }
-
     fun addPromotion(promotion: Promotion, onSuccess: () -> Unit) {
         viewModelScope.launch {
             addPromotionUseCase.invoke(promotion = promotion)
@@ -117,5 +112,6 @@ class MainDetailsScreenVM @Inject constructor(
 
     init {
         updateNotes()
+        updateAllPromotions()
     }
 }

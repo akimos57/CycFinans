@@ -8,10 +8,10 @@ interface NoteRepositoryImpl {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(note: Note)
 
-    @Query("SELECT * FROM fast_notes")
+    @Query("SELECT * FROM notes")
     suspend fun getAllNotes(): List<Note>
 
-    @Query("SELECT * FROM fast_notes WHERE id=:noteId")
+    @Query("SELECT * FROM notes WHERE id=:noteId")
     suspend fun getNoteById(noteId: Long): Note
 
     @Delete
