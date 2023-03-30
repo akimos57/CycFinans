@@ -47,13 +47,13 @@ fun BottomNavigationBar(
                         contentDescription = "icon"
                     )
                     },
-                    label = {
-                        Text(
-                            text = stringResource(id = item.titleId)
-                        )
-                    },
+//                    label = {
+//                        Text(
+//                            text = stringResource(id = item.titleId)
+//                        )
+//                    },
                     selectedContentColor = fab1,
-                    unselectedContentColor = Color.Gray
+                    unselectedContentColor = MaterialTheme.colors.primaryVariant
                 )
 
             }

@@ -25,7 +25,7 @@ sealed class Screens(
     val iconId: Int
 ) {
     object MainScreen: Screens(rout = "main_screen", iconId = R.drawable.home, titleId = R.string.main)
-    object CalendarScreen: Screens(rout = "target_screen", iconId = R.drawable.dashboard, titleId = R.string.calendar)
+    object CalendarScreen: Screens(rout = "target_screen", iconId = R.drawable.ic_baseline_check_box_24, titleId = R.string.calendar)
     object StatisticsScreen: Screens(rout = "statistics_screen", iconId = R.drawable.data_usage, titleId = R.string.statistics)
     object SettingsScreen: Screens(rout = "settings_screen", iconId = R.drawable.settings, titleId = R.string.settings)
 }
@@ -33,6 +33,7 @@ sealed class Screens(
 sealed class AdditionalScreens(
     val rout: String
 ) {
+    object SplashScreen: AdditionalScreens(rout = "splash_screen")
     object MainDetailsScreen: AdditionalScreens(rout = "mainDetails_screen")
     object SetCategoryLimitsScreen: AdditionalScreens(rout = "set_category_limits_screen")
     object EditCategoriesListScreen: AdditionalScreens(rout = "edit_categories_screen")
@@ -62,6 +63,7 @@ fun SetupNavHost(navController: NavHostController) {
             modifier = Modifier
                 .padding(paddingValues)
         ) {
+
             composable(route = Screens.MainScreen.rout) {
                 MainScreen(
                     navController = navController,

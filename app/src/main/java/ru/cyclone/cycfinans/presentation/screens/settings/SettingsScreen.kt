@@ -42,7 +42,7 @@ fun SettingsScreen(navController: NavHostController) {
             SetCurrencyDialog(showCurrency)
 
         SettingsElement(
-            title = "Choose First Day Of the Week",
+            title = "Первый день недели",
             icon = R.drawable.settings,
             onClick = {
                 show.value = true

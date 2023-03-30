@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +28,7 @@ import ru.cyclone.cycfinans.presentation.ui.components.Calendar
 import ru.cyclone.cycfinans.presentation.ui.components.DayBox
 import ru.cyclone.cycfinans.presentation.ui.components.FastNotes
 import ru.cyclone.cycfinans.presentation.ui.components.MainBox
+import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.Month
@@ -143,6 +145,15 @@ fun MainScreen(navController: NavHostController, onReturned: MutableState<() -> 
                         FastNotes()
                     }
 
+                    val colorDay = if (
+                        (i == actualDate.first) and
+                        (currentMonth.value + 1 == actualDate.second.month.value) and
+                        (currentYear == actualDate.second.year)
+                        )  {
+                        fab1
+                    } else {
+                        MaterialTheme.colors.secondary
+                    }
                     DayBox(
                         day = i,
                         modifier = Modifier
@@ -155,7 +166,8 @@ fun MainScreen(navController: NavHostController, onReturned: MutableState<() -> 
                                 }
                             },
                         income = income,
-                        expenses = expenses
+                        expenses = expenses,
+                        colorDay = colorDay
                     )
                 }
                 if (

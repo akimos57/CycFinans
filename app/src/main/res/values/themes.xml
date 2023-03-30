@@ -4,4 +4,10 @@
     <style name="Theme.CycFinans" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/head</item>
     </style>
+
+    <!-- Splashcreen -->
+    <style name="SplashScreen" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splashscreen</item>
+        <item name="android:statusBarColor">?android:attr/colorPrimary</item>
+    </style>
 </resources>

@@ -51,17 +51,12 @@ fun SettingsElement(
                     .fillMaxWidth()
                     .padding(vertical = 10.dp)
             )
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(4.dp)
-                    .background(colorResource(id = R.color.secondary_gray))
-            )
         }
     }
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(start = 85.dp)
             .height(0.5.dp)
             .background(colorResource(id = R.color.secondary_gray))
     )
