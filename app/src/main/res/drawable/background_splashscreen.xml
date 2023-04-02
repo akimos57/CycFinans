@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/black" />
-    <item android:drawable="@drawable/splash"
-        android:width="80dp"
-        android:height="80dp"
+    <item android:drawable="@color/black"/>
+    <item
+        android:drawable="@drawable/splash"
+        android:width="85dp"
+        android:height="85dp"
         android:gravity="center"
-        android:bottom="150dp"
+        android:bottom="90dp"
         />
-
+    <item
+        android:drawable="@drawable/cyclone1"
+        android:gravity="bottom|center"
+        android:width="75dp"
+        android:height="20dp"
+        android:bottom="30dp"
+        />
 
 
 </layer-list>

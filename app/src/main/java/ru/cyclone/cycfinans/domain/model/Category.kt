@@ -3,6 +3,7 @@ package ru.cyclone.cycfinans.domain.model
 import com.beust.klaxon.Json
 import com.beust.klaxon.Klaxon
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
+import ru.cyclone.cycnote.R
 import java.util.*
 
 data class Category(
@@ -14,37 +15,51 @@ data class Category(
 )
 
 object Categories {
-    private val categories = listOf(
+    private val expensesCategoriesEN = listOf(
         "Food",
         "Clothes",
         "Taxes",
         "Entertainment",
-        "Others"
+        "Transport",
     )
-    private val categoriesRU = listOf(
+    private val expensesCategoriesRU = listOf(
         "Еда",
         "Одежда",
         "Налоги",
         "Развлечения",
         "Транспорт",
-        "Другое"
+    )
+    private val expensesCategoriesZH = listOf(
+        "食物",
+        "布",
+        "稅收",
+        "娛樂",
+        "運輸",
+    )
+    private val expensesCategoriesKO = listOf(
+        "음식",
+        "옷감",
+        "구실",
+        "오락",
+        "수송",
     )
 
-    private val incomeCategories = listOf(
-        "!Food",
-        "!Clothes",
-        "!Taxes",
-        "!Entertainment",
-        "!Others"
+    private val incomeCategoriesEN = listOf(
+        "Salary",
+        "Business",
     )
     private val incomeCategoriesRU = listOf(
         "Зарплата",
         "Бизнес",
-        "Недвижимость",
-        "Акции",
-        "Другое"
     )
-
+    private val incomeCategoriesZH = listOf(
+        "薪水",
+        "商業",
+    )
+    private val incomeCategoriesKO = listOf(
+        "샐러리",
+        "사업",
+    )
     fun getAll(
         locale: Locale,
         type: Boolean,
@@ -61,13 +76,17 @@ object Categories {
             true -> {
                 when (locale.language) {
                     "ru" -> incomeCategoriesRU + categoryList
-                    else -> incomeCategories + categoryList
+                    "zh" -> incomeCategoriesZH + categoryList
+                    "ko" -> incomeCategoriesKO + categoryList
+                    else -> incomeCategoriesEN + categoryList
                 }
             }
             false -> {
                 when (locale.language) {
-                    "ru" -> categoriesRU + categoryList
-                    else -> categories + categoryList
+                    "ru" -> expensesCategoriesRU + categoryList
+                    "zh" -> expensesCategoriesZH + categoryList
+                    "ko" -> expensesCategoriesKO + categoryList
+                    else -> expensesCategoriesEN + categoryList
                 }
             }
         }

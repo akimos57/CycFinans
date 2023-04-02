@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
+import ru.cyclone.cycnote.R
 import java.time.Month
 import java.time.format.TextStyle
 import java.util.*
@@ -191,7 +193,7 @@ fun Calendar(
                         )
                     ) {
                         Text(
-                            text = "Отмена",
+                            text = stringResource(id = R.string.cancel),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colors.primaryVariant

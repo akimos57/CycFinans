@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">cycFinance</string>
+    <string name="app_name">Finance</string>
     <string name="expenses">花費</string>
     <string name="income">收入</string>
     <string name="done">完畢</string>
@@ -19,4 +19,19 @@
     <string name="main">家</string>
     <string name="delete">刪除</string>
     <string name="reminder">提醒</string>
+    <string name="name">Finance</string>
+    <string name="food">食物</string>
+    <string name="clothes">布</string>
+    <string name="taxes">稅收</string>
+    <string name="transport">運輸</string>
+    <string name="business">商業</string>
+    <string name="salary">薪水</string>
+    <string name="entertainment">娛樂</string>
+    <string name="new_category">新品類</string>
+    <string name="about_us">關於我們</string>
+    <string name="first_day_of_the_week">一周的第一天</string>
+    <string name="time_format">時間格式</string>
+    <string name="categories">類別</string>
+    <string name="language">語言</string>
+    <string name="currency">貨幣</string>
 </resources>

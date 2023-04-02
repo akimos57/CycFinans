@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +30,7 @@ fun SettingsScreen(navController: NavHostController) {
         Text(
             modifier = Modifier
                 .padding(horizontal = 35.dp, vertical = 16.dp),
-            text = "Настройки",
+            text = stringResource(id = R.string.settings),
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
             color = fab1
@@ -42,21 +43,21 @@ fun SettingsScreen(navController: NavHostController) {
             SetCurrencyDialog(showCurrency)
 
         SettingsElement(
-            title = "Первый день недели",
-            icon = R.drawable.settings,
+            title = stringResource(id = R.string.first_day_of_the_week),
+            icon = R.drawable.sun,
             onClick = {
                 show.value = true
             }
         )
         SettingsElement(
-            title = "Формат времени",
+            title = stringResource(id = R.string.time_format),
             icon = R.drawable.time,
             onClick = {
                 showTime.value = true
             }
         )
         SettingsElement(
-            title = "Категории",
+            title = stringResource(id = R.string.categories),
             icon = R.drawable.categories,
             onClick = {
                 navController.navigate(AdditionalScreens.EditCategoriesListScreen.rout) {
@@ -68,19 +69,19 @@ fun SettingsScreen(navController: NavHostController) {
             }
         )
         SettingsElement(
-            title = "Язык",
+            title = stringResource(id = R.string.language),
             icon = R.drawable.language
         )
         SettingsElement(
-            title = "Валюта",
+            title = stringResource(id = R.string.currency),
             icon = R.drawable.dollar,
             onClick = {
                 showCurrency.value = true
             }
         )
         SettingsElement(
-            title = "Помочь разработчикам",
-            icon = R.drawable.pay
+            title = stringResource(id = R.string.about_us),
+            icon = R.drawable.groups
         )
     }
 }

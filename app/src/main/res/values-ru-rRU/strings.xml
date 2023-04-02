@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">cycFinance</string>
+    <string name="app_name">Finance</string>
     <string name="expenses">Расходы</string>
     <string name="income">Доходы</string>
     <string name="done">Выполнено</string>
@@ -19,4 +19,19 @@
     <string name="settings">Настройки</string>
     <string name="delete">Удалить</string>
     <string name="reminder">Напоминание</string>
+    <string name="name">Finance</string>
+    <string name="food">Еда</string>
+    <string name="clothes">Одежда</string>
+    <string name="taxes">Налоги</string>
+    <string name="transport">Транспорт</string>
+    <string name="entertainment">Развлечения</string>
+    <string name="salary">Зарплата</string>
+    <string name="business">Бизнес</string>
+    <string name="new_category">Новая категория</string>
+    <string name="about_us">О нас</string>
+    <string name="first_day_of_the_week">Первый день недели</string>
+    <string name="time_format">Формат времени</string>
+    <string name="categories">Категории</string>
+    <string name="language">Язык</string>
+    <string name="currency">Валюта</string>
 </resources>

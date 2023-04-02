@@ -143,7 +143,7 @@ fun EditPromotion(
                                 onClick = { showDialog.value = false }
                             ) {
                                 Text(
-                                    text = "Отмена",
+                                    text = stringResource(id = R.string.cancel),
                                     color = MaterialTheme.colors.primaryVariant,
                                     fontSize = 16.sp,
                                     modifier = Modifier.clickable { onDismiss() }
@@ -193,7 +193,7 @@ fun EditPromotion(
                                 )
                             ) {
                                 Text(
-                                    text = "Сохранить",
+                                    text = stringResource(id = R.string.save),
                                     color = MaterialTheme.colors.primaryVariant,
                                     fontSize = 16.sp
                                 )

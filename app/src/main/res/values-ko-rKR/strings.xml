@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">cycFinance</string>
+    <string name="app_name">Finance</string>
     <string name="calendar">달력</string>
     <string name="expenses">경비</string>
     <string name="income">소득</string>
@@ -19,4 +19,19 @@
     <string name="dollar">₩</string>
     <string name="delete">삭제</string>
     <string name="reminder">알림</string>
+    <string name="name">Finance</string>
+    <string name="food">음식</string>
+    <string name="clothes">옷감</string>
+    <string name="taxes">구실</string>
+    <string name="transport">수송</string>
+    <string name="entertainment">오락</string>
+    <string name="salary">샐러리</string>
+    <string name="business">사업</string>
+    <string name="new_category">새 분류</string>
+    <string name="about_us">회사 소개</string>
+    <string name="first_day_of_the_week">주의 첫날</string>
+    <string name="time_format">시간 형식</string>
+    <string name="categories">카테고리</string>
+    <string name="language">언어</string>
+    <string name="currency">통화</string>
 </resources>

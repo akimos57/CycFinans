@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">cycFinance</string>
+    <string name="app_name">Finance</string>
     <string name="expenses">Expenses</string>
     <string name="income">Income</string>
     <string name="done">Done</string>
@@ -19,4 +19,19 @@
     <string name="settings">Settings</string>
     <string name="delete">Delete</string>
     <string name="reminder">Reminder</string>
+    <string name="name">Finance</string>
+    <string name="food">Food</string>
+    <string name="clothes">Clothes</string>
+    <string name="taxes">Taxes</string>
+    <string name="transport">Transport</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="business">Business</string>
+    <string name="salary">Salary</string>
+    <string name="new_category">New category</string>
+    <string name="about_us">About us</string>
+    <string name="first_day_of_the_week">First day of the week</string>
+    <string name="time_format">Time format</string>
+    <string name="categories">Categories</string>
+    <string name="language">Language</string>
+    <string name="currency">Currency</string>
 </resources>

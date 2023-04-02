@@ -61,7 +61,7 @@ fun CategoryTypePager(type: Boolean) {
             .background(MaterialTheme.colors.background)
     ) {
         Text(
-            text = if (type) "Incomes" else "Expenses",
+            text = if (type) stringResource(id = R.string.income) else stringResource(id = R.string.expenses),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
