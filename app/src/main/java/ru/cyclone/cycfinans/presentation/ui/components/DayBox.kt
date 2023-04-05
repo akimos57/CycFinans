@@ -10,8 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import ru.cyclone.cycnote.R
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
@@ -24,6 +26,7 @@ fun DayBox(
     income: BigDecimal,
     expenses: BigDecimal
 ) {
+    val currency = stringResource(id = R.string.dollar)
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,7 +66,7 @@ fun DayBox(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "+ $incomeString ₽"
+                        text = "+ $incomeString $currency"
                     )
                 }
                 Row(
@@ -74,7 +77,7 @@ fun DayBox(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "- $expensesString ₽"
+                        text = "- $expensesString $currency"
                     )
                 }
             }

@@ -104,7 +104,7 @@ fun StatisticsScreen(navController: NavHostController) {
                     Text(
                         modifier = Modifier
                             .padding(start = 8.dp),
-                        text = "$monthString, ${date.year}"
+                        text = "$monthString ${date.year}"
                             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Light

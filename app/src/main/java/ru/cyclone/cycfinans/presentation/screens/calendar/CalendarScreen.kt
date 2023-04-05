@@ -55,7 +55,7 @@ fun CalendarScreen(navController: NavHostController, onReturned: MutableState<()
     ) }
 
     var dateString by remember {
-        mutableStateOf("$monthString, ${ currentYearMonth.value!!.year }")
+        mutableStateOf("$monthString ${ currentYearMonth.value!!.year }")
     }
 
     val showEditNoteDialog = remember { mutableStateOf(false) }
@@ -151,7 +151,7 @@ fun CalendarScreen(navController: NavHostController, onReturned: MutableState<()
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp),
-                    text = " $monthString, $currentDay",
+                    text = " $monthString $currentDay",
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Light
                 )

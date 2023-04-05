@@ -53,7 +53,7 @@ fun MainScreen(navController: NavHostController, onReturned: MutableState<() -> 
     var currentYear by remember { mutableStateOf(Year.now().value) }
 
     var date by remember {
-        mutableStateOf("$month, $currentYear")
+        mutableStateOf("$month $currentYear")
     }
 
     onReturned.value = {

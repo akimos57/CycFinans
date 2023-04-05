@@ -24,6 +24,7 @@ fun MainBox(
     income: BigDecimal,
     expenses: BigDecimal
 ) {
+    val currency = stringResource(id = R.string.dollar)
     // Средств осталось
     val currentPrice = income - expenses
     // for LinearProgress
@@ -55,7 +56,7 @@ fun MainBox(
                 ) {
                     val incomeString = NumberFormat.getNumberInstance(Locale.US).format(income).replace(',', ' ')
                     Text(
-                        text = "$incomeString ₽",
+                        text = "$incomeString $currency",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -84,12 +85,12 @@ fun MainBox(
                         val expensesString = NumberFormat.getNumberInstance(Locale.US).format(expenses).replace(',', ' ')
                         val currentPriceString = NumberFormat.getNumberInstance(Locale.US).format(currentPrice).replace(',', ' ')
                         Text(
-                            text = stringResource(id = R.string.spent)+": $expensesString ₽",
+                            text = stringResource(id = R.string.spent)+": $expensesString $currency",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = stringResource(id = R.string.left)+": $currentPriceString ₽",
+                            text = stringResource(id = R.string.left)+": $currentPriceString $currency",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )

@@ -6,7 +6,6 @@
         android:width="85dp"
         android:height="85dp"
         android:gravity="center"
-        android:bottom="90dp"
         />
     <item
         android:drawable="@drawable/cyclone1"
@@ -15,6 +14,4 @@
         android:height="20dp"
         android:bottom="30dp"
         />
-
-
 </layer-list>

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
+import ru.cyclone.cycnote.R
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -28,6 +30,7 @@ fun PromotionBox(
     promotion: Promotion,
     modifier: Modifier
 ) {
+    val currency = stringResource(id = R.string.dollar)
     Column(modifier = Modifier) {
         Box(
             modifier = Modifier
@@ -44,7 +47,7 @@ fun PromotionBox(
                     .padding(top = 24.dp)
             ) {
                 val price = NumberFormat.getNumberInstance(Locale.US).format(BigDecimal(promotion.price)).replace(',', ' ')
-                val text = if (promotion.type) "+ $price ₽" else "- $price ₽"
+                val text = if (promotion.type) "+ $price $currency" else "- $price $currency"
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),

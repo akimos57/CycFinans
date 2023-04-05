@@ -22,10 +22,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import ru.cyclone.cycfinans.presentation.ui.theme.*
+import ru.cyclone.cycnote.R
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
@@ -41,6 +43,7 @@ fun ChartDonut(
     animDuration: Int = 2000,
     animationState: MutableState<Boolean>
 ) {
+    val currency = stringResource(id = R.string.dollar)
     val totalSum = data.values.sumOf { it }
     val floatValue = data.values.map { 360F * it.toFloat() / totalSum.toFloat() }
 
@@ -118,7 +121,7 @@ fun ChartDonut(
         var text = NumberFormat.getNumberInstance(Locale.US).format(totalSum).replace(',', ' ')
         text = if (text.isEmpty() or (text == "0"))
             ""
-        else "$text ₽"
+        else "$text $currency"
         val textStyle = TextStyle(
             fontSize = TextUnit(animateScaling.value, TextUnitType.Sp),
             color = MaterialTheme.colors.primaryVariant
@@ -205,6 +208,7 @@ fun DetailsPieChartItem(
     color: Color,
     totalSum: BigDecimal
 ) {
+    val currency = stringResource(id = R.string.dollar)
     Surface(
         modifier = Modifier
             .padding(vertical = 10.dp, horizontal = 12.dp),
@@ -233,7 +237,7 @@ fun DetailsPieChartItem(
                     Text(
                         modifier = Modifier
                             .padding(start = 15.dp),
-                        text = "$price ₽",
+                        text = "$price $currency",
                         fontWeight = FontWeight.Medium,
                         fontSize = 14.sp,
                         color = Color.Gray

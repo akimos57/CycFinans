@@ -78,7 +78,7 @@ fun MainDetailsScreen(
                     )
                 }
                 Text(
-                    text = "$day ${ Month.of(month.toInt()).getDisplayName(TextStyle.FULL, Locale.getDefault()) }, $year",
+                    text = "$day ${ Month.of(month.toInt()).getDisplayName(TextStyle.FULL, Locale.getDefault()) } $year",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Light,
                     modifier = Modifier
