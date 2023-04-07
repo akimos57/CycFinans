@@ -10,5 +10,6 @@ data class Note(
     val id: Int = 0,
     val content: String,
     val time: Time,
-    val completed: Boolean = false
+    val isCompleted: Boolean = false,
+    val remind: Boolean = false
 )

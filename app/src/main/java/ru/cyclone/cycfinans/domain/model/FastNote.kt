@@ -10,5 +10,5 @@ data class FastNote(
     val id: Int = 0,
     val content: String,
     val time: Time,
-    val completed: Boolean = false
+    val isCompleted: Boolean = false
 )

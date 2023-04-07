@@ -140,7 +140,7 @@ fun NotesInDetails(date: Calendar) {
                     ),
                 note = note,
                 onNoteCompleteStateChanged = {
-                    viewModel.addNote(note.copy(completed = it))
+                    viewModel.addNote(note.copy(isCompleted = it))
                 }
             )
         }

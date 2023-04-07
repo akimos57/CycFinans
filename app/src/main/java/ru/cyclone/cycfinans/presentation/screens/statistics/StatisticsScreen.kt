@@ -36,14 +36,23 @@ import java.util.*
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun StatisticsScreen(navController: NavHostController) {
+fun StatisticsScreen(
+    navController: NavHostController,
+    month: String?,
+    year: String?
+) {
     var visible by remember {
         mutableStateOf(false)
     }
 
     // Create a YearMonth object with the current year and month
-    val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
-    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    var currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+    var currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+    if (!month.isNullOrBlank() and !year.isNullOrBlank()) {
+        currentMonth = month?.toInt()!!
+        currentYear = year?.toInt()!!
+    }
 
     var date by remember { mutableStateOf(YearMonth.of(currentYear, currentMonth + 1)) }
 

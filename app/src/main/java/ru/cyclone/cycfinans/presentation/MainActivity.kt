@@ -9,6 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ru.cyclone.cycfinans.domain.usecases.NotificationController
 import ru.cyclone.cycfinans.presentation.navigation.SetupNavHost
 import ru.cyclone.cycfinans.presentation.ui.theme.CycFinansTheme
 
@@ -16,6 +17,7 @@ import ru.cyclone.cycfinans.presentation.ui.theme.CycFinansTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        NotificationController.provide(this)
         setContent {
             val navController = rememberNavController()
             CycFinansTheme {

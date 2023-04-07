@@ -20,20 +20,21 @@ import ru.cyclone.cycnote.R
 
 
 sealed class Screens(
-    val titleId: Int,
     val rout: String,
     val iconId: Int
 ) {
-    object MainScreen: Screens(rout = "main_screen", iconId = R.drawable.home, titleId = R.string.main)
-    object CalendarScreen: Screens(rout = "target_screen", iconId = R.drawable.ic_baseline_check_box_24, titleId = R.string.calendar)
-    object StatisticsScreen: Screens(rout = "statistics_screen", iconId = R.drawable.data_usage, titleId = R.string.statistics)
-    object SettingsScreen: Screens(rout = "settings_screen", iconId = R.drawable.settings, titleId = R.string.settings)
+    object MainScreen: Screens(rout = "main_screen", iconId = R.drawable.home)
+    object CalendarScreen: Screens(
+        rout = "target_screen",
+        iconId = R.drawable.ic_baseline_check_box_24
+    )
+    object StatisticsScreen: Screens(rout = "statistics_screen", iconId = R.drawable.data_usage)
+    object SettingsScreen: Screens(rout = "settings_screen", iconId = R.drawable.settings)
 }
 
 sealed class AdditionalScreens(
     val rout: String
 ) {
-    object SplashScreen: AdditionalScreens(rout = "splash_screen")
     object MainDetailsScreen: AdditionalScreens(rout = "mainDetails_screen")
     object SetCategoryLimitsScreen: AdditionalScreens(rout = "set_category_limits_screen")
     object EditCategoriesListScreen: AdditionalScreens(rout = "edit_categories_screen")
@@ -89,8 +90,22 @@ fun SetupNavHost(navController: NavHostController) {
                     onReturned = onReturned
                 )
             }
+            composable(route = Screens.StatisticsScreen.rout +
+                    "/{month}" +
+                    "/{year}"
+            ) {
+                StatisticsScreen(
+                    navController = navController,
+                    it.arguments?.getString("month"),
+                    it.arguments?.getString("year"),
+                )
+            }
             composable(route = Screens.StatisticsScreen.rout) {
-                StatisticsScreen(navController = navController)
+                StatisticsScreen(
+                    navController = navController,
+                    month = it.arguments?.getString("month"),
+                    year = it.arguments?.getString("year")
+                )
             }
             composable(route = Screens.SettingsScreen.rout) {
                 SettingsScreen(navController = navController)

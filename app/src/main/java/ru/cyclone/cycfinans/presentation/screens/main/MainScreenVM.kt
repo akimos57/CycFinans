@@ -54,7 +54,7 @@ class MainScreenVM @Inject constructor(
     fun updateNotes() {
         viewModelScope.launch {
             getAllFastNotesUseCase.invoke().let { notes: List<FastNote> ->
-                _notes.postValue(notes.filter { note ->
+                _notes.postValue(notes.sortedBy { it.isCompleted }.filter { note ->
                     val c = Calendar.getInstance()
                     c.timeInMillis = note.time.time
                     (date?.get(Calendar.YEAR) == c.get(Calendar.YEAR)) and

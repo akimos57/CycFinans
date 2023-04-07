@@ -5,13 +5,11 @@
         android:drawable="@drawable/splash"
         android:width="85dp"
         android:height="85dp"
-        android:gravity="center"
-        />
+        android:gravity="center" />
     <item
         android:drawable="@drawable/cyclone1"
         android:gravity="bottom|center"
         android:width="75dp"
         android:height="20dp"
-        android:bottom="30dp"
-        />
+        android:bottom="30dp" />
 </layer-list>

@@ -72,10 +72,10 @@ class MainDetailsScreenVM @Inject constructor(
         }
     }
 
-    fun updateNotes() {
+    private fun updateNotes() {
         viewModelScope.launch {
             getAllNotesUseCase.invoke().let { notes: List<Note> ->
-                _notes.postValue(notes.filter { note ->
+                _notes.postValue(notes.sortedBy { it.isCompleted }.filter { note ->
                     val c = Calendar.getInstance()
                     c.timeInMillis = note.time.time
                     (date?.get(Calendar.YEAR) == c.get(Calendar.YEAR)) and

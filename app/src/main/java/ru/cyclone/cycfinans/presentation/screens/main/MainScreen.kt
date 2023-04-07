@@ -1,10 +1,7 @@
 package ru.cyclone.cycfinans.presentation.screens.main
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,13 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
+import ru.cyclone.cycfinans.domain.usecases.NotificationController
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.components.Calendar
@@ -80,6 +77,13 @@ fun MainScreen(navController: NavHostController, onReturned: MutableState<() -> 
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    NotificationController.launchSingleNotification()
+                }) {
+                Text(text = "Notify")
+            }
             TextButton(
                 modifier = Modifier
                     .padding(20.dp)
@@ -105,7 +109,11 @@ fun MainScreen(navController: NavHostController, onReturned: MutableState<() -> 
             }
             MainBox(
                 modifier = Modifier
-                    .clickable { navController.navigate(Screens.StatisticsScreen.rout){
+                    .clickable { navController.navigate(
+                        Screens.StatisticsScreen.rout + '/' +
+                                currentMonth.value + '/' +
+                                currentYear
+                    ){
                         launchSingleTop = true
                     } },
                 income = fullIncome,

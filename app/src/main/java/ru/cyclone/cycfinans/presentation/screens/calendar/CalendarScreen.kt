@@ -22,10 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
-import ru.cyclone.cycfinans.presentation.ui.components.Calendar
-import ru.cyclone.cycfinans.presentation.ui.components.EditFastNote
-import ru.cyclone.cycfinans.presentation.ui.components.MyCalendar
-import ru.cyclone.cycfinans.presentation.ui.components.NoteBox
+import ru.cyclone.cycfinans.presentation.ui.components.*
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycnote.R
@@ -164,7 +161,7 @@ fun CalendarScreen(navController: NavHostController, onReturned: MutableState<()
                     (currentYearMonth.value?.year == c.get(Calendar.YEAR)) and
                             ((currentYearMonth.value?.month?.value?.minus(1)) == c.get(Calendar.MONTH)) and
                             (currentDay == c.get(Calendar.DATE))
-                }.sortedBy { it.completed }.forEach { note ->
+                }.sortedBy { it.isCompleted }.forEach { note ->
                     val showDeleteDialog = remember { mutableStateOf(false) }
                     if (showDeleteDialog.value) {
                         Dialog(
@@ -253,7 +250,7 @@ fun CalendarScreen(navController: NavHostController, onReturned: MutableState<()
                             ),
                         onNoteCompleteStateChanged = { completed ->
                             vm.addNote(note.copy(
-                                completed = completed
+                                isCompleted = completed
                             ))
                         }
                     )
@@ -261,7 +258,7 @@ fun CalendarScreen(navController: NavHostController, onReturned: MutableState<()
                 }
             }
         }
-        EditFastNote(
+        EditNote(
             showDialog = showEditNoteDialog,
             note = noteState,
             addNote = { note -> vm.addNote(note) },

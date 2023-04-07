@@ -1,11 +1,6 @@
 package ru.cyclone.cycfinans.di
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -16,8 +11,6 @@ import ru.cyclone.cycfinans.data.local.AppDatabase
 import ru.cyclone.cycfinans.data.local.dao.FastNoteRepositoryImpl
 import ru.cyclone.cycfinans.data.local.dao.NoteRepositoryImpl
 import ru.cyclone.cycfinans.data.local.dao.PromotionRepositoryImpl
-import ru.cyclone.cycnote.R
-import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -45,6 +38,9 @@ class DatabaseModule {
     fun provideFastNoteDao(appDatabase: AppDatabase): FastNoteRepositoryImpl {
         return appDatabase.fastNoteDao()
     }
+
+    @Provides
+    fun provideAppContext(context: Context) : Context = context
 }
 
 

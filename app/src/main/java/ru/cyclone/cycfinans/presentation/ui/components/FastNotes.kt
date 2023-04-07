@@ -137,7 +137,7 @@ fun FastNotes() {
                                 note.id,
                                 note.content,
                                 note.time,
-                                note.completed
+                                note.isCompleted
                             )
                             showEditNoteDialog.value = true
                         },
@@ -147,15 +147,15 @@ fun FastNotes() {
                     note.id,
                     note.content,
                     note.time,
-                    note.completed
+                    note.isCompleted
                 ),
                 onNoteCompleteStateChanged = {
-                    viewModel.addNote(note.copy(completed = it))
+                    viewModel.addNote(note.copy(isCompleted = it))
                     editedNote.value = Note(
                         note.id,
                         note.content,
                         note.time,
-                        note.completed
+                        note.isCompleted
                     )
                 }
             )
@@ -167,7 +167,7 @@ fun FastNotes() {
                 note.id,
                 note.content,
                 note.time,
-                note.completed
+                note.isCompleted
             )) {
                 viewModel.updateNotes()
             } },
@@ -175,7 +175,7 @@ fun FastNotes() {
                 note.id,
                 note.content,
                 note.time,
-                note.completed
+                note.isCompleted
             )) {
                 viewModel.updateNotes()
             } }

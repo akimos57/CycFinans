@@ -63,7 +63,7 @@ fun NoteBox(
                 ) {
                     Text(text = stringResource(id = R.string.done))
                     Checkbox(
-                        checked = note.completed,
+                        checked = note.isCompleted,
                         onCheckedChange = {
                             onNoteCompleteStateChanged(it) },
                         colors = CheckboxDefaults.colors(blue),

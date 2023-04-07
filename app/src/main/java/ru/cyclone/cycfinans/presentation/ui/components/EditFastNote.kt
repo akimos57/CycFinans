@@ -27,7 +27,6 @@ import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.ui.theme.*
 import ru.cyclone.cycnote.R
 import java.sql.Time
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
@@ -40,7 +39,7 @@ fun EditFastNote(
     if (showDialog.value) {
         var content by rememberSaveable { mutableStateOf(note.value.content) }
         var time by remember { mutableStateOf(Time(System.currentTimeMillis())) }
-        var isCompleted by rememberSaveable { mutableStateOf(note.value.completed) }
+        var isCompleted by rememberSaveable { mutableStateOf(note.value.isCompleted) }
 
         val c = Calendar.getInstance()
         val dp = DatePickerDialog(LocalContext.current,
@@ -128,7 +127,7 @@ fun EditFastNote(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = stringResource(id = R.string.remind),
+                                text = stringResource(id = R.string.done),
                                 color = MaterialTheme.colors.primaryVariant
                             )
                             Checkbox(
@@ -140,11 +139,6 @@ fun EditFastNote(
                                     .padding(start = 16.dp,end = 16.dp)
                             )
                         }
-                        Text(
-                            text = SimpleDateFormat("dd.mm.yyyy hh:mm", Locale.getDefault()).format(time),
-                            color = MaterialTheme.colors.primaryVariant,
-                            fontSize = 18.sp
-                        )
                     }
                     Row(
                         modifier = Modifier
@@ -176,7 +170,7 @@ fun EditFastNote(
                                             id = note.value.id,
                                             content = content,
                                             time = time,
-                                            completed = isCompleted
+                                            isCompleted = isCompleted
                                         )
                                     )
                                 }

@@ -67,6 +67,13 @@ fun CategoryTypePager(type: Boolean) {
                 .padding(20.dp)
         )
 
+        if (categoryList.isEmpty()) {
+            Text(
+                text = "No extra categories",
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
         categoryList.forEach { (category, string) ->
             var limit by remember { mutableStateOf(category!!.limit.toString()) }
             var name by remember { mutableStateOf(category!!.name) }
