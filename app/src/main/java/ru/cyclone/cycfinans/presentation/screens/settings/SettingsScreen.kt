@@ -14,18 +14,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
-import ru.cyclone.cycfinans.presentation.ui.components.FirstDayOfTheWeekChooser
-import ru.cyclone.cycfinans.presentation.ui.components.SetCurrencyDialog
-import ru.cyclone.cycfinans.presentation.ui.components.SetTimeFormatDialog
-import ru.cyclone.cycfinans.presentation.ui.components.SettingsElement
+import ru.cyclone.cycfinans.presentation.ui.components.*
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycnote.R
 
 @Composable
 fun SettingsScreen(navController: NavHostController) {
-    val show = remember { mutableStateOf(false) }
-    val showTime = remember { mutableStateOf(false) }
-    val showCurrency = remember { mutableStateOf(false) }
+    val showFirstDayOfTheWeekSelector = remember { mutableStateOf(false) }
+    val showSetTimeFormatSelector = remember { mutableStateOf(false) }
+    val showCurrencySelector = remember { mutableStateOf(false) }
+    val showLanguageSelector = remember { mutableStateOf(false) }
     Column {
         Text(
             modifier = Modifier
@@ -35,25 +33,27 @@ fun SettingsScreen(navController: NavHostController) {
             fontWeight = FontWeight.Medium,
             color = fab1
         )
-        if (show.value)
-            FirstDayOfTheWeekChooser(show)
-        if (showTime.value)
-            SetTimeFormatDialog(showTime)
-        if (showCurrency.value)
-            SetCurrencyDialog(showCurrency)
+        if (showFirstDayOfTheWeekSelector.value)
+            FirstDayOfTheWeekSelector(showFirstDayOfTheWeekSelector)
+        if (showSetTimeFormatSelector.value)
+            TimeFormatSelector(showSetTimeFormatSelector)
+        if (showCurrencySelector.value)
+            CurrencySelector(showCurrencySelector)
+        if (showLanguageSelector.value)
+            LanguageSelector(showLanguageSelector)
 
         SettingsElement(
             title = stringResource(id = R.string.first_day_of_the_week),
             icon = R.drawable.sun,
             onClick = {
-                show.value = true
+                showFirstDayOfTheWeekSelector.value = true
             }
         )
         SettingsElement(
             title = stringResource(id = R.string.time_format),
             icon = R.drawable.time,
             onClick = {
-                showTime.value = true
+                showSetTimeFormatSelector.value = true
             }
         )
         SettingsElement(
@@ -70,13 +70,16 @@ fun SettingsScreen(navController: NavHostController) {
         )
         SettingsElement(
             title = stringResource(id = R.string.language),
-            icon = R.drawable.language
+            icon = R.drawable.language,
+            onClick = {
+                showLanguageSelector.value = true
+            }
         )
         SettingsElement(
             title = stringResource(id = R.string.currency),
             icon = R.drawable.dollar,
             onClick = {
-                showCurrency.value = true
+                showCurrencySelector.value = true
             }
         )
         SettingsElement(

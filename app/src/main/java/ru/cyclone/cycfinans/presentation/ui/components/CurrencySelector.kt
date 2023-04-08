@@ -3,7 +3,9 @@ package ru.cyclone.cycfinans.presentation.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,43 +15,43 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
-import java.time.DayOfWeek
 
 @Composable
-fun FirstDayOfTheWeekChooser(
+fun CurrencySelector(
     show: MutableState<Boolean>
 ) {
-    val preferencesController = PreferencesController("firstDayOfWeek_table")
+    val preferencesController = PreferencesController("currency_table")
+    val availableCurrency = listOf(
+        "₽\t\tRUB",
+        "$\t\tUSD",
+        "€\t\tEUR",
+        "¥\t\tCNY",
+        "₩\t\tKPW"
+    )
     if (show.value) {
         Dialog(onDismissRequest = { show.value = false }) {
             Box(
                 modifier = Modifier
-                    .width(200.dp)
+                    .width(150.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(MaterialTheme.colors.secondary)
             ) {
-                Column {
-                    for (i in 1..7) {
-                        Row(
+                Column(
+                    Modifier.verticalScroll(rememberScrollState())
+                ) {
+                    for (itemCurrency in availableCurrency) {
+                        Text(
+                            text = itemCurrency,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(12.dp)
                                 .clickable {
-                                    preferencesController.fileNameList =
-                                        mutableListOf((i).toString())
-                                    preferencesController.saveLists()
-
                                     show.value = false
+                                    preferencesController.fileNameList =
+                                        mutableListOf(itemCurrency.first().toString())
+                                    preferencesController.saveLists()
                                 }
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .padding(
-                                        horizontal = 20.dp,
-                                        vertical = 12.dp
-                                    ),
-                                text = DayOfWeek.of(i).name
-                            )
-                        }
+                        )
                     }
                 }
             }

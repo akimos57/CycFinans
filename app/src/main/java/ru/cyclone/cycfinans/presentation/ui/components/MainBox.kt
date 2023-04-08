@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycnote.R
 import java.math.BigDecimal
@@ -24,7 +25,8 @@ fun MainBox(
     income: BigDecimal,
     expenses: BigDecimal
 ) {
-    val currency = stringResource(id = R.string.dollar)
+    val preferencesController = PreferencesController("currency_table")
+    val currency = preferencesController.fileNameList.last()
     // Средств осталось
     val currentPrice = income - expenses
     // for LinearProgress

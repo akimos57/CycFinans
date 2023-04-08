@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun SetTimeFormatDialog(
+fun TimeFormatSelector(
     show: MutableState<Boolean>
 ) {
     if (show.value) {

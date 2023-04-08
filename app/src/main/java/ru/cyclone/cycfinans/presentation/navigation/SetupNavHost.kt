@@ -1,13 +1,16 @@
 package ru.cyclone.cycfinans.presentation.navigation
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.presentation.screens.calendar.CalendarScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainScreen
@@ -17,6 +20,7 @@ import ru.cyclone.cycfinans.presentation.screens.settings.SettingsScreen
 import ru.cyclone.cycfinans.presentation.screens.statistics.StatisticsScreen
 import ru.cyclone.cycfinans.presentation.ui.components.BottomNavigationBar
 import ru.cyclone.cycnote.R
+import java.util.*
 
 
 sealed class Screens(
@@ -54,6 +58,17 @@ fun SetupNavHost(navController: NavHostController) {
     }
 
     val onReturned = remember { mutableStateOf({}) }
+    val preferencesController = PreferencesController("locale_table")
+    LocalContext.current.resources.apply {
+        val locale = Locale.forLanguageTag(preferencesController.fileNameList.last())
+        val config = Configuration(configuration)
+
+        LocalContext.current.createConfigurationContext(configuration)
+        Locale.setDefault(locale)
+        config.setLocale(locale)
+        @Suppress("DEPRECATION")
+        LocalContext.current.resources.updateConfiguration(config, displayMetrics)
+    }
 
     Scaffold(
         bottomBar = { BottomNavigationBar(navController = navController, showNavigationBar) }

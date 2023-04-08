@@ -44,8 +44,5 @@
     <string name="statistics">Statistics</string>
     <string name="settings">Settings</string>
 
-    // Сurrency
-    <string name="dollar">$</string>
-
     <string name="category_table_name" translatable="false">extra_categories</string>
 </resources>
