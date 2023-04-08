@@ -14,7 +14,7 @@ class PreferencesController(
     var fileNameList : MutableList<String> = update()
 
     @SuppressLint("SdCardPath")
-    private val storage =  StorageController("/data/user/0/${ BuildConfig.APPLICATION_ID }/files", tableName, DIVIDER_STRING, DIVIDER)
+    private val storage =  StorageController("/data/data/${ BuildConfig.APPLICATION_ID }", tableName, DIVIDER_STRING, DIVIDER)
 
     fun saveLists() {
         storage.file.writeText("")

@@ -58,7 +58,16 @@ fun SetupNavHost(navController: NavHostController) {
     }
 
     val onReturned = remember { mutableStateOf({}) }
-    val preferencesController = PreferencesController("locale_table")
+    var preferencesController = PreferencesController("currency_table")
+    if (preferencesController.fileNameList.isEmpty()){
+        preferencesController.fileNameList.add("$")
+        preferencesController.saveLists()
+    }
+    preferencesController = PreferencesController("locale_table")
+    if (preferencesController.fileNameList.isEmpty()){
+        preferencesController.fileNameList.add("en")
+        preferencesController.saveLists()
+    }
     LocalContext.current.resources.apply {
         val locale = Locale.forLanguageTag(preferencesController.fileNameList.last())
         val config = Configuration(configuration)
