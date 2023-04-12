@@ -3,6 +3,7 @@
 package ru.cyclone.cycfinans.presentation.ui.components
 
 import android.app.TimePickerDialog
+import android.text.InputFilter
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -80,8 +81,8 @@ fun EditPromotion(
                 ) {
                     Column {
                         TextField(
-                            value = if (price == "0") "" else price,
-                            onValueChange = { price = it },
+                            value = if ((price == "0") || (price == ".")) "" else price,
+                            onValueChange = { if(!it.contains(Regex("[ ,-]"))) price = it },
                             modifier = Modifier
                                 .fillMaxWidth(),
                             keyboardOptions = KeyboardOptions(
@@ -130,8 +131,8 @@ fun EditPromotion(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 8.dp),
-                            horizontalArrangement = Arrangement.Center
+                                .padding(bottom = 8.dp, end = 24.dp),
+                            horizontalArrangement = Arrangement.End
                         ) {
                             OutlinedButton(
 //                                modifier = Modifier.padding(end = 20.dp),

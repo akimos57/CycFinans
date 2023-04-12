@@ -51,26 +51,26 @@ fun CategoryChooseDialog(
                         .verticalScroll(rememberScrollState())
                         .background(MaterialTheme.colors.secondary)
                 ) {
-                    for (category in categories) {
-//                        TextButton(
-//                            onClick = { category_picker.value = category; onDismiss() }) {
-//                            Text(text = category)
+//                    for (category in categories) {
+////                        TextButton(
+////                            onClick = { category_picker.value = category; onDismiss() }) {
+////                            Text(text = category)
+////                        }
+//                        Row(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .height(40.dp)
+//                                .clickable { category_picker.value = category; onDismiss() },
+//                            verticalAlignment = Alignment.CenterVertically
+//                        ) {
+//                            Text(
+//                                modifier = Modifier
+//                                    .padding(start = 16.dp),
+//                                text = category,
+//                                fontSize = 18.sp
+//                            )
 //                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                                .clickable { category_picker.value = category; onDismiss() },
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .padding(start = 16.dp),
-                                text = category,
-                                fontSize = 18.sp
-                            )
-                        }
-                    }
+//                    }
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -139,6 +139,26 @@ fun CategoryChooseDialog(
                                     contentDescription = "add"
                                 )
                             }
+                        }
+                    }
+                    for (category in categories) {
+//                        TextButton(
+//                            onClick = { category_picker.value = category; onDismiss() }) {
+//                            Text(text = category)
+//                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp)
+                                .clickable { category_picker.value = category; onDismiss() },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .padding(start = 16.dp),
+                                text = category,
+                                fontSize = 18.sp
+                            )
                         }
                     }
                 }

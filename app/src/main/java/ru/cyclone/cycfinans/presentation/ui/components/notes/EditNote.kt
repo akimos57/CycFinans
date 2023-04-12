@@ -1,5 +1,5 @@
 @file:Suppress("DEPRECATION")
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.presentation.ui.components.notes
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -155,38 +155,42 @@ fun EditNote(
                                 )
                             }
                             Text(
-                                text = SimpleDateFormat("dd LLL yyyy hh:mm", Locale.getDefault()).format(time),
+                                text = SimpleDateFormat(
+//                                    "dd" +
+//                                        " LLL" +
+//                                        " yyyy " +
+                                        "hh:mm", Locale.getDefault()).format(time),
                                 color = MaterialTheme.colors.primaryVariant,
                                 fontSize = 18.sp
                             )
                         }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(30.dp)
-                                .clickable { tp.show() },
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .padding(horizontal = 24.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.done),
-                                    color = MaterialTheme.colors.primaryVariant
-                                )
-                                Checkbox(
-                                    checked = isCompleted,
-                                    onCheckedChange = { isCompleted = it },
-                                    colors = CheckboxDefaults.colors(blue),
-                                    modifier = Modifier
-                                        .size(16.dp)
-                                        .padding(start = 16.dp,end = 16.dp)
-                                )
-                            }
-                        }
+//                        Row(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .height(30.dp)
+//                                .clickable { tp.show() },
+//                            horizontalArrangement = Arrangement.Start,
+//                            verticalAlignment = Alignment.CenterVertically
+//                        ) {
+//                            Row(
+//                                modifier = Modifier
+//                                    .padding(horizontal = 24.dp),
+//                                verticalAlignment = Alignment.CenterVertically
+//                            ) {
+//                                Text(
+//                                    text = stringResource(id = R.string.done),
+//                                    color = MaterialTheme.colors.primaryVariant
+//                                )
+//                                Checkbox(
+//                                    checked = isCompleted,
+//                                    onCheckedChange = { isCompleted = it },
+//                                    colors = CheckboxDefaults.colors(blue),
+//                                    modifier = Modifier
+//                                        .size(16.dp)
+//                                        .padding(start = 16.dp,end = 16.dp)
+//                                )
+//                            }
+//                        }
                     }
                     Row(
                         modifier = Modifier

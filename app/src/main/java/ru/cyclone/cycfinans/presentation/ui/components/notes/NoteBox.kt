@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.domain.model.Note
@@ -24,6 +25,7 @@ import java.util.*
 
 @Composable
 fun NoteBox(
+    width: Dp,
     modifier: Modifier,
     note: Note,
     onNoteCompleteStateChanged: (Boolean) -> Unit,
@@ -32,7 +34,7 @@ fun NoteBox(
 //    val time3 = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time2)
     Box(
         modifier = modifier
-            .fillMaxWidth()
+            .width(width)
             .height(120.dp)
             .clip(RoundedCornerShape(16.dp))
             .border(width = 1.3.dp, color = blue, shape = RoundedCornerShape(16.dp))

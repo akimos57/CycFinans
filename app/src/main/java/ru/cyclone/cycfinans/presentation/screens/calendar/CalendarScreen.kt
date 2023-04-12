@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.ui.components.*
+import ru.cyclone.cycfinans.presentation.ui.components.notes.EditNote
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycnote.R
@@ -237,23 +238,30 @@ fun CalendarScreen(navController: NavHostController, onReturned: MutableState<()
                         }
                     }
 
-                    NoteBox(
-                        note = note,
+                    Row(
                         modifier = Modifier
-                            .padding(horizontal = 20.dp, vertical = 4.dp)
-                            .combinedClickable (
-                                onClick = {
-                                    noteState.value = note
-                                    showEditNoteDialog.value = true
-                                },
-                                onLongClick = { showDeleteDialog.value = true }
-                            ),
-                        onNoteCompleteStateChanged = { completed ->
-                            vm.addNote(note.copy(
-                                isCompleted = completed
-                            ))
-                        }
-                    )
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        NoteBox(
+                            note = note,
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp, vertical = 4.dp)
+                                .combinedClickable(
+                                    onClick = {
+                                        noteState.value = note
+                                        showEditNoteDialog.value = true
+                                    },
+                                    onLongClick = { showDeleteDialog.value = true }
+                                ),
+                            onNoteCompleteStateChanged = { completed ->
+                                vm.addNote(note.copy(
+                                    isCompleted = completed
+                                ))
+                            },
+                            width = 500.dp
+                        )
+                    }
                     noteState.value = note
                 }
             }

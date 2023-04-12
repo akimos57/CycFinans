@@ -36,7 +36,7 @@ fun PromotionBox(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.dp)
-                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .padding(8.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colors.secondary)
         ) {

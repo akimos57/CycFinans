@@ -24,7 +24,6 @@ fun BottomNavigationBar(
             Screens.StatisticsScreen,
             Screens.SettingsScreen
         )
-
         BottomNavigation(
             backgroundColor = MaterialTheme.colors.background
         ) {

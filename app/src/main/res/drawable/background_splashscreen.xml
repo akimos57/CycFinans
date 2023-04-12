@@ -3,13 +3,13 @@
     <item android:drawable="@color/black"/>
     <item
         android:drawable="@drawable/splash"
-        android:width="85dp"
-        android:height="85dp"
-        android:gravity="center" />
+        android:width="80dp"
+        android:height="80dp"
+        android:gravity="center"/>
     <item
-        android:drawable="@drawable/cyclone1"
+        android:drawable="@drawable/cycloone"
         android:gravity="bottom|center"
-        android:width="75dp"
-        android:height="20dp"
-        android:bottom="30dp" />
+        android:width="90dp"
+        android:height="22dp"
+        android:bottom="30dp"/>
 </layer-list>

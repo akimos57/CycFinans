@@ -138,7 +138,7 @@ fun SetupNavHost(navController: NavHostController) {
                 SetCategoryLimitsScreen()
             }
             composable(route = AdditionalScreens.EditCategoriesListScreen.rout) {
-                EditCategoriesListScreen()
+                EditCategoriesListScreen(navController = navController)
             }
         }
     }

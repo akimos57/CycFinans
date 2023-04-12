@@ -77,13 +77,13 @@ fun MainScreen(navController: NavHostController, onReturned: MutableState<() -> 
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    NotificationController.launchSingleNotification()
-                }) {
-                Text(text = "Notify")
-            }
+//            Button(
+//                modifier = Modifier.fillMaxWidth(),
+//                onClick = {
+//                    NotificationController.launchSingleNotification()
+//                }) {
+//                Text(text = "Notify")
+//            }
             TextButton(
                 modifier = Modifier
                     .padding(20.dp)

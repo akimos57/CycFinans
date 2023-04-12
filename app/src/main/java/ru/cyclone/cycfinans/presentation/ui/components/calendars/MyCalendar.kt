@@ -23,6 +23,8 @@ import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
+import ru.cyclone.cycfinans.presentation.ui.theme.fab1
+import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -158,9 +160,12 @@ fun MyCalendar(
 
             for(i in 0..41) {
                 val textPositionX = (i % CALENDAR_COLUMNS) * xSteps + strokeWidth + 24f
-                val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight
+                val textPositionY = (i / CALENDAR_COLUMNS) * ySteps + textHeight + 24f
 
                 var weekColor = color2.toArgb()
+
+                val canvasDay = i - 7 - firstDayInWeekWithOffset + 1
+                val today = LocalDate.now().dayOfMonth
 
                 if (i < 7) {
                     val dayOfWeek = DayOfWeek.of(dayOfWeekCounter)
@@ -190,11 +195,14 @@ fun MyCalendar(
                         )
                     }
                 }
-
+                val c2 = Calendar.getInstance()
                 if (i in 7 + firstDayInWeekWithOffset until yearMonth.value!!.lengthOfMonth() + 7 + firstDayInWeekWithOffset) {
                     val canvasDay = i - 7 - firstDayInWeekWithOffset + 1
                     if ((i % CALENDAR_COLUMNS) == weekendPoint)
                         weekColor = Color.Red.toArgb()
+                    if ((canvasDay == day) and (c2.get(Calendar.MONTH) + 1 == yearMonth.value?.month?.value) and (c2.get(Calendar.YEAR) == yearMonth.value?.year)) {
+                        weekColor = blue.toArgb()
+                    }
 
                     drawContext.canvas.nativeCanvas.apply {
                         drawText(
@@ -209,7 +217,7 @@ fun MyCalendar(
                         )
                         if (canvasDay in notEmptyDays) {
                             drawCircle(
-                                textPositionX - strokeWidth + xSteps - 10F - 50F, // - Radius + END Padding
+                                textPositionX - strokeWidth + xSteps - 10F - 60F, // - Radius + END Padding
                                 textPositionY - textHeight + 10F + 4F, // + Radius + TOP Padding
                                 10F,
                                 Paint().apply {

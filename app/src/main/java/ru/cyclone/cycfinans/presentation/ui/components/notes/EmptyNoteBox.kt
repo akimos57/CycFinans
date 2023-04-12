@@ -19,22 +19,6 @@ import androidx.compose.ui.unit.dp
 fun EmptyNoteBox(
     modifier: Modifier = Modifier
 ) {
-//    Box(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(120.dp)
-//            .padding(horizontal = 16.dp, vertical = 4.dp)
-//            .clip(RoundedCornerShape(16.dp))
-//            .background(MaterialTheme.colors.secondary)
-//    ) {
-//        Icon(
-//            imageVector = Icons.Filled.Edit,
-//            contentDescription = "add",
-//            modifier = modifier
-//                .fillMaxSize()
-//                .padding(16.dp)
-//        )
-//    }
     Box(
         modifier = modifier
             .padding()

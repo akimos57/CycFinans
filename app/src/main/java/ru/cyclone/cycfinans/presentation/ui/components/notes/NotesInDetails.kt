@@ -20,22 +20,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import ru.cyclone.cycfinans.domain.model.FastNote
 import ru.cyclone.cycfinans.domain.model.Note
-import ru.cyclone.cycfinans.presentation.screens.main.MainScreenVM
+import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
+import ru.cyclone.cycfinans.presentation.ui.components.notes.EditNote
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycnote.R
 import java.sql.Time
+import java.util.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FastNotes() {
-    val viewModel = hiltViewModel<MainScreenVM>()
+fun NotesInDetails(date: Calendar) {
+    val viewModel = hiltViewModel<MainDetailsScreenVM>()
     val notes by viewModel.notes.observeAsState()
     val showEditNoteDialog = remember { mutableStateOf(false) }
     val editedNote = remember { mutableStateOf(Note(
         content = "",
-        time = Time(System.currentTimeMillis())
+        time = Time(date.time.time)
     )) }
     Row(
         modifier = Modifier
@@ -50,7 +51,7 @@ fun FastNotes() {
                 .clickable {
                     editedNote.value = Note(
                         content = "",
-                        time = Time(System.currentTimeMillis())
+                        time = Time(date.time.time)
                     )
                     showEditNoteDialog.value = true
                 }
@@ -133,52 +134,23 @@ fun FastNotes() {
                     .padding(horizontal = 4.dp)
                     .combinedClickable (
                         onClick = {
-                            editedNote.value = Note(
-                                note.id,
-                                note.content,
-                                note.time,
-                                note.isCompleted
-                            )
+                            editedNote.value = note
                             showEditNoteDialog.value = true
                         },
                         onLongClick = { showDialog1.value = true }
                     ),
-                note = Note(
-                    note.id,
-                    note.content,
-                    note.time,
-                    note.isCompleted
-                ),
+                note = note,
                 onNoteCompleteStateChanged = {
                     viewModel.addNote(note.copy(isCompleted = it))
-                    editedNote.value = Note(
-                        note.id,
-                        note.content,
-                        note.time,
-                        note.isCompleted
-                    )
-                }
+                },
+                width = 200.dp
             )
         }
-        EditFastNote(
+        EditNote(
             note = editedNote,
             showDialog = showEditNoteDialog,
-            addNote = { note -> viewModel.addNote(FastNote(
-                note.id,
-                note.content,
-                note.time,
-                note.isCompleted
-            )) {
-                viewModel.updateNotes()
-            } },
-            deleteNote = { note -> viewModel.deleteNote(FastNote(
-                note.id,
-                note.content,
-                note.time,
-                note.isCompleted
-            )) {
-                viewModel.updateNotes()
-            } }
+            addNote = { note -> viewModel.addNote(note) },
+            deleteNote = { note -> viewModel.deleteNote(note) }
         )
     }
 }

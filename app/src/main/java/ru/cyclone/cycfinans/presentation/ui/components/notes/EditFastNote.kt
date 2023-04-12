@@ -117,7 +117,10 @@ fun EditFastNote(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(30.dp)
-                            .clickable { tp.show(); dp.show() },
+//                            .clickable {
+//                                tp.show(); dp.show()
+//                                       }
+                        ,
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
