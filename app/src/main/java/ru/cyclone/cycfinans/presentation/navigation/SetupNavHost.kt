@@ -15,7 +15,7 @@ import ru.cyclone.cycfinans.presentation.screens.calendar.CalendarScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreen
 import ru.cyclone.cycfinans.presentation.screens.main.MainScreen
 import ru.cyclone.cycfinans.presentation.screens.settings.EditCategoriesListScreen
-import ru.cyclone.cycfinans.presentation.screens.settings.SetCategoryLimitsScreen
+import ru.cyclone.cycfinans.presentation.screens.settings.LocaleSettingsScreen
 import ru.cyclone.cycfinans.presentation.screens.settings.SettingsScreen
 import ru.cyclone.cycfinans.presentation.screens.statistics.StatisticsScreen
 import ru.cyclone.cycfinans.presentation.ui.components.BottomNavigationBar
@@ -40,8 +40,8 @@ sealed class AdditionalScreens(
     val rout: String
 ) {
     object MainDetailsScreen: AdditionalScreens(rout = "mainDetails_screen")
-    object SetCategoryLimitsScreen: AdditionalScreens(rout = "set_category_limits_screen")
     object EditCategoriesListScreen: AdditionalScreens(rout = "edit_categories_screen")
+    object LocaleSettingsScreen: AdditionalScreens(rout = "locale_settings_screen")
 }
 
 @Composable
@@ -63,11 +63,17 @@ fun SetupNavHost(navController: NavHostController) {
         preferencesController.fileNameList.add("$")
         preferencesController.saveLists()
     }
+    preferencesController = PreferencesController("time_format_table")
+    if (preferencesController.fileNameList.isEmpty()){
+        preferencesController.fileNameList.add("HH:mm")
+        preferencesController.saveLists()
+    }
     preferencesController = PreferencesController("locale_table")
     if (preferencesController.fileNameList.isEmpty()){
         preferencesController.fileNameList.add("en")
         preferencesController.saveLists()
     }
+
     LocalContext.current.resources.apply {
         val locale = Locale.forLanguageTag(preferencesController.fileNameList.last())
         val config = Configuration(configuration)
@@ -119,14 +125,12 @@ fun SetupNavHost(navController: NavHostController) {
                     "/{year}"
             ) {
                 StatisticsScreen(
-                    navController = navController,
                     it.arguments?.getString("month"),
                     it.arguments?.getString("year"),
                 )
             }
             composable(route = Screens.StatisticsScreen.rout) {
                 StatisticsScreen(
-                    navController = navController,
                     month = it.arguments?.getString("month"),
                     year = it.arguments?.getString("year")
                 )
@@ -134,11 +138,11 @@ fun SetupNavHost(navController: NavHostController) {
             composable(route = Screens.SettingsScreen.rout) {
                 SettingsScreen(navController = navController)
             }
-            composable(route = AdditionalScreens.SetCategoryLimitsScreen.rout) {
-                SetCategoryLimitsScreen()
-            }
             composable(route = AdditionalScreens.EditCategoriesListScreen.rout) {
                 EditCategoriesListScreen(navController = navController)
+            }
+            composable(route = AdditionalScreens.LocaleSettingsScreen.rout) {
+                LocaleSettingsScreen()
             }
         }
     }

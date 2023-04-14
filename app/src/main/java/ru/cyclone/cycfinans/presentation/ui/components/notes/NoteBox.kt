@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.presentation.ui.components.notes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycnote.R
@@ -30,8 +31,7 @@ fun NoteBox(
     note: Note,
     onNoteCompleteStateChanged: (Boolean) -> Unit,
 ) {
-//    var time2 by remember { mutableStateOf(Time(date)) }
-//    val time3 = SimpleDateFormat("HH:mm", Locale.getDefault()).format(time2)
+    val timeFormatPattern = PreferencesController("time_format_table").fileNameList.last()
     Box(
         modifier = modifier
             .width(width)
@@ -52,8 +52,7 @@ fun NoteBox(
             ) {
                 Text(
                     text = SimpleDateFormat(
-//                        "dd.mm.yyyy " +
-                                "hh:mm", Locale.getDefault()).format(note.time.time
+                        timeFormatPattern, Locale.getDefault()).format(note.time.time
                     ),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal

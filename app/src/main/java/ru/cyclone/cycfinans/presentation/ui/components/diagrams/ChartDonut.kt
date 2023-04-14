@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.presentation.ui.components.diagrams
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState

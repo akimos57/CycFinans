@@ -12,7 +12,6 @@
     <string name="left">Left</string>
     <string name="others">Others</string>
     <string name="select_a_category">Select a category</string>
-    <string name="dollar">€</string>
     <string name="main">Home</string>
     <string name="calendar">Calendar</string>
     <string name="statistics">Statistics</string>
@@ -34,4 +33,5 @@
     <string name="categories">Categories</string>
     <string name="language">Language</string>
     <string name="currency">Currency</string>
+    <string name="locale_settings">Locale settings</string>
 </resources>

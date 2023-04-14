@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
 import ru.cyclone.cycfinans.presentation.ui.components.notes.EditNote
+import ru.cyclone.cycfinans.presentation.ui.components.notes.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycnote.R
 import java.sql.Time

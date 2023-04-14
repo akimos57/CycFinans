@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.presentation.ui.components.calendars
 
 import android.graphics.Paint
 import androidx.compose.animation.core.animate
@@ -23,8 +23,6 @@ import kotlinx.coroutines.launch
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
-import ru.cyclone.cycfinans.presentation.ui.theme.fab1
-import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -164,9 +162,6 @@ fun MyCalendar(
 
                 var weekColor = color2.toArgb()
 
-                val canvasDay = i - 7 - firstDayInWeekWithOffset + 1
-                val today = LocalDate.now().dayOfMonth
-
                 if (i < 7) {
                     val dayOfWeek = DayOfWeek.of(dayOfWeekCounter)
                     if (dayOfWeek.value == 7) {
@@ -195,12 +190,13 @@ fun MyCalendar(
                         )
                     }
                 }
-                val c2 = Calendar.getInstance()
                 if (i in 7 + firstDayInWeekWithOffset until yearMonth.value!!.lengthOfMonth() + 7 + firstDayInWeekWithOffset) {
                     val canvasDay = i - 7 - firstDayInWeekWithOffset + 1
                     if ((i % CALENDAR_COLUMNS) == weekendPoint)
                         weekColor = Color.Red.toArgb()
-                    if ((canvasDay == day) and (c2.get(Calendar.MONTH) + 1 == yearMonth.value?.month?.value) and (c2.get(Calendar.YEAR) == yearMonth.value?.year)) {
+                    if ((canvasDay == day) and
+                        (YearMonth.now() == yearMonth.value)
+                    ) {
                         weekColor = blue.toArgb()
                     }
 

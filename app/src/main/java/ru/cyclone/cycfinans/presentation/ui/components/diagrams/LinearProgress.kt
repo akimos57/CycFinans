@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.presentation.ui.components.diagrams
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width

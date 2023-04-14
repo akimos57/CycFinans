@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.ui.components.*
+import ru.cyclone.cycfinans.presentation.ui.components.promotion.EditPromotion
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycnote.R

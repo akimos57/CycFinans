@@ -12,7 +12,6 @@
     <string name="left">左邊</string>
     <string name="others">其他</string>
     <string name="select_a_category">選擇一個類別</string>
-    <string name="dollar">¥</string>
     <string name="settings">設置</string>
     <string name="statistics">統計數據</string>
     <string name="calendar">日曆</string>
@@ -34,4 +33,5 @@
     <string name="categories">類別</string>
     <string name="language">語言</string>
     <string name="currency">貨幣</string>
+    <string name="locale_settings">本地化设置</string>
 </resources>

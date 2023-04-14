@@ -16,7 +16,6 @@
     <string name="main">집</string>
     <string name="statistics">통계</string>
     <string name="settings">설정</string>
-    <string name="dollar">₩</string>
     <string name="delete">삭제</string>
     <string name="reminder">알림</string>
     <string name="name">Finance</string>
@@ -34,4 +33,5 @@
     <string name="categories">카테고리</string>
     <string name="language">언어</string>
     <string name="currency">통화</string>
+    <string name="locale_settings">현지화 설정</string>
 </resources>

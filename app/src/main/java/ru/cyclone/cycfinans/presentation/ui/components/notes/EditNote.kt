@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.TimePickerDialog
-import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -33,8 +32,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
 import ru.cyclone.cycfinans.domain.model.Note
-import ru.cyclone.cycfinans.domain.usecases.NotificationController
+import ru.cyclone.cycfinans.domain.usecases.AlarmReceiver
+import ru.cyclone.cycfinans.presentation.ui.components.settings.selectors.AvailableTimeFormats
 import ru.cyclone.cycfinans.presentation.ui.theme.*
 import ru.cyclone.cycnote.R
 import java.sql.Time
@@ -65,9 +66,10 @@ fun EditNote(
     }
 
     if (showDialog.value and hasPermission) {
+        val timeFormatPattern = PreferencesController("time_format_table").fileNameList.last()
+
         var content by rememberSaveable { mutableStateOf(note.value.content) }
         var time by remember { mutableStateOf(note.value.time) }
-        var isCompleted by rememberSaveable { mutableStateOf(note.value.isCompleted) }
         var remind by rememberSaveable { mutableStateOf(note.value.remind) }
 
         val c = Calendar.getInstance()
@@ -78,7 +80,8 @@ fun EditNote(
                 q.set(Calendar.HOUR_OF_DAY, selectedHour)
                 q.set(Calendar.MINUTE, selectedMinute)
                 time = Time(q.timeInMillis)
-            }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE], true
+            }, c[Calendar.HOUR_OF_DAY], c[Calendar.MINUTE],
+            timeFormatPattern == AvailableTimeFormats.availableTimeFormats.values.last()
         )
 
         tp.setOnDismissListener {
@@ -155,42 +158,11 @@ fun EditNote(
                                 )
                             }
                             Text(
-                                text = SimpleDateFormat(
-//                                    "dd" +
-//                                        " LLL" +
-//                                        " yyyy " +
-                                        "hh:mm", Locale.getDefault()).format(time),
+                                text = SimpleDateFormat(timeFormatPattern, Locale.getDefault()).format(time),
                                 color = MaterialTheme.colors.primaryVariant,
                                 fontSize = 18.sp
                             )
                         }
-//                        Row(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .height(30.dp)
-//                                .clickable { tp.show() },
-//                            horizontalArrangement = Arrangement.Start,
-//                            verticalAlignment = Alignment.CenterVertically
-//                        ) {
-//                            Row(
-//                                modifier = Modifier
-//                                    .padding(horizontal = 24.dp),
-//                                verticalAlignment = Alignment.CenterVertically
-//                            ) {
-//                                Text(
-//                                    text = stringResource(id = R.string.done),
-//                                    color = MaterialTheme.colors.primaryVariant
-//                                )
-//                                Checkbox(
-//                                    checked = isCompleted,
-//                                    onCheckedChange = { isCompleted = it },
-//                                    colors = CheckboxDefaults.colors(blue),
-//                                    modifier = Modifier
-//                                        .size(16.dp)
-//                                        .padding(start = 16.dp,end = 16.dp)
-//                                )
-//                            }
-//                        }
                     }
                     Row(
                         modifier = Modifier
@@ -222,7 +194,7 @@ fun EditNote(
                                             id = note.value.id,
                                             content = content,
                                             time = time,
-                                            isCompleted = isCompleted,
+                                            isCompleted = note.value.isCompleted,
                                             remind = remind
                                         )
                                     )
@@ -237,6 +209,7 @@ fun EditNote(
                                         PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                                         PackageManager.DONT_KILL_APP
                                     )
+                                    intent.putExtra("Notification Text", content)
 
                                     val pendingIntent =
                                         PendingIntent.getBroadcast(context, calendar.timeInMillis.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
@@ -268,20 +241,3 @@ fun EditNote(
         Toast.makeText(context, "Permission error", Toast.LENGTH_SHORT).show()
     }
 }
-
-class AlarmReceiver: BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        NotificationController.launchSingleNotification()
-    }
-}
-
-
-
-
-
-
-
-
-
-
-

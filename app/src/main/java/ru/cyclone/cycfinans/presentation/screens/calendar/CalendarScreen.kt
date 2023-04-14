@@ -23,7 +23,9 @@ import androidx.navigation.NavHostController
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.ui.components.*
+import ru.cyclone.cycfinans.presentation.ui.components.calendars.MyCalendar
 import ru.cyclone.cycfinans.presentation.ui.components.notes.EditNote
+import ru.cyclone.cycfinans.presentation.ui.components.notes.NoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.blue
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycnote.R

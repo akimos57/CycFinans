@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.presentation.ui.components.notes
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -23,6 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import ru.cyclone.cycfinans.domain.model.FastNote
 import ru.cyclone.cycfinans.domain.model.Note
 import ru.cyclone.cycfinans.presentation.screens.main.MainScreenVM
+import ru.cyclone.cycfinans.presentation.ui.components.EditFastNote
+import ru.cyclone.cycfinans.presentation.ui.components.EmptyNoteBox
 import ru.cyclone.cycfinans.presentation.ui.theme.fab2
 import ru.cyclone.cycnote.R
 import java.sql.Time

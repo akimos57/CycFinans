@@ -1,7 +1,10 @@
 package ru.cyclone.cycfinans.presentation.screens.main
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,13 +21,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
-import ru.cyclone.cycfinans.domain.usecases.NotificationController
 import ru.cyclone.cycfinans.presentation.navigation.AdditionalScreens
 import ru.cyclone.cycfinans.presentation.navigation.Screens
 import ru.cyclone.cycfinans.presentation.ui.components.Calendar
-import ru.cyclone.cycfinans.presentation.ui.components.DayBox
-import ru.cyclone.cycfinans.presentation.ui.components.FastNotes
-import ru.cyclone.cycfinans.presentation.ui.components.MainBox
+import ru.cyclone.cycfinans.presentation.ui.components.main.DayBox
+import ru.cyclone.cycfinans.presentation.ui.components.notes.FastNotes
+import ru.cyclone.cycfinans.presentation.ui.components.main.MainBox
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -77,16 +79,9 @@ fun MainScreen(navController: NavHostController, onReturned: MutableState<() -> 
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-//            Button(
-//                modifier = Modifier.fillMaxWidth(),
-//                onClick = {
-//                    NotificationController.launchSingleNotification()
-//                }) {
-//                Text(text = "Notify")
-//            }
             TextButton(
                 modifier = Modifier
-                    .padding(20.dp)
+                    .padding(16.dp)
                     .clip(RoundedCornerShape(16.dp)),
                 onClick = { visible = true },
                 colors = ButtonDefaults.buttonColors(

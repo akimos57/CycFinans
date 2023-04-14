@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -117,9 +116,6 @@ fun EditFastNote(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(30.dp)
-//                            .clickable {
-//                                tp.show(); dp.show()
-//                                       }
                         ,
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically

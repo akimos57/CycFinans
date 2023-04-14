@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.presentation.ui.components.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,9 +13,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.cyclone.cycfinans.data.local.preferences.PreferencesController
+import ru.cyclone.cycfinans.presentation.ui.components.diagrams.LinearProgress
 import ru.cyclone.cycfinans.presentation.ui.theme.fab1
 import ru.cyclone.cycnote.R
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*
 
@@ -30,8 +32,10 @@ fun MainBox(
     // Средств осталось
     val currentPrice = income - expenses
     // for LinearProgress
-    val progress = if (income != BigDecimal(0)) currentPrice/income else BigDecimal(0)
-
+    val progress =
+        if (income != BigDecimal(0))
+            currentPrice.divide(income, 2, RoundingMode.HALF_UP)
+        else BigDecimal(0)
 
     Box(
         modifier = Modifier

@@ -1,4 +1,4 @@
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.presentation.ui.components.settings.selectors
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

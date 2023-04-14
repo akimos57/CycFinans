@@ -12,7 +12,6 @@
     <string name="left">Осталось</string>
     <string name="others">Другое</string>
     <string name="select_a_category">Выбрать категорию</string>
-    <string name="dollar">₽</string>
     <string name="main">Главная</string>
     <string name="calendar">Календарь</string>
     <string name="statistics">Статистика</string>
@@ -34,4 +33,5 @@
     <string name="categories">Категории</string>
     <string name="language">Язык</string>
     <string name="currency">Валюта</string>
+    <string name="locale_settings">Настройки локализации</string>
 </resources>

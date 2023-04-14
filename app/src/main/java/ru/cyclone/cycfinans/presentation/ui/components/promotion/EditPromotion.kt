@@ -1,9 +1,8 @@
 @file:Suppress("DEPRECATION")
 
-package ru.cyclone.cycfinans.presentation.ui.components
+package ru.cyclone.cycfinans.presentation.ui.components.promotion
 
 import android.app.TimePickerDialog
-import android.text.InputFilter
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -33,6 +32,7 @@ import ru.cyclone.cycfinans.domain.model.Categories
 import ru.cyclone.cycfinans.domain.model.Category
 import ru.cyclone.cycfinans.domain.model.Promotion
 import ru.cyclone.cycfinans.presentation.screens.main.MainDetailsScreenVM
+import ru.cyclone.cycfinans.presentation.ui.components.CategoryChooseDialog
 import ru.cyclone.cycfinans.presentation.ui.theme.*
 import ru.cyclone.cycnote.R
 import java.sql.Time

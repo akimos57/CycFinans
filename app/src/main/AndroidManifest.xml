@@ -37,7 +37,7 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <receiver android:name="ru.cyclone.cycfinans.presentation.ui.components.AlarmReceiver"
+        <receiver android:name="ru.cyclone.cycfinans.domain.usecases.AlarmReceiver"
             android:exported="false"
             android:directBootAware="true">
         </receiver>
