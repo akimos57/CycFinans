@@ -75,14 +75,19 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:1.4.0-alpha04"
     implementation "com.google.accompanist:accompanist-pager:0.22.0-rc"
 
+
     // Navigation
     implementation "androidx.navigation:navigation-compose:$nav_version"
+    implementation 'io.github.raamcosta.compose-destinations:core:1.5.1-beta' // Destinations
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
+    // Lifecycle ViewModel
+    runtimeOnly 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
 
     // Keyboard Listener
     def LATEST_VERSION = "3.0.0-RC3"
